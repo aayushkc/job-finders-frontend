@@ -2,7 +2,9 @@
 import { Open_Sans } from "next/font/google";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../globals.css";
+import 'froala-editor/css/froala_style.min.css';
 
+import 'froala-editor/css/froala_editor.pkgd.min.css';
 import AdminNav from "../components/adminnav";
 const sans = Open_Sans({ subsets: ["latin"] });
 
