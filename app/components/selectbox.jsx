@@ -20,7 +20,8 @@ export default function SelectComponent({
                 )}
                 name={name}
                 control={control}
-                defaultValue={defaultValue? defaultValue:""}
+                defaultValue={defaultValue}
+                rules={{required:true}}
             />
         </FormControl>
     )

@@ -3,7 +3,7 @@ import GetRequestNoToken from "@/app/api/getRequestNoToken";
 import AdminDashBoardLayout from "@/app/components/DashBoardLayout";
 import ReactHookFormSelect from "@/app/components/industrychoices";
 import SelectComponent from "@/app/components/selectbox";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, useMediaQuery } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -13,16 +13,25 @@ import dynamic from 'next/dynamic';
 import PostWithTokien from "@/app/api/postWithToken";
 
 import DialogBox from "@/app/components/sucessbox";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import getRequestWithToken from "@/app/api/getRequestWithToken";
+import Cookies from "js-cookie";
+import PutWithTokien from "@/app/api/putRequest";
+import DeleteRequest from "@/app/api/deleteRequest";
+import { useTheme } from '@mui/material/styles';
 const FroalaEditor = dynamic(
     () => import('react-froala-wysiwyg'),
     { ssr: false }
 );
 export default function Page() {
-
+    const accessToken = Cookies.get('accessToken')
+    const router = useParams()
+    const navigate = useRouter()
     const {
         handleSubmit,
         register,
         control,
+        setValue,
         formState: { errors, isSubmitting, isDirty, isValid },
     } = useForm()
 
@@ -31,8 +40,23 @@ export default function Page() {
     const [skills, setSkills] = useState([]);
     const [jobcategory, setJobCategory] = useState([]);
     const [educationIfon, setEducationInfo] = useState([]);
-    const [jobSuccess,setJobSuccess] = useState(false)
+    const [jobSuccess, setJobSuccess] = useState(false)
     const [jobError, setJobError] = useState(false)
+    const [deleteSuccess, setDeleteSuccess] = useState(false)
+    const [deleteError, setDeleteError] = useState(false)
+    const [jobDetails, setJobDetails] = useState([])
+    const [requiedSkills, setRequiredSkills] = useState()
+    const [selectedJobCategory, setSelectedJobCategory] = useState()
+    const [selectedEducationInfo, setSelectedEducationInfo] = useState()
+    const [selectedJobLevel, setSelectedJobLevel] = useState()
+    const [selectedWorkLoc, setSelectedWorkLoc] = useState()
+    const [areYouSure, setAreYouSure] = useState(false)
+    const [open, setOpen] = useState(true);
+
+    const handleModalClose = () => {
+        setOpen(false);
+    };
+
     const getIndustries = async () => {
 
         try {
@@ -101,7 +125,7 @@ export default function Page() {
         },
         {
             "id": 1,
-            "type": "On Site"
+            "type": "Onsite"
         },
         {
             "id": 2,
@@ -142,74 +166,154 @@ export default function Page() {
             "type": "Experienced"
         },
     ]
+
+    const getJob = async () => {
+        try {
+            const data = await getRequestWithToken(`/recruiter/get-job/${router.id}`, accessToken)
+            if (data.detail) {
+                throw new Error("Cannot Fetch")
+            }
+            console.log(data);
+            // The total count of data needs to be dividd by the number of data sent per page by backend
+            setJobDetails(data)
+            setRequiredSkills(data.required_skills.map(data => data.id))
+            setSelectedJobCategory(data.job_category.map(data => data.id))
+            setSelectedEducationInfo(data.education_info.map(data => data.id))
+        }
+        catch (errors) {
+            setJobDetails([])
+        }
+    }
+
     const onSubmit = async (data) => {
         console.log(data);
-        
+        setJobSuccess(false)
+        setJobError(false)
         try {
-            const res = await PostWithTokien('/recruiter/add-job/', data)
-            console.log(res);
+            const res = await PutWithTokien(`/recruiter/get-job/${router.id}`, data)
+            console.log("This is respooooooooooooooo");
             if (res.detail) {
                 throw new Error("Cannot Fetch")
             }
-           setJobSuccess(true)
+            console.log("Helooooooooooooooo");
+            setJobSuccess(true)
         }
         catch (errors) {
-            console.log("ENteerereddddddd");
+            console.log("ENteerereddddddd Tissssssss");
             console.log(errors);
             setJobError(true)
         }
     }
 
+    const handleDelete = async () => {
+        setDeleteError(false)
+        setDeleteSuccess(false)
+        setOpen(true)
+        try {
+            const res = await DeleteRequest(`/recruiter/delete-job/${router.id}`)
+            console.log(res);
+            if (res.detail) {
+                throw new Error("Cannot Fetch")
+            }
+            console.log("Helooooooooooooooo");
+            setDeleteSuccess(true)
+
+
+        }
+        catch (errors) {
+            console.log("ENteerereddddddd Tissssssss");
+            console.log(errors);
+            setDeleteError(true)
+        }
+    }
+
+    const handleCloseDeleteComp = () => {
+        setAreYouSure(false)
+        setOpen(true)
+    }
     useEffect(() => {
         getIndustries()
         getSkills()
         getJobCategory()
         getEducationInfo()
+        getJob()
     }, [])
+
+    useEffect(() => {
+        if (jobDetails && jobDetails.level) {
+            const selectedLevelObject = jobLevelChoices.find(data => data.type === jobDetails.level);
+            const selectedWorkLocObj = worklocationType.find(data => data.type === jobDetails.work_location_type)
+            if (selectedLevelObject) {
+                setSelectedJobLevel(selectedLevelObject.id);
+
+            }
+            if (selectedWorkLocObj) {
+                setSelectedWorkLoc(selectedWorkLocObj.id)
+            }
+        }
+
+
+    }, [jobDetails])
+
+    useEffect(() => {
+        setValue("title", jobDetails.title || "");
+        setValue("number_of_vacancy", jobDetails.number_of_vacancy || "");
+        setValue("salary", jobDetails.salary || "");
+        setValue("job_location", jobDetails.job_location || "");
+        setValue("required_skills", requiedSkills || []);
+        setValue("job_category", selectedJobCategory || []);
+        setValue("education_info", selectedEducationInfo || []);
+        setValue("apply_before", dayjs(jobDetails.apply_before) || dayjs().startOf("D"));
+        setValue("description", jobDetails.description || "");
+        setValue("industry", industries.filter(indus => indus.title_name === jobDetails.industry)[0]?.id || '');
+        setValue("level", selectedJobLevel || '');
+        setValue("work_location_type", selectedWorkLoc || '');
+
+    }, [jobDetails])
+
     return (
         <AdminDashBoardLayout>
+            {console.log(jobDetails)}
             {
-                jobSuccess &&<DialogBox 
-                                dialogHeading={"Job Added Sucessfully"} 
-                                dialogText={"Job has been Added SuccessFully"}
-                                goToPageName={"View All Jobs"}
-                                url={"/recruiter/view-all-jobs"}
-                                success={true}
-                        />
+                jobSuccess && <DialogBox
+                    dialogHeading={"Job Has Been Edited Sucessfully"}
+                    dialogText={"Job has been edited SuccessFully"}
+                    goToPageName={"View All Jobs"}
+                    url={"/recruiter/view-all-jobs"}
+                    success={true}
+                />
             }
 
             {
-                jobError &&<DialogBox 
-                                dialogHeading={"An Error occured during Submission"} 
-                                dialogText={"Please try again"}
-                                error={true}
-                        />
+                jobError && <DialogBox
+                    dialogHeading={"An Error occured during Submission"}
+                    dialogText={"Please try again"}
+                    error={true}
+                />
             }
-            <h1 className="text-3xl font-semibold">Add Job Vacancy</h1>
+            <h1 className="text-3xl font-semibold">Edit Your Job Vacancy</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
 
                 {/* Job Title */}
                 <div className="">
-                    <label htmlFor="tile" className="text-sm">Job Title*</label>
+                    <label htmlFor="title" className="text-sm">Job Title*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
-                            {...register("title", { required: "This field is required" })}
+                            {...register("title", { required: true })}
                             type="text"
                             name='title'
                             id="title"
                             className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                            placeholder="Enter Job Title" />
-                
-                       
+
+
+                        />
+
                     </div>
-                    {errors.title && 
-                          <p>{console.log(errors.title.message)}</p>
-                        }
                 </div>
 
                 {/* Number of Vacancy */}
                 <div className="">
-                    <label htmlFor="vacancy-number" className="text-sm">Number of Vacancy*</label>
+                    <label htmlFor="number_of_vacancy" className="text-sm">Number of Vacancy*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
                             {...register("number_of_vacancy", { required: true })}
@@ -217,7 +321,7 @@ export default function Page() {
                             name='number_of_vacancy'
                             id="number_of_vacancy"
                             className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                            placeholder="Enter Number of Vacancy" />
+                        />
                     </div>
                 </div>
 
@@ -231,14 +335,14 @@ export default function Page() {
                             name='salary'
                             id="salary"
                             className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                            placeholder="Enter Salary" />
+                        />
                     </div>
                 </div>
 
 
                 {/* Site Location */}
                 <div className="">
-                    <label htmlFor="site-location" className="text-sm">Site Location*</label>
+                    <label htmlFor="job_location" className="text-sm">Site Location*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
                             {...register("job_location", { required: true })}
@@ -246,7 +350,7 @@ export default function Page() {
                             name='job_location'
                             id="job_location"
                             className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                            placeholder="Enter Job Site Location" />
+                        />
                     </div>
                 </div>
 
@@ -257,6 +361,7 @@ export default function Page() {
                     name={"work_location_type"}
                     label={"Job Type"}
                     control={control}
+                    defaultValue={''}
                 >
                     {
                         worklocationType.map(data => {
@@ -274,6 +379,7 @@ export default function Page() {
                     name={"required_years_of_experience"}
                     label={"Required Years of Experience"}
                     control={control}
+                    defaultValue={0}
                 >
                     {
                         workExpereinceChoices.map(data => {
@@ -293,6 +399,7 @@ export default function Page() {
                     name={"level"}
                     label={"Required Job Level"}
                     control={control}
+                    defaultValue={''}
                 >
                     {
                         jobLevelChoices.map(data => {
@@ -310,7 +417,7 @@ export default function Page() {
                     name="industry"
                     label="Choose one Industry"
                     control={control}
-                    defaultValue={""}
+                    defaultValue={''}
                 >
                     {
                         industries?.map(industry => {
@@ -324,12 +431,13 @@ export default function Page() {
 
 
                 {/* Choose Skills */}
+                {console.log(requiedSkills)}
+
                 <Controller
 
                     name="required_skills"
                     control={control}
                     defaultValue={[]}
-                    rules={{required:true}}
                     render={({ field }) => (
                         <FormControl fullWidth>
                             <InputLabel id="skills">Skills</InputLabel>
@@ -338,7 +446,7 @@ export default function Page() {
                                 labelId="skills"
                                 label="skills"
                                 multiple
-                                defaultValue={[]}
+
                             >
                                 {skills?.map((data) => (
                                     <MenuItem value={data.id} key={data.id}>
@@ -351,14 +459,11 @@ export default function Page() {
 
                 />
 
-
                 {/* Choose Job Category */}
                 <Controller
-
                     name="job_category"
                     control={control}
                     defaultValue={[]}
-                    rules={{required:true}}
                     render={({ field }) => (
                         <FormControl fullWidth>
                             <InputLabel id="job_category">Job Category</InputLabel>
@@ -367,7 +472,7 @@ export default function Page() {
                                 labelId="job_category"
                                 label="job_category"
                                 multiple
-                                defaultValue={[]}
+
                             >
                                 {jobcategory?.map((data) => (
                                     <MenuItem value={data.id} key={data.id}>
@@ -383,11 +488,9 @@ export default function Page() {
                 {/* Select Degree */}
 
                 <Controller
-
                     name="education_info"
                     control={control}
                     defaultValue={[]}
-                    rules={{required:true}}
                     render={({ field }) => (
                         <FormControl fullWidth>
                             <InputLabel id="education_info">Select Required Degree</InputLabel>
@@ -396,7 +499,6 @@ export default function Page() {
                                 labelId="education_info"
                                 label="education_info"
                                 multiple
-                                defaultValue={[]}
                             >
                                 {educationIfon?.map((data) => (
                                     <MenuItem value={data.id} key={data.education_level}>
@@ -412,7 +514,7 @@ export default function Page() {
                 {/* Apply before Before */}
                 <Controller
                     control={control}
-                    defaultValue={dayjs().startOf("D")}
+                    defaultValue={''}
                     name="apply_before"
                     rules={{
                         required: {
@@ -428,7 +530,7 @@ export default function Page() {
                                 onChange={(date) => onChange(date ? date.format("YYYY-MM-DD") : "")}
                                 value={value}
                                 inputRef={ref}
-                                format={"YYYY/MM/DD"}
+                                format={"YYYY-MM-DD"}
                             />
                         </LocalizationProvider>
                     )}
@@ -443,7 +545,6 @@ export default function Page() {
                             control={control}
                             name="description"
                             defaultValue={""}
-                            rules={{required:true}}
                             render={({ field: { onChange, value } }) => (
                                 <FroalaEditor
                                     model={value}
@@ -459,28 +560,100 @@ export default function Page() {
 
                     </div>
                 </div>
-                <button
-                    type="submit"
-                    disabled={!isDirty || !isValid || isSubmitting}
-                    className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
-                >
-                    {isSubmitting ? (
-                        <div role="status">
-                            <svg
-                                aria-hidden="true"
-                                className="inline w-6 h-6 mr-2 text-white animate-spin fill-rose-600 opacity-100"
-                                viewBox="0 0 100 101"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                {/* SVG for Spinner Animation */}
-                            </svg>
-                        </div>
-                    ) : (
-                        "Add Job"
-                    )}
-                </button>
+
+                <div className="flex gap-4">
+                    <button
+                        type="submit"
+                        disabled={!isDirty || !isValid || isSubmitting}
+                        className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
+                    >
+                        {isSubmitting ? (
+                            <div role="status">
+                                <svg
+                                    aria-hidden="true"
+                                    className="inline w-6 h-6 mr-2 text-white animate-spin fill-rose-600 opacity-100"
+                                    viewBox="0 0 100 101"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    {/* SVG for Spinner Animation */}
+                                </svg>
+                            </div>
+                        ) : (
+                            "Edit Job"
+                        )}
+                    </button>
+
+                    <button
+                        onClick={() => setAreYouSure(true)}
+                        type="button"
+                        className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
+                    >
+
+                        Delete Job
+
+                    </button>
+
+                </div>
+
             </form>
+            {areYouSure && <AreYourSureComponent handelDelete={handleDelete} handelNoDelete={handleCloseDeleteComp} handleModalClose={handleModalClose} open={open} />}
+            {
+                deleteSuccess && <DialogBox
+                    dialogHeading={"Job Has  Deleted Sucessfully"}
+                    dialogText={"Job has been deleted SuccessFully"}
+                    goToPageName={"View All Jobs"}
+                    url={"/recruiter/view-all-jobs"}
+                    success={true}
+                    deleteBox={true}
+                />
+            }
+
+            {
+                deleteError && <DialogBox
+                    dialogHeading={"An Error occured during deletion"}
+                    dialogText={"Please try again"}
+                    error={true}
+                />
+            }
         </AdminDashBoardLayout>
     )
+}
+
+const AreYourSureComponent = ({ handelDelete, handelNoDelete, open, handleModalClose }) => {
+
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+
+    return (
+        <>
+            <Dialog
+                fullScreen={fullScreen}
+                open={open}
+                onClose={() => handleModalClose}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    "Are you Sure you Want To Delete?"
+                </DialogTitle>
+                {/* <DialogContent>
+                    <DialogContentText>
+                        {dialogText}
+                    </DialogContentText>
+                </DialogContent> */}
+                <DialogActions>
+
+                    <Button onClick={() => handelDelete()} autoFocus>
+                        Yes
+                    </Button>
+
+
+                    <Button onClick={() => { handelNoDelete() }} autoFocus>
+                        No
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
 }

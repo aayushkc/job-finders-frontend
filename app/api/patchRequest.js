@@ -1,10 +1,10 @@
 import { APIENDPOINT } from "./APIENDPOINT";
 import Cookies from 'js-cookie';
-export default async function PostWithTokien(endpoint, data){
+export default async function PatchRequest(endpoint, data){
     const accessToken = Cookies.get('accessToken');
     console.log(data);
     const requestOptions = {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           // Include the bearer token in the Authorization header
@@ -17,8 +17,7 @@ export default async function PostWithTokien(endpoint, data){
         if (!response.ok) {
           // Handle non-successful responses
           console.log("Entereedddddddddddddd");
-          throw new Error("Cannot Fetch")
-        //   throw new Error('Network response was not ok.');
+          throw new Error('Network response was not ok.');
         }
         return await response.json();
       } catch (error) {

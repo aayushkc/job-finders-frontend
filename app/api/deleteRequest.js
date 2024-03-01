@@ -1,24 +1,22 @@
 import { APIENDPOINT } from "./APIENDPOINT";
 import Cookies from 'js-cookie';
-export default async function PostWithTokien(endpoint, data){
+export default async function DeleteRequest(endpoint){
     const accessToken = Cookies.get('accessToken');
-    console.log(data);
+
     const requestOptions = {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           // Include the bearer token in the Authorization header
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(data),
       };
       try {
         const response = await fetch(`${APIENDPOINT}${endpoint}`, requestOptions);
         if (!response.ok) {
           // Handle non-successful responses
           console.log("Entereedddddddddddddd");
-          throw new Error("Cannot Fetch")
-        //   throw new Error('Network response was not ok.');
+          throw new Error('Network response was not ok.');
         }
         return await response.json();
       } catch (error) {

@@ -27,6 +27,7 @@ const ReactHookFormSelect = ({
         name={name}
         control={control}
         defaultValue={defaultValue}
+        rules={{required:true}}
       />
     </FormControl>
   );
