@@ -50,6 +50,7 @@ export default function Page() {
     const [selectedEducationInfo, setSelectedEducationInfo] = useState()
     const [selectedJobLevel, setSelectedJobLevel] = useState()
     const [selectedWorkLoc, setSelectedWorkLoc] = useState()
+    const [selectedWorkExperience, setSelectedWorkExperience] = useState()
     const [areYouSure, setAreYouSure] = useState(false)
     const [open, setOpen] = useState(true);
 
@@ -179,6 +180,9 @@ export default function Page() {
             setRequiredSkills(data.required_skills.map(data => data.id))
             setSelectedJobCategory(data.job_category.map(data => data.id))
             setSelectedEducationInfo(data.education_info.map(data => data.id))
+            setSelectedWorkLoc(worklocationType.find(loc => loc.type === data.work_location_type))
+            setSelectedJobLevel(jobLevelChoices.find(loc => loc.type === data.level))
+            setSelectedWorkExperience(workExpereinceChoices.find(loc => loc.type === data.required_years_of_experience))
         }
         catch (errors) {
             setJobDetails([])
@@ -186,11 +190,13 @@ export default function Page() {
     }
 
     const onSubmit = async (data) => {
-        console.log(data);
+        console.log(data.apply_before.format("YYYY-MM-DD"));
+        const subData = {...data, 'apply_before':data.apply_before.format("YYYY-MM-DD")}
+        console.log(subData);
         setJobSuccess(false)
         setJobError(false)
         try {
-            const res = await PutWithTokien(`/recruiter/get-job/${router.id}`, data)
+            const res = await PutWithTokien(`/recruiter/get-job/${router.id}`, subData)
             console.log("This is respooooooooooooooo");
             if (res.detail) {
                 throw new Error("Cannot Fetch")
@@ -239,21 +245,7 @@ export default function Page() {
         getJob()
     }, [])
 
-    useEffect(() => {
-        if (jobDetails && jobDetails.level) {
-            const selectedLevelObject = jobLevelChoices.find(data => data.type === jobDetails.level);
-            const selectedWorkLocObj = worklocationType.find(data => data.type === jobDetails.work_location_type)
-            if (selectedLevelObject) {
-                setSelectedJobLevel(selectedLevelObject.id);
-
-            }
-            if (selectedWorkLocObj) {
-                setSelectedWorkLoc(selectedWorkLocObj.id)
-            }
-        }
-
-
-    }, [jobDetails])
+   
 
     useEffect(() => {
         setValue("title", jobDetails.title || "");
@@ -266,10 +258,22 @@ export default function Page() {
         setValue("apply_before", dayjs(jobDetails.apply_before) || dayjs().startOf("D"));
         setValue("description", jobDetails.description || "");
         setValue("industry", industries.filter(indus => indus.title_name === jobDetails.industry)[0]?.id || '');
-        setValue("level", selectedJobLevel || '');
-        setValue("work_location_type", selectedWorkLoc || '');
+
+        if(selectedWorkLoc){
+            setValue("work_location_type", selectedWorkLoc.id || 0);
+        }
+
+        if(selectedJobLevel){
+            console.log(selectedJobLevel);
+            setValue("level", selectedJobLevel.id || 0)
+        }
+
+        if(selectedWorkExperience){
+            setValue("required_years_of_experience", selectedWorkExperience.id || 0)
+        }
 
     }, [jobDetails])
+
 
     return (
         <AdminDashBoardLayout>
@@ -295,7 +299,7 @@ export default function Page() {
             <form onSubmit={handleSubmit(onSubmit)}>
 
                 {/* Job Title */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="title" className="text-sm">Job Title*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
@@ -312,7 +316,7 @@ export default function Page() {
                 </div>
 
                 {/* Number of Vacancy */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="number_of_vacancy" className="text-sm">Number of Vacancy*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
@@ -326,7 +330,7 @@ export default function Page() {
                 </div>
 
                 {/* Salary Amount */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="salary" className="text-sm">Salary</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
@@ -341,7 +345,7 @@ export default function Page() {
 
 
                 {/* Site Location */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="job_location" className="text-sm">Site Location*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
@@ -361,7 +365,7 @@ export default function Page() {
                     name={"work_location_type"}
                     label={"Job Type"}
                     control={control}
-                    defaultValue={''}
+                    defaultValue={selectedWorkLoc ? selectedWorkLoc.id : ''}
                 >
                     {
                         worklocationType.map(data => {
@@ -399,7 +403,7 @@ export default function Page() {
                     name={"level"}
                     label={"Required Job Level"}
                     control={control}
-                    defaultValue={''}
+                    defaultValue={selectedJobLevel ? selectedJobLevel.id : ''}
                 >
                     {
                         jobLevelChoices.map(data => {
@@ -446,7 +450,7 @@ export default function Page() {
                                 labelId="skills"
                                 label="skills"
                                 multiple
-
+                                className="my-4"
                             >
                                 {skills?.map((data) => (
                                     <MenuItem value={data.id} key={data.id}>
@@ -472,7 +476,7 @@ export default function Page() {
                                 labelId="job_category"
                                 label="job_category"
                                 multiple
-
+                                className="my-4"
                             >
                                 {jobcategory?.map((data) => (
                                     <MenuItem value={data.id} key={data.id}>
@@ -491,6 +495,7 @@ export default function Page() {
                     name="education_info"
                     control={control}
                     defaultValue={[]}
+                    className="my-4"
                     render={({ field }) => (
                         <FormControl fullWidth>
                             <InputLabel id="education_info">Select Required Degree</InputLabel>
@@ -527,10 +532,11 @@ export default function Page() {
                             <DatePicker
                                 label="Apply Before"
                                 disablePast
-                                onChange={(date) => onChange(date ? date.format("YYYY-MM-DD") : "")}
+                                onChange={onChange}
                                 value={value}
                                 inputRef={ref}
                                 format={"YYYY-MM-DD"}
+                                className="mt-4"
                             />
                         </LocalizationProvider>
                     )}

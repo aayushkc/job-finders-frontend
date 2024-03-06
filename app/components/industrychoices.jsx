@@ -16,7 +16,7 @@ const ReactHookFormSelect = ({
 }) => {
   const labelId = `${name}-label`;
   return (
-    <FormControl {...props} fullWidth>
+    <FormControl {...props} fullWidth className='my-4'>
       <InputLabel id={labelId}>{label}</InputLabel>
       <Controller
          render={({ field }) => (

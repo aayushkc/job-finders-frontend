@@ -10,7 +10,7 @@ export default function SelectComponent({
     ...props }) {
     const lableIdTxt = name + "-" + label
     return (
-        <FormControl {...props} fullWidth>
+        <FormControl {...props} fullWidth className="my-4">
             <InputLabel id={lableIdTxt}>{label}</InputLabel>
             <Controller
                 render={({ field }) => (

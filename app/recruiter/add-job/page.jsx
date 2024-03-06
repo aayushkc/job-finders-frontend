@@ -186,10 +186,10 @@ export default function Page() {
                         />
             }
             <h1 className="text-3xl font-semibold">Add Job Vacancy</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
 
                 {/* Job Title */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="tile" className="text-sm">Job Title*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
@@ -208,11 +208,11 @@ export default function Page() {
                 </div>
 
                 {/* Number of Vacancy */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="vacancy-number" className="text-sm">Number of Vacancy*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
-                            {...register("number_of_vacancy", { required: true })}
+                            {...register("number_of_vacancy", { required: true, min:1 })}
                             type="number"
                             name='number_of_vacancy'
                             id="number_of_vacancy"
@@ -222,7 +222,7 @@ export default function Page() {
                 </div>
 
                 {/* Salary Amount */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="salary" className="text-sm">Salary</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
@@ -237,7 +237,7 @@ export default function Page() {
 
 
                 {/* Site Location */}
-                <div className="">
+                <div className="my-4">
                     <label htmlFor="site-location" className="text-sm">Site Location*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
@@ -257,6 +257,7 @@ export default function Page() {
                     name={"work_location_type"}
                     label={"Job Type"}
                     control={control}
+                    defaultValue={''}
                 >
                     {
                         worklocationType.map(data => {
@@ -274,6 +275,7 @@ export default function Page() {
                     name={"required_years_of_experience"}
                     label={"Required Years of Experience"}
                     control={control}
+                    defaultValue={''}
                 >
                     {
                         workExpereinceChoices.map(data => {
@@ -293,6 +295,7 @@ export default function Page() {
                     name={"level"}
                     label={"Required Job Level"}
                     control={control}
+                    defaultValue={''}
                 >
                     {
                         jobLevelChoices.map(data => {
@@ -339,6 +342,7 @@ export default function Page() {
                                 label="skills"
                                 multiple
                                 defaultValue={[]}
+                                className="my-4"
                             >
                                 {skills?.map((data) => (
                                     <MenuItem value={data.id} key={data.id}>
@@ -368,6 +372,7 @@ export default function Page() {
                                 label="job_category"
                                 multiple
                                 defaultValue={[]}
+                                className="my-4"
                             >
                                 {jobcategory?.map((data) => (
                                     <MenuItem value={data.id} key={data.id}>
@@ -397,6 +402,7 @@ export default function Page() {
                                 label="education_info"
                                 multiple
                                 defaultValue={[]}
+                                className="my-4"
                             >
                                 {educationIfon?.map((data) => (
                                     <MenuItem value={data.id} key={data.education_level}>
@@ -429,6 +435,7 @@ export default function Page() {
                                 value={value}
                                 inputRef={ref}
                                 format={"YYYY/MM/DD"}
+                                className="mt-4"
                             />
                         </LocalizationProvider>
                     )}

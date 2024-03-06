@@ -58,7 +58,7 @@ export default function NavBar(){
     },[handleLogOut])
     return(
 
-        <header className="sm:px-40 sm:py-6">
+        <header className="sm:px-40 sm:py-6 border-[1px] border-b-[#CFD1D4]">
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
                     <Link href="/">
