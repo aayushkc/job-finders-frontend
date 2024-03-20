@@ -9,15 +9,15 @@ import AdminNav from "../components/adminnav";
 const sans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Hire Gurkha Recruiter",
+  title: "Hire Gurkha Superadmin",
   description: "Hire gurkha",
 };
 
-export default function RecruiterLayout({children}){
+export default function SuperAdminLayout({children}){
   return (
     <html lang="en">
       <body className={sans.className}>
-        <AdminNav isRecruiter={true}></AdminNav>
+        <AdminNav isSuperAdmin={true}></AdminNav>
         <main className="">
           
         {children}

@@ -6,7 +6,7 @@ import { Roboto } from "next/font/google";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
@@ -36,6 +36,8 @@ export default function NavBar(){
     const [hamburg, setHamBurg] = useState(false)
     const router = useRouter();
     const [isLogedIn, setIsLogedIn] = useState(false)
+    const currentRoute = usePathname();
+    console.log(currentRoute);
 
     const handleClick = () =>{
         console.log("Aaaa");
@@ -72,7 +74,9 @@ export default function NavBar(){
                <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" :"hidden "} bottom-0  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4`}>
                     {
                         NavItems.map((data,index) =>{
-                            return <Link href={data.link} key={index} onClick={handleClick}><li className="mb-4 sm:mb-0">{data.item}</li></Link>
+                            return <Link href={data.link} key={index} onClick={handleClick}>
+                                <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
+                                </Link>
                         })
                     }
 

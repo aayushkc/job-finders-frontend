@@ -29,6 +29,7 @@ export default function LoginForm(){
           const userId = decodedToken.userId; 
           const isRecruiter = decodedToken.isRecruiter; 
           const isSeeker = decodedToken.isSeeker; 
+          const isSuperAdmin = decodedToken.isSuperAdmin
           Cookies.set('accessToken', data.access, { expires: 1 });
           Cookies.set('userId', userId); // Store user ID in cookie (optional)
           if(isRecruiter){
@@ -36,6 +37,9 @@ export default function LoginForm(){
           }
           if(isSeeker){
             router.push('/');
+          }
+          if(isSuperAdmin){
+            router.push('/view-all-pending-jobs')
           }
          
         } else {

@@ -26,6 +26,7 @@ const FroalaEditor = dynamic(
 export default function Page() {
     const accessToken = Cookies.get('accessToken')
     const router = useParams()
+    console.log(router.id)
     const navigate = useRouter()
     const {
         handleSubmit,

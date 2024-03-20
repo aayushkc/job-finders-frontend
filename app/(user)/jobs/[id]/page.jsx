@@ -18,8 +18,7 @@ import PostWithTokien from "@/app/api/postWithToken"
 import PostFormWithToken from "@/app/api/postFormWithToken"
 import DialogBox from "@/app/components/sucessbox"
 import JobPanelData from "@/app/components/JobPanelData"
-import { useParams, useSearchParams,useRouter, usePathname } from "next/navigation"
-
+import { useParams, useSearchParams } from "next/navigation"
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -33,20 +32,18 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 
 export default function JobDetail() {
-    const serachParam = useSearchParams()
-    const router = useRouter()
-    const pathname = usePathname()
+    const router = useSearchParams()
     const accessToken = Cookies.get('accessToken')
     const [recommendedJobs, setRecommendedJobs] = useState([])
     const [jobPanelData, setJobPanelData] = useState()
     const [totalPage, setTotalPage] = useState(1)
     const [totalJobMatch, setTotalJobMatch] = useState(0)
-    const [pageNum, setPageNum] = useState(serachParam.get("pageNum")||1)
+    const [pageNum, setPageNum] = useState(router.get("pageNum")||1)
     const [isAppliedClicked, setIsApplied] = useState(false)
     const [open, setOpen] = useState(true);
     const [success, setSuccess] = useState(false)
     const [falliure, setFaliure] = useState(false)
-    console.log(serachParam.get("id"), serachParam.get("pageNum"));
+    console.log(router.get("id"), router.get("pageNum"));
     const handleClose = () => {
         setOpen(false);
         setIsApplied(false)
@@ -58,7 +55,7 @@ export default function JobDetail() {
         setFaliure(false)
         setIsApplied(true)
     }
-    const getRecommendedJobs = async (pageChange) => {
+    const getRecommendedJobs = async () => {
         try {
             const data = await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}`, accessToken)
             if (data.detail) {
@@ -70,10 +67,8 @@ export default function JobDetail() {
             setTotalJobMatch(data.count)
             setTotalPage(pages)
             setRecommendedJobs(data.results)
-            if(pageChange){
-                setJobPanelData(data.results[0])
+            // setJobPanelData(data.results[0])
 
-            }
         }
         catch (errors) {
             setRecommendedJobs([])
@@ -128,31 +123,18 @@ export default function JobDetail() {
     }
 
     useEffect(() => {
-        
-        if(serachParam.get("id") && serachParam.get("pageNum")){
-            getRecommendedJobs()
-        }
-            const nextSearchParams = new URLSearchParams(serachParam.toString())
-            nextSearchParams.delete('id')
-            nextSearchParams.delete('pageNum')
-            
-            router.replace(`${pathname}?${nextSearchParams}`)
-        if(!serachParam.get("id")){
-            getRecommendedJobs(true)
-        }
-           
+        getRecommendedJobs()
     }, [pageNum])
 
+    useEffect(() =>{
+        setJobPanelData(recommendedJobs[0])
+    },[recommendedJobs])
 
     useEffect(()=>{
-        if(serachParam.get("id") && serachParam.get("pageNum")){
-            getJobFromId(serachParam.get("id"))
-            setPageNum(serachParam.get("pageNum"))
+        if(router.get("id") && router.get("pageNum")){
+            getJobFromId(router.get("id"))
+            setPageNum(router.get("pageNum"))
         }
-        else{
-            getRecommendedJobs(true)
-        }
-     
       
 
     },[])
@@ -234,7 +216,7 @@ export default function JobDetail() {
                             recommendedJobs?.map(data => {
                                 return (
                                     <div>
-                                        <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => {setJobPanelData(data); getJobFromId(data.id); }}>
+                                        <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData.id && 'bg-[#EBF3FA]'}`} key={data.id} onClick={(e) => {setJobPanelData(data); getJobFromId(data.id); }}>
                                             <div className="flex items-center gap-6">
                                                 <div className="w-[55px] h-[55px]">
                                                     <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
@@ -273,7 +255,7 @@ export default function JobDetail() {
            
 
                     {
-                        jobPanelData?.id ?
+                        jobPanelData.id ?
 
                         
                         <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick}/>

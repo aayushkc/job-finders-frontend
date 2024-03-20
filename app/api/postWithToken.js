@@ -17,6 +17,8 @@ export default async function PostWithTokien(endpoint, data){
         if (!response.ok) {
           // Handle non-successful responses
           console.log("Entereedddddddddddddd");
+          const data = await response.json()
+          console.log(data);
           throw new Error("Cannot Fetch")
         //   throw new Error('Network response was not ok.');
         }
