@@ -25,7 +25,7 @@ export default function ApplicantDisplayCard({ applicant }) {
                         <p className="text-[#4F5052] text-sm">Skills:</p>
                         {data.job_seeker.seeker_details.skills.map((data, index) => {
                             console.log(data)
-                            return <p className="bg-[#F3F4F8] text-black text-xs font-light p-2 rounded-xl" key={index}>{data}</p>
+                            return <p className="bg-[#F3F4F8] text-black text-xs font-light p-2 rounded-xl" key={index}>{data.title}</p>
                         })}
 
                     </div>

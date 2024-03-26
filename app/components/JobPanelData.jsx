@@ -7,19 +7,27 @@ const FroalaEditor = dynamic(
     () => import('react-froala-wysiwyg/FroalaEditorView'),
     { ssr: false }
 );
-export default function JobPanelData({jobPanelData, handleApplyClick}){
+export default function JobPanelData({jobPanelData, handleApplyClick,isUserLoged}){
     return(
         <div className="py-4 px-16 h-screen overflow-y-scroll">
                             <div className="flex justify-between items-center">
                                 <h2 className="font-bold text-2xl">{jobPanelData.title}</h2>
-                                {jobPanelData.hasApplied ?
-                                    <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
-                                        Already Applied
-                                    </button>
-                                    :
-                                    <button onClick={() =>handleApplyClick()} className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
-                                        Apply Now
-                                    </button>}
+                                {
+                                    isUserLoged ?
+                                    jobPanelData.hasApplied ?
+                                        <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
+                                            Already Applied
+                                        </button>
+                                        :
+                                        <button onClick={() =>handleApplyClick()} className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                                            Apply Now
+                                        </button>
+                                     :
+                                     <button disabled className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                                     Log In to Apply
+                                 </button>
+                                }
+                               
 
                             </div>
 
@@ -97,11 +105,20 @@ export default function JobPanelData({jobPanelData, handleApplyClick}){
                                     <p className="text-[#01B46A]">{jobPanelData.salary} $/month </p>
                                 </div>
                             </div>
-
-                            {!jobPanelData.hasApplied &&
-                                <button onClick={() =>handleApplyClick()} className="bg-[#FFB000] rounded-3xl py-2 px-6 mt-4 text-white">
+                            {
+                                isUserLoged ? 
+                                !jobPanelData.hasApplied &&
+                                (<button onClick={() =>handleApplyClick()} className="bg-[#FFB000] rounded-3xl py-2 px-6 mt-4 text-white">
                                     Apply Now
-                                </button>}
+                                </button>)
+                                :
+
+                                <button disabled className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                                Log In to Apply
+                            </button>
+                            }
+
+                            
 
                         </div>
     )

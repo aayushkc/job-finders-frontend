@@ -14,9 +14,12 @@ import { InlineWidget, useCalendlyEventListener } from "react-calendly";
 import { Controller, useForm } from 'react-hook-form'
 
 
-const FroalaEditor = dynamic(
-  () => import('react-froala-wysiwyg'),
-  { ssr: false }
+import 'react-quill/dist/quill.snow.css';
+
+
+const ReactQuillEditable = dynamic(
+    () => import ('react-quill'),
+    { ssr: false }
 );
 export default function HireCandidates() {
   const router = useRouter()
@@ -127,6 +130,7 @@ export default function HireCandidates() {
   })
 
   const onSubmit = async (data) => {
+  
     const d ={...data, 
       "job_location_type":parseInt(data.job_location_type),
       "required_years_of_experience":parseInt(data.required_years_of_experience),
@@ -185,7 +189,7 @@ export default function HireCandidates() {
             :
             (
               <section className="flex justify-center mb-6">
-              <form onSubmit={handleSubmit(onSubmit)} className="mt-6 bg-[#F3F4F8] p-6 rounded-xl">
+              <form onSubmit={handleSubmit(onSubmit)} className="mt-6 bg-[#F3F4F8] p-6 rounded-xl max-w-[800px]">
   
                 {/* Job Title */}
                 <div className="my-4">
@@ -376,7 +380,7 @@ export default function HireCandidates() {
                 <div className="my-4">
                   <Controller
                     control={control}
-                    name="prefferd_job"
+                    name="job_category"
                     render={({ field: { onChange } }) => (
                       <Autocomplete
                         defaultValue={[]}
@@ -390,10 +394,10 @@ export default function HireCandidates() {
                         renderInput={(params) => (
                           <TextField
                             {...params}
-                            label="Job Industries"
-                            placeholder="Job Industries"
-                            helperText={errors.prefferd_job?.message}
-                            error={!!errors.prefferd_job}
+                            label="Choose Job KeyWords"
+                            placeholder="Choose Job KeyWords"
+                            helperText={errors.job_category?.message}
+                            error={!!errors.job_category}
                           />
                         )}
                       />
@@ -421,8 +425,8 @@ export default function HireCandidates() {
                         renderInput={(params) => (
                           <TextField
                             {...params}
-                            label="Job Industries"
-                            placeholder="Job Industries"
+                            label="Choose Required Education Level"
+                            placeholder="Choose Required Education Level"
                             helperText={errors.prefferd_job?.message}
                             error={!!errors.prefferd_job}
                           />
@@ -472,12 +476,11 @@ export default function HireCandidates() {
                       defaultValue={""}
                       rules={{ required: true }}
                       render={({ field: { onChange, value } }) => (
-                        <FroalaEditor
-                          model={value}
-                          onModelChange={onChange}
-                          tag="textarea"
-  
-                        />
+                        <ReactQuillEditable 
+                              theme="snow" 
+                              value={value} 
+                              onChange={onChange} 
+                              className="w-full bg-white "/>
   
                       )}
                     />

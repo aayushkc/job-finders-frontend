@@ -4,9 +4,10 @@ import Logo from "../../public/images/logo.png"
 
 import { Roboto } from "next/font/google";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "../utils/checkIsLoggedIn";
 
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
@@ -31,11 +32,26 @@ const NavItems = [
     },
   
 ]
-export default function NavBar(){
 
+
+
+const NavAnonItems = [
+    {
+        "item":"Home",
+        "link":"/"
+    },
+
+    {
+        "item":"Job",
+        "link":"/jobs"
+    },
+   
+  
+]
+export default function NavBar(){
+    const {isLoggedIn, setIsLoggedIn} = useAuth()
     const [hamburg, setHamBurg] = useState(false)
     const router = useRouter();
-    const [isLogedIn, setIsLogedIn] = useState(false)
     const currentRoute = usePathname();
     console.log(currentRoute);
 
@@ -52,9 +68,9 @@ export default function NavBar(){
 
     useEffect(()=>{
         if(Cookies.get('accessToken')){
-            setIsLogedIn(true)
+            setIsLoggedIn(true)
         }else{
-            setIsLogedIn(false)
+            setIsLoggedIn(false)
         }
        
     },[handleLogOut])
@@ -73,7 +89,14 @@ export default function NavBar(){
               
                <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" :"hidden "} bottom-0  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4`}>
                     {
-                        NavItems.map((data,index) =>{
+                        isLoggedIn ?NavItems.map((data,index) =>{
+                            return <Link href={data.link} key={index} onClick={handleClick}>
+                                <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
+                                </Link>
+                        })
+
+                        :
+                        NavAnonItems.map((data,index) =>{
                             return <Link href={data.link} key={index} onClick={handleClick}>
                                 <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                                 </Link>
@@ -84,7 +107,7 @@ export default function NavBar(){
                 </ul>
              
                   
-                   {isLogedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>: <Link href="/signin" className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl">Login</button></Link> }
+                   {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>: <Link href="/signin" className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl">Login</button></Link> }
                
             </nav>
         </header>

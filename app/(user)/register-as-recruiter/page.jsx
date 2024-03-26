@@ -12,10 +12,14 @@ import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { useRouter } from 'next/navigation'
 import dayjs from "dayjs";
 import DialogBox from "@/app/components/sucessbox";
+import { useAuth } from "@/app/utils/checkIsLoggedIn";
+import { APIENDPOINT } from "@/app/api/APIENDPOINT";
+import { ClipLoader } from "react-spinners";
 
 export default function SignInUser() {
 
     const router = useRouter()
+    const { isLoggedIn } = useAuth();
     const [isNextClicked, setIsNextClicked] = useState(false)
     const [meeting_date, setDate] = useState(new Date());
     const [meeting_time, setTime] = useState();
@@ -53,7 +57,7 @@ export default function SignInUser() {
         setRegistrationSuccess(false)
         setErrorStatus(false)
         try {
-            const response = await fetch('http://127.0.0.1:8000/generate-recruiter-lead', {
+            const response = await fetch(`${APIENDPOINT}/generate-recruiter-lead`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,13 +87,11 @@ export default function SignInUser() {
     }
 
     const handleDate = (e) => {
-        const dateFormat = `${e.$y}-${e.$M}-${e.$D}`
-        console.log(dateFormat)
         setFormData(prevState => ({
             ...prevState,
-            meeting_date: dateFormat
+            meeting_date: e.format("YYYY-MM-DD")
         }));
-        setDate(dateFormat);
+        setDate(e);
     }
 
     const handleTime = (t) => {
@@ -102,6 +104,10 @@ export default function SignInUser() {
         setTime(timeFormat)
     }
 
+    useEffect(() =>{
+        if(isLoggedIn) router.back()
+      },[isLoggedIn])
+    
     useEffect(()=>{
         setRegistrationSuccess(false)
         setErrorStatus(false)
@@ -110,7 +116,7 @@ export default function SignInUser() {
         <main className="signin grid">
             {
                 registrationSuccess && <DialogBox
-                    url={"/register-as-recruiter"}
+                    url={"/signin"}
                     goToPageName={"Back"}
                     dialogHeading={"Successfully Sent Email"}
                     dialogText={"Our team will reach out to you through. Please Check your email"}
@@ -144,15 +150,17 @@ export default function SignInUser() {
                     {
                         isNextClicked ?
                             <>
+                            <em className="text-lg font-bold">Choose Meeting date and Meeting Time to verify profile.</em>
 
                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                    <DateCalendar className="bg-white text-black m-0 rounded-xl" disablePast={true} onChange={handleDate} />
+                                    <DateCalendar className="bg-white text-black m-0 rounded-xl border-2 border-black" disablePast={true} onChange={handleDate} />
                                     <div className="mt-8 mb-8">
                                         <label >Select Time*</label>
                                         <DigitalClock
                                             className="bg-white text-black rounded xl mt-10"
                                             onChange={handleTime}
-                                            skipDisabled minTime={dayjs('2022-04-17T09:00')}
+                                            skipDisabled 
+                                            minTime={dayjs('2022-04-17T09:00')}
                                             maxTime={dayjs('2022-04-17T19:00')} />
                                     </div>
 
@@ -182,7 +190,25 @@ export default function SignInUser() {
 
 
                     {
-                        isNextClicked ? <button className={`uppercase font-bold  rounded-xl py-3 px-6 w-full mt-6 ${isButtonDisabled ? 'bg-[#F3F4F8] text-black cursor-not-allowed pointer-events-none ' : 'bg-gurkha-yellow text-white'}`} onClick={handleRegisterClick}>Register</button> : <button className="uppercase bg-gurkha-yellow font-bold text-white rounded-xl py-3 px-6 w-full mt-6" onClick={handleNextClick}>Next</button>
+                        isNextClicked ? 
+                        <button 
+                            className={`uppercase font-bold flex justify-center items-center gap-4  rounded-xl py-3 px-6 w-full mt-6 ${isButtonDisabled ? 'bg-[#F3F4F8] text-black cursor-not-allowed' : 'bg-gurkha-yellow text-white'}`} 
+                            onClick={handleRegisterClick}
+                            disabled={isButtonDisabled}
+                            >
+                               {isButtonDisabled && <ClipLoader
+                         color={"#FFFFFF"}
+                         loading={true}
+                         size={20}
+                         aria-label="Loading Spinner"
+                         data-testid="loader"
+                       />
+                          }
+                          Register
+                        
+                        </button> 
+                        : 
+                        <button className="uppercase bg-gurkha-yellow font-bold text-white rounded-xl py-3 px-6 w-full mt-6" onClick={handleNextClick}>Next</button>
                     }
 
                 </form>

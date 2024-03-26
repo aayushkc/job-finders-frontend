@@ -12,17 +12,13 @@ import ReactHookFormSelect from "../components/industrychoices";
 import { Button, MenuItem, Vis, styled } from "@mui/material";
 import GetRequestNoToken from "../api/getRequestNoToken";
 import { useRouter } from "next/navigation";
+import { APIENDPOINT } from "../api/APIENDPOINT";
+import 'react-quill/dist/quill.snow.css';
 
-//Read-only Editor
-const FroalaEditor = dynamic(
-  () => import('react-froala-wysiwyg/FroalaEditorView'),
-  { ssr: false }
-);
 
-//Writeable Editor
-const FroalaEditorEditable = dynamic(
-  () => import('react-froala-wysiwyg'),
-  { ssr: false }
+const ReactQuillEditable = dynamic(
+    () => import ('react-quill'),
+    { ssr: false }
 );
 
 export default function Home() {
@@ -72,18 +68,18 @@ export default function Home() {
   const getProfile = async () => {
     const accessToken = Cookies.get('accessToken');
 
-    
+
     const requestOptions = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        
+
         Authorization: `Bearer ${accessToken}`,
       },
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/recruiter/get-recruiter-profile/', requestOptions);
+      const response = await fetch(`${APIENDPOINT}/recruiter/get-recruiter-profile/`, requestOptions);
       if (!response.ok) {
         const data = await response.json();
         console.log(data);
@@ -102,7 +98,7 @@ export default function Home() {
           }
         )
         router.push("/recruiter/create-profile-details")
-        
+
       }
       const data = await response.json();
       setProfileDetails(data)
@@ -198,7 +194,7 @@ export default function Home() {
     setValue("description", profileDetail[0]?.description || "");
     setValue("logo", profileDetail[0]?.logo || "");
   }, [profileDetail])
-  
+
 
   //Code to preview the selected image file on browser
   useEffect(() => {
@@ -215,7 +211,7 @@ export default function Home() {
   }, [selectedFile])
 
 
-  
+
 
   return (
 
@@ -263,7 +259,7 @@ export default function Home() {
               </div>
             </form>
 
-            
+
             {/* Phone Fields */}
             <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="phone" className="text-sm">Phone</label>
@@ -284,7 +280,7 @@ export default function Home() {
 
           </div>
 
-          
+
           {/* Comapany Logo Fields */}
           <form onSubmit={handleSubmit(onFileSubmit)} encType="multipart/form-data" className="text-center">
 
@@ -295,7 +291,7 @@ export default function Home() {
                     <div className='w-[101px] h-[71px] mb-3'>
                       {
                         //Previews the image
-                        selectedFile ? <img src={preview} className='w-full h-full object-contain' /> : "" 
+                        selectedFile ? <img src={preview} className='w-full h-full object-contain' /> : ""
                       }
                     </div>
 
@@ -317,26 +313,26 @@ export default function Home() {
 
 
                   </div>
-                 
+
 
 
                   :
-                 
+
                   <img src={profileDetail[0] ? profileDetail[0].logo : ImageSkleton} alt="logo" className="object-contain" />
-                 
+
               }
 
-              
+
             </div>
             {
-                profilePic ?
-                  <div className="flex gap-2 flex-col items-center font-bold text-[#414C61] mt-3">
-                    <button type="submit" className="bg-[#99E8A5] py-2 px-3 text-sm rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Upload Image</button>
-                    <button onClick={() => setProfilePic(false)} className="bg-red-400 py-2 px-3 rounded-2xl">Cancel</button>
-                  </div>
-                  :
-                  <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer text-center" onClick={() => setProfilePic(true)}></i>
-              }
+              profilePic ?
+                <div className="flex gap-2 flex-col items-center font-bold text-[#414C61] mt-3">
+                  <button type="submit" className="bg-[#99E8A5] py-2 px-3 text-sm rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Upload Image</button>
+                  <button onClick={() => setProfilePic(false)} className="bg-red-400 py-2 px-3 rounded-2xl">Cancel</button>
+                </div>
+                :
+                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer text-center" onClick={() => setProfilePic(true)}></i>
+            }
 
           </form>
         </div>
@@ -398,7 +394,7 @@ export default function Home() {
                     })
                   }
                 </ReactHookFormSelect>
-                
+
                 :
                 <input type="text" value={profileDetail[0]?.industry} id="industry" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled placeholder="Industry" />
             }
@@ -415,8 +411,8 @@ export default function Home() {
           </div>
         </form>
 
-          {/* Description Fields */}
-          {/* In import FroalaEditorEditable is the editable editor while
+        {/* Description Fields */}
+        {/* In import FroalaEditorEditable is the editable editor while
               FroalaEditor is a viewable editor */}
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="description" className="text-sm">Description</label>
@@ -429,21 +425,23 @@ export default function Home() {
                   control={control}
                   defaultValue={""}
                   render={({ field: { onChange, value } }) => (
-                    <FroalaEditorEditable
-                      model={value}
-                      onModelChange={onChange}
-                      tag="textarea"
-
+                    <ReactQuillEditable
+                      theme="snow"
+                      value={value}
+                      onChange={onChange}
+                      className="w-full bg-white "
                     />
+
                   )}
                 />
 
                 :
                 <div className="w-full rounded-xl bg-white py-4 px-3 text-black min-h-[300px] ">
-                  <FroalaEditor
-                    model={profileDetail[0]?.description}
-                    className="bg-white h-[300px]"
-                  />
+                   <ReactQuillEditable
+                      theme="snow"
+                      readOnly
+                      className="w-full bg-white min-h-[300px]"
+                    />
                 </div>
 
             }

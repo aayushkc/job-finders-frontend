@@ -11,9 +11,11 @@ import PostFormWithToken from "@/app/api/postFormWithToken";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { useAuth } from "@/app/utils/checkIsLoggedIn";
 
 export default function CreateProfile() {
     const router = useRouter()
+    const { isLoggedIn } = useAuth();
     const [industries, setIndustries] = useState([]);
     const [selectedFile, setSelectedFile] = useState()
     const [preview, setPreview] = useState()
@@ -112,6 +114,9 @@ export default function CreateProfile() {
     //     return () => URL.revokeObjectURL(objectUrl)
     // }, [selectedFile])
 
+    useEffect(() =>{
+        if(!isLoggedIn) router.push("/signin")
+      },[isLoggedIn])
 
     useEffect(() => {
         if (!selecteProfilePhoto) {

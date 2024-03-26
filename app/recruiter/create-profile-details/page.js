@@ -2,22 +2,22 @@
 
 
 import AdminDashBoardLayout from "../../components/DashBoardLayout/index";
-
 import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import dynamic from 'next/dynamic';
-import PatchRequest from "../../api/patchRequest";
-import ReactHookFormSelect from "../../components/industrychoices";
-import { Button, MenuItem, Vis, selectClasses, styled } from "@mui/material";
+import { Autocomplete, Button, MenuItem, TextField, Vis, selectClasses, styled } from "@mui/material";
 import GetRequestNoToken from "../../api/getRequestNoToken";
-import PostWithTokien from "@/app/api/postWithToken";
 import PostFormWithToken from "@/app/api/postFormWithToken";
 import { useRouter } from "next/navigation";
+import { APIENDPOINT } from "@/app/api/APIENDPOINT";
+import { ClipLoader } from "react-spinners";
 
-//Writeable Editor
-const FroalaEditorEditable = dynamic(
-    () => import('react-froala-wysiwyg'),
+import 'react-quill/dist/quill.snow.css';
+
+
+const ReactQuillEditable = dynamic(
+    () => import ('react-quill'),
     { ssr: false }
 );
 
@@ -73,6 +73,7 @@ export default function CreateProfileDetails() {
 
     const onSubmit = async (data) => {
         const formData = new FormData()
+        console.log(data);
         formData.append("name", data.name)
         formData.append("company_url", data.company_url)
         formData.append("company_size", data.company_size)
@@ -130,7 +131,7 @@ export default function CreateProfileDetails() {
         };
     
         try {
-          const response = await fetch('http://127.0.0.1:8000/recruiter/get-recruiter-profile/', requestOptions);
+          const response = await fetch(`${APIENDPOINT}/recruiter/get-recruiter-profile/`, requestOptions);
           if (response.ok) {
             // Handle non-successful responses
             router.push("/recruiter")
@@ -186,7 +187,7 @@ export default function CreateProfileDetails() {
 
                 <label htmlFor="phone" className="text-sm">Phone</label>
                 <div className="flex gap-4 items-center mt-1">
-                    <input type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Phone number" />
+                    <input min="1" type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Phone number" />
 
                 </div>
 
@@ -195,7 +196,7 @@ export default function CreateProfileDetails() {
 
                  <label htmlFor="size" className="text-sm">Company Size</label>
                 <div className="flex gap-4 items-center mt-1">
-                    <input type="number" {...register("company_size", { required: "Size is required" })} id="size" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Phone number" />
+                    <input min="1" type="number" {...register("company_size", { required: "Size is required" })} id="size" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Number of Employee" />
 
                 </div>
 
@@ -226,7 +227,7 @@ export default function CreateProfileDetails() {
                                 render={({ field: { onChange } }) =>
                                     <Button component="label" variant="contained" sx={{ backgroundColor: '#49C199', color: 'white', textTransform: "capitalize", border: "1px solid #475569", width: "max-content" }}>
                                         Choose Image
-                                        <VisuallyHiddenInput type="file" onChange={handleChange} />
+                                        <VisuallyHiddenInput type="file" onChange={handleChange} accept=".jpeg,.jpg, .png"/>
                                     </Button>}
                             ></Controller>
 
@@ -256,16 +257,42 @@ export default function CreateProfileDetails() {
 
                 <label htmlFor="company_url" className="text-sm">Company Website URL</label>
                 <div className="flex gap-4 items-center mt-1">
-                    <input type="text" {...register("company_url", { required: "Url is required" })} id="company_url" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="URL" />
+                    <input type="text" {...register("company_url", { required: "Url is required" })} id="company_url" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="https://example.com" />
 
                 </div>
 
 
 
                 {/* Comany Industry Fields */}
+                <div className="my-4">
+                  <Controller
+                    control={control}
+                    name="industry"
+                    rules={{required:"Industry is required"}}
+                    render={({ field: { onChange } }) => (
+                      <Autocomplete
+                        defaultValue={null}
+                        options={industries}
+                        getOptionLabel={(option) => option.title_name}
+                        onChange={(event, values) => {
+                          onChange(values?.id)
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Choose One Domain"
+                            placeholder="Choose One Domain"
+                            helperText={errors.industry?.message}
+                            error={!!errors.industry}
+                          />
+                        )}
+                      />)}
+                  />
+  
+                </div>
+  
 
-
-                <label htmlFor="industry" className="text-sm">Industry</label>
+                {/* <label htmlFor="industry" className="text-sm">Industry</label>
                 <div className="flex gap-4 items-center mt-1">
 
                     <ReactHookFormSelect
@@ -286,7 +313,7 @@ export default function CreateProfileDetails() {
 
 
 
-                </div>
+                </div> */}
 
 
                 {/* Description Fields */}
@@ -298,14 +325,13 @@ export default function CreateProfileDetails() {
                     <Controller
                         name="description"
                         control={control}
+                        rules={{
+                            required:"Description is Required"
+                        }}
                         defaultValue={""}
                         render={({ field: { onChange, value } }) => (
-                            <FroalaEditorEditable
-                                model={value}
-                                onModelChange={onChange}
-                                tag="textarea"
-
-                            />
+            
+                            <ReactQuillEditable theme="snow" value={value} onChange={onChange} className="w-full bg-white "/>
                         )}
                     />
 
@@ -318,17 +344,13 @@ export default function CreateProfileDetails() {
                     className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
                 >
                     {isSubmitting ? (
-                        <div role="status">
-                            <svg
-                                aria-hidden="true"
-                                className="inline w-6 h-6 mr-2 text-white animate-spin fill-rose-600 opacity-100"
-                                viewBox="0 0 100 101"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                {/* SVG for Spinner Animation */}
-                            </svg>
-                        </div>
+                        <ClipLoader
+                        color={"#FFFFFF"}
+                        loading={true}
+                        size={20}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
                     ) : (
                         "Submit Details"
                     )}

@@ -60,7 +60,8 @@ export default function JobDetail() {
     }
     const getRecommendedJobs = async (pageChange) => {
         try {
-            const data = await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}`, accessToken)
+
+            const data = accessToken ? await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}`, accessToken) : await GetRequestNoToken(`/job-seeker/get-all-job/?page=${pageNum}`)
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
@@ -82,7 +83,7 @@ export default function JobDetail() {
 
     const getJobFromId = async (id) => {
         try {
-            const data = await getRequestWithToken(`/job-seeker/get-job/${id}`,accessToken)
+            const data = await GetRequestNoToken(`/job-seeker/get-job/${id}`)
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
@@ -276,7 +277,7 @@ export default function JobDetail() {
                         jobPanelData?.id ?
 
                         
-                        <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick}/>
+                        <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick} isUserLoged = {accessToken}/>
                         :
                         <div className="flex justify-center items-center text-4xl font-bold">
                                 <h2>Loading.........</h2>

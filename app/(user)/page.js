@@ -7,6 +7,8 @@ import getRequestWithToken from "../api/getRequestWithToken";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PaginationComponent from "../components/paginationcomponent";
+import { APIENDPOINT } from "../api/APIENDPOINT";
+import AnonUserHomePage from "../components/anonymoususerhomepage";
 export default function Home() {
   const accessToken = Cookies.get('accessToken')
   const [recommendedJobs, setRecommendedJobs] = useState([])
@@ -56,7 +58,7 @@ export default function Home() {
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/job-seeker/check-seeker-details/', requestOptions);
+      const response = await fetch(`${APIENDPOINT}/job-seeker/check-seeker-details/`, requestOptions);
       if (!response.ok) {
         router.push("/create-profile")
 
@@ -76,14 +78,24 @@ export default function Home() {
 
   }
   useEffect(() => {
-    getRecommendedJobs()
+    if(accessToken){
+      getRecommendedJobs()
+    }
+   
   }, [pageNum])
 
   useEffect(() => {
-    checkSeekerDetails()
+    if(accessToken){
+      checkSeekerDetails()
+    }
+
   }, [])
 
+
   return (
+    accessToken ?
+  
+
     <>
       <section className="text-center bg-white pt-8">
         <h1 className="text-[#193855] font-bold text-5xl leading-[78.4px]">Welcome to Hire Gurkha</h1>
@@ -132,10 +144,11 @@ export default function Home() {
                           <i className="bi bi-people text-xl"></i>
                           <p className="text-[#01B46A]">{data.applied} Applied</p>
                         </div>
-
+                        <Link href={`/jobs?id=${data.id}&pageNum=1`}>
                         <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
                           Apply Now
                         </button>
+                        </Link>
                       </div>
                     </div>
 
@@ -222,5 +235,14 @@ export default function Home() {
 
       </section>
     </>
+
+    :
+    <>
+    <AnonUserHomePage pageNum={pageNum} totalPage={totalPage}/>
+    <div className="flex justify-center mt-10">
+           <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
+         </div>
+
+   </>
   );
 }

@@ -19,8 +19,12 @@ import Cookies from "js-cookie";
 import PutWithTokien from "@/app/api/putRequest";
 import DeleteRequest from "@/app/api/deleteRequest";
 import { useTheme } from '@mui/material/styles';
-const FroalaEditor = dynamic(
-    () => import('react-froala-wysiwyg'),
+import { ClipLoader } from "react-spinners";
+import 'react-quill/dist/quill.snow.css';
+
+
+const ReactQuillEditable = dynamic(
+    () => import ('react-quill'),
     { ssr: false }
 );
 export default function Page() {
@@ -553,11 +557,11 @@ export default function Page() {
                             name="description"
                             defaultValue={""}
                             render={({ field: { onChange, value } }) => (
-                                <FroalaEditor
-                                    model={value}
-                                    onModelChange={onChange}
-                                    tag="textarea"
-
+                                <ReactQuillEditable 
+                                theme="snow" 
+                                value={value} 
+                                onChange={onChange} 
+                                className="w-full bg-white "
                                 />
 
                             )}
@@ -575,17 +579,13 @@ export default function Page() {
                         className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
                     >
                         {isSubmitting ? (
-                            <div role="status">
-                                <svg
-                                    aria-hidden="true"
-                                    className="inline w-6 h-6 mr-2 text-white animate-spin fill-rose-600 opacity-100"
-                                    viewBox="0 0 100 101"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    {/* SVG for Spinner Animation */}
-                                </svg>
-                            </div>
+                             <ClipLoader
+                             color={"#FFFFFF"}
+                             loading={true}
+                             size={20}
+                             aria-label="Loading Spinner"
+                             data-testid="loader"
+                           />
                         ) : (
                             "Edit Job"
                         )}

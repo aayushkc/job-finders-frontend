@@ -12,8 +12,10 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
+import PatchRequest from "@/app/api/patchRequest";
+import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 
-export default function CreateProfile() {
+export default function UpdateProfile() {
     const router = useRouter()
     const [profileDetail, setProfileDetails] = useState([])
     const [industries, setIndustries] = useState([]);
@@ -26,51 +28,51 @@ export default function CreateProfile() {
     const [requiedSkills, setRequiredSkills] = useState()
     const [selectedJobCategory, setSelectedJobCategory] = useState()
     const [selectedIndustry, setSelectedIndustry] = useState(null)
-      // Gets all the profileDetail of the request user
-  const getProfile = async () => {
-    const accessToken = Cookies.get('accessToken');
+    // Gets all the profileDetail of the request user
+    const getProfile = async () => {
+        const accessToken = Cookies.get('accessToken');
 
-    
-    const requestOptions = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
 
-    try {
-      const response = await fetch('http://127.0.0.1:8000/job-seeker/check-seeker-details/', requestOptions);
-      if (!response.ok) {
-        const data = await response.json();
-        console.log(data);
-        // Handle non-successful responses
-        setProfileDetails(
-            {
-                "id": '',
-                "dob": "",
-                "first_name": "",
-                "middle_name": "",
-                "last_name": "",
-                "resume": "",
-                "industry": '',
-                "skills": [],
-                "prefferd_job": []
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+
+                Authorization: `Bearer ${accessToken}`,
+            },
+        };
+
+        try {
+            const response = await fetch(`${APIENDPOINT}/job-seeker/check-seeker-details/`, requestOptions);
+            if (!response.ok) {
+                const data = await response.json();
+                console.log(data);
+                // Handle non-successful responses
+                setProfileDetails(
+                    {
+                        "id": '',
+                        "dob": "",
+                        "first_name": "",
+                        "middle_name": "",
+                        "last_name": "",
+                        "resume": "",
+                        "industry": '',
+                        "skills": [],
+                        "prefferd_job": []
+                    }
+                )
+                router.push("/recruiter/create-profile-details")
+
             }
-        )
-        router.push("/recruiter/create-profile-details")
-        
-      }
-      const data = await response.json();
-      setProfileDetails(data)
-      setSelectedIndustry(data[0].industry)
-    } catch (error) {
-      console.error('There was a problem with the fetch request:', error);
-      // Handle error
-      return { error: error.message };
+            const data = await response.json();
+            setProfileDetails(data)
+            setSelectedIndustry(data[0].industry)
+        } catch (error) {
+            console.error('There was a problem with the fetch request:', error);
+            // Handle error
+            return { error: error.message };
+        }
     }
-  }
 
 
     const getSkills = async () => {
@@ -92,8 +94,8 @@ export default function CreateProfile() {
         setValue,
         formState: { errors, isSubmitting, isDirty, isValid },
     } = useForm({
-        
-        shouldUnregister:false
+
+        shouldUnregister: false
     })
 
 
@@ -168,26 +170,45 @@ export default function CreateProfile() {
 
 
     const onSubmit = async (data) => {
-        const da = { ...data,"dob": data.dob.format("YYYY-MM-DD"), "resume": selectedFile ? selectedFile: data.resume, "profilePic": selecteProfilePhoto ? selecteProfilePhoto : data.profilePic }
+       
+        let da = { ...data,"dob":data.dob.format("YYYY-MM-DD")}
+
+        if(selectedFile){
+             da = { ...da, "resume":  selectedFile }
+        }
+
+        if(selecteProfilePhoto){
+             da = { ...da, "profilePic":  selecteProfilePhoto }
+        }
+        
+        if(!selectedFile){
+            delete da.resume
+        }
+        console.log("Profile Photttttttt:", selecteProfilePhoto);
+        if(!selecteProfilePhoto){
+            delete da.profilePic
+        }
+
         console.log(da);
         const formData = new FormData()
         Object.entries(da).forEach(([key, value]) => { formData.append(key, value); console.log(key, value); })
         formData.delete("skills")
         formData.delete("prefferd_job")
         data.skills.forEach(item => {
-            formData.append('skills', item);
+            formData.append('skills',item);
         });
 
         data.prefferd_job.forEach(item => {
             formData.append('prefferd_job', item);
         });
         try {
-            const res = await PostFormWithToken(`/job-seeker/create-details/`, formData)
+            const res = await PatchRequest(`/job-seeker/get-update-details/${profileDetail[0].id}`, formData,  true)
             console.log("This is respooooooooooooooo");
             if (res.detail) {
                 console.log(res);
                 throw new Error("Cannot Fetch")
             }
+            console.log(res);
             console.log("Helooooooooooooooo");
             router.push("/")
 
@@ -207,12 +228,22 @@ export default function CreateProfile() {
         setValue("phone", profileDetail[0]?.phone || "");
         setValue("linkedin_url", profileDetail[0]?.linkedin_url || "");
         setValue("dob", dayjs(profileDetail[0]?.dob) || dayjs().startOf("D"));
-        setValue("industry",industries.filter(data =>  data.title_name === profileDetail[0]?.industry)[0]?.id || "")
+        setValue("industry", industries.filter(data => data.id === profileDetail[0]?.industry.id)[0]?.id || "")
         setValue("profilePic", profileDetail[0]?.profilePic || "")
         setValue("resume", profileDetail[0]?.resume || "")
-        setValue("prefferd_job", profileDetail[0]?.prefferd_job.map(data => {return data.id}) || "")
-        setValue("skills", profileDetail[0]?.skills.map(data => {return data.id}) || "")
     }, [profileDetail])
+
+    useEffect(() => {
+        if (profileDetail && profileDetail[0]?.skills) {
+            const initialValues = profileDetail[0].skills.map(data => data.id);
+            setValue('skills', initialValues);
+        }
+
+        if (profileDetail && profileDetail[0]?.prefferd_job) {
+            const initialValues = profileDetail[0].prefferd_job.map(data => data.id);
+            setValue('prefferd_job', initialValues);
+        }
+    }, [profileDetail, setValue]);
 
     useEffect(() => {
         getIndustries()
@@ -221,12 +252,12 @@ export default function CreateProfile() {
         getProfile()
     }, [])
 
-    
+
     return (
         <>
-        {console.log(profileDetail)}
-    
-        
+            {console.log(profileDetail)}
+
+
             <section className="py-10 flex justify-center">
                 <div className="bg-white p-10 w-[80%] mb-10">
                     <h2 className="font-bold text-3xl text-[#414C61] bg-[#FFF7E2] px-4 py-2 rounded-2xl max-w-max">Edit Profile</h2>
@@ -238,7 +269,7 @@ export default function CreateProfile() {
                                 <div className='mb-2'>
                                     {
                                         //Previews the file name
-                                        selectedFile ? selectedFile.name : profileDetail ? profileDetail[0]?.resume :''
+                                        selectedFile ? selectedFile.name : profileDetail ? profileDetail[0]?.resume : ''
                                     }
                                 </div>
 
@@ -273,7 +304,7 @@ export default function CreateProfile() {
                                         <div className='w-[125px] h-[125px] mb-1 border-[0.5px] mt-10 pt-4 px-4 border-[#514646]'>
                                             {
                                                 //Previews the image
-                                                selecteProfilePhoto ? <img src={previewProfilePic} alt="profile" className='w-full h-full object-contain' /> : <img src={profileDetail ? profileDetail[0]?.profilePic :defaultProfile} alt="profile" className='w-full h-full object-contain' />
+                                                selecteProfilePhoto ? <img src={previewProfilePic} alt="profile" className='w-full h-full object-contain' /> : <img src={profileDetail ? profileDetail[0]?.profilePic : defaultProfile} alt="profile" className='w-full h-full object-contain' />
                                             }
                                         </div>
 
@@ -356,7 +387,7 @@ export default function CreateProfile() {
                                         <DatePicker
                                             label="Date of Birth"
                                             disableFuture
-                                            onChange={(value) => onChange(value.format("YYYY-MM-DD"))}
+                                            onChange={(value) => onChange(value)}
                                             value={value}
                                             inputRef={ref}
                                             format={"YYYY-MM-DD"}
@@ -424,21 +455,33 @@ export default function CreateProfile() {
                                 <Controller
                                     control={control}
                                     name="skills"
+                                    defaultValue={profileDetail && profileDetail[0]?.skills ? profileDetail[0].skills.map(data => data.id) : []}
                                     render={({ field }) => (
                                         <Autocomplete
-                                            defaultValue={profileDetail[0]?.skills.map(data => {return data.title})}
                                             multiple
                                             {...field}
                                             disableCloseOnSelect
                                             options={skills}
-                                            getOptionLabel={(option) =>{return option.title}}
+                                            getOptionLabel={(option) =>
+                                                option?
+                                                typeof option === "number" ?
+                                                    (skills.find(skill => skill.id === option) || {}).title || '' :
+                                                    option.title :""
+                                                }
+                                            isOptionEqualToValue={(option, value) => {
+                                                
+                                                return option.id === value
+                                            }
+                                            }
                                             onChange={(event, values) => {
-                                                field.onChange(values.map(val => { return val.id }))
+                                               
+                                                field.onChange(values.map(val => {return typeof(val) === "number"? val:  val.id }))
                                             }}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
-                                                    placeholder={profileDetail[0]?.skills.map(data => {return data.title}) || ""}
+                                                    placeholder={'Choose multiple Skills'}
+
                                                     helperText={errors.skills?.message}
                                                     error={!!errors.skills}
                                                 />
@@ -454,23 +497,36 @@ export default function CreateProfile() {
                             <h2 className="text-xl font-semibold">Choose Your Preffered Job Fields</h2>
                             <p className="text-xs text-[#4F5052] mb-4">(We will use this to recommend you jobs)</p>
                             <div style={{ marginBottom: 16, marginTop: 6 }}>
-                                <Controller
+                            <Controller
                                     control={control}
                                     name="prefferd_job"
-                                    render={({ field: { onChange } }) => (
+                                    defaultValue={profileDetail && profileDetail[0]?.prefferd_job ? profileDetail[0].prefferd_job.map(data => data.id) : []}
+                                    render={({ field }) => (
                                         <Autocomplete
-                                            defaultValue={[]}
                                             multiple
+                                            {...field}
                                             disableCloseOnSelect
                                             options={prefferedJobField}
-                                            getOptionLabel={(option) => option.title}
+                                            getOptionLabel={(option) =>
+                                                option?
+                                                typeof option === "number" ?
+                                                    (prefferedJobField.find(preffJob => preffJob.id === option) || {}).title || '' :
+                                                    option.title :""
+                                                }
+                                            isOptionEqualToValue={(option, value) => {
+                                               
+                                                return option.id === value
+                                            }
+                                            }
                                             onChange={(event, values) => {
-                                                onChange(values.map(val => { return val.id }))
+                                            
+                                                field.onChange(values.map(val => {return typeof(val) === "number"? val:  val.id }))
                                             }}
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
-                                                    placeholder={profileDetail[0]?.prefferd_job.map(data => {return data.title})|| ""}
+                                                    placeholder={'Choose multiple Job Fields'}
+
                                                     helperText={errors.prefferd_job?.message}
                                                     error={!!errors.prefferd_job}
                                                 />

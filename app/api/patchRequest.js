@@ -24,6 +24,8 @@ export default async function PatchRequest(endpoint, data, isFile){
         if (!response.ok) {
           // Handle non-successful responses
           console.log("Entereedddddddddddddd");
+          const err = await response.json()
+          console.log("Errrrrrrrrrr:", err);
           throw new Error('Network response was not ok.');
         }
         return await response.json();
