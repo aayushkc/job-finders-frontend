@@ -172,8 +172,8 @@ export default function Page() {
                 jobSuccess &&<DialogBox 
                                 dialogHeading={"Job Added Sucessfully"} 
                                 dialogText={"Job has been Added SuccessFully"}
-                                goToPageName={"View All Jobs"}
-                                url={"/recruiter/view-all-jobs"}
+                                goToPageName={"To View All Pending Jobs"}
+                                url={"/recruiter/view-all-pending-jobs"}
                                 success={true}
                         />
             }

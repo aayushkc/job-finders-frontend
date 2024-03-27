@@ -127,10 +127,8 @@ export default function SignInUser() {
             {
                 errorStatus && <DialogBox
                     url={"/register-as-recruiter"}
-                    goToPageName={"Back"}
                     dialogHeading={"Error Encountered"}
                     dialogText={"An error occured while sending email. Try again later."}
-                    success={true}
                 />
             }
 

@@ -155,8 +155,8 @@ export default function HireCandidates() {
                 jobSuccess &&<DialogBox
                                 dialogHeading={"Job Request Sent Sucessfully"} 
                                 dialogText={"Request for Job Approval has benn sent successFully"}
-                                goToPageName={"View All Jobs"}
-                                url={"/recruiter/view-all-jobs"}
+                                goToPageName={"View All Pending Jobs"}
+                                url={"/recruiter/view-all-pending-jobs"}
                                 success={true}
                         />
             }

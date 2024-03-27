@@ -440,6 +440,7 @@ export default function Home() {
                    <ReactQuillEditable
                       theme="snow"
                       readOnly
+                      value={profileDetail[0]?.description}
                       className="w-full bg-white min-h-[300px]"
                     />
                 </div>

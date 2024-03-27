@@ -48,7 +48,7 @@ export default function AnonUserHomePage({pageNum, totalPage}) {
             </div>
 
             <div className="text-center text-2xl font-bold text-[#193855] mt-4">
-                    Log in to view recommended Jobs 
+                   <p>Log in to view recommended Jobs </p> 
 
             </div>
 

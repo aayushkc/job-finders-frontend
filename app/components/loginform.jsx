@@ -106,7 +106,7 @@ export default function LoginForm(){
                 }
               </button>
                
-                {/* <Link href="#">Forget Password?</Link> */}
+                <Link href="/forget-password">Forget Password?</Link>
             </div>
 
             <button className={`flex gap-4 items-center justify-center uppercase rounded-xl py-3 px-6 w-full mt-6 ${isSubmitting ?'bg-[#FCE4B0] text-[#475569] font-semibold' :'bg-gurkha-yellow text-white font-bold'}`} disabled={isSubmitting}>

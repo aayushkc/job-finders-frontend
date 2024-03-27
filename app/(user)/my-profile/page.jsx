@@ -410,9 +410,9 @@ export default function UpdateProfile() {
                                     className="mt-3 ml-2 gap-3"
 
                                 >
-                                    <FormControlLabel value="remote" control={<Radio size="small" {...register('job_location_type', { required: "Requried" })} />} label="Remote" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                                    <FormControlLabel value="onSite" control={<Radio size="small" {...register('job_location_type', { required: "Requried" })} />} label="On-Site" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                                    <FormControlLabel value="Hybrid" control={<Radio size="small" {...register('job_location_type', { required: "Requried" })} />} label="Hybrid" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                                    <FormControlLabel value="remote" control={<Radio size="small" {...register('job_location_type')} />} label="Remote" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                                    <FormControlLabel value="onSite" control={<Radio size="small" {...register('job_location_type')} />} label="On-Site" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                                    <FormControlLabel value="Hybrid" control={<Radio size="small" {...register('job_location_type')} />} label="Hybrid" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
                                 </RadioGroup>
                             </FormControl>
                         </div>

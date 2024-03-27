@@ -75,7 +75,7 @@ export default function JobStatus() {
                     })
                     :
 
-                    <div className="font-bold text-5xl flex items-center justify-center h-[400px]">
+                    <div className="font-bold text-5xl flex items-center justify-center h-[400px] bg-white">
                         You have Applied to any Jobs
                     </div>
             }
