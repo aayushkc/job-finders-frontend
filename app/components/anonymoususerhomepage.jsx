@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import GetRequestNoToken from "../api/getRequestNoToken";
-export default function AnonUserHomePage({pageNum, totalPage}) {
- 
+export default function AnonUserHomePage({ pageNum, totalPage }) {
+
   const [recommendedJobs, setRecommendedJobs] = useState([])
   const router = useRouter()
   const getRecommendedJobs = async () => {
@@ -26,7 +26,7 @@ export default function AnonUserHomePage({pageNum, totalPage}) {
     }
   }
 
- 
+
   useEffect(() => {
     getRecommendedJobs()
   }, [pageNum])
@@ -48,7 +48,7 @@ export default function AnonUserHomePage({pageNum, totalPage}) {
             </div>
 
             <div className="text-center text-2xl font-bold text-[#193855] mt-4">
-                    Log in to view recommended Jobs 
+              <p>Log in to view recommended Jobs </p>
 
             </div>
 
@@ -58,58 +58,82 @@ export default function AnonUserHomePage({pageNum, totalPage}) {
       </section>
 
       <section className="text-center bg-white p-8  grid">
-        <div className="place-self-center max-w-[1300px]">
+        <div className="px-16">
           <h2 className="text-xl">Available Jobs</h2>
 
-          <div className="grid grid-cols-3 gap-12 text-left mt-6">
+          <div className="grid grid-cols-3 gap-4 text-left mt-6">
             {
               recommendedJobs?.map(data => {
-                return (  
-                  <Link href={`/jobs?id=${data.id}&pageNum=${pageNum}`}>
-                <div className="px-6 py-4 rounded-2xl border-[1px] border-[#065F46]">
-                  <div className="flex justify-between items-start">
-                    <h2 className="text-xl font-bold">{data.title}</h2>
-                    <i className="bi bi-bookmark text-lg text-[#475569]"></i>
-                  </div>
-                  <p className="">{data.job_category[0]?.title}</p>
-                  <h2 className="text-[#4F5052] text-lg mt-1">{data.company}</h2>
+                return (
+                  <Link href={`/jobs?id=${data.id}&pageNum=${pageNum}`} key={data.id}>
+                    <div className="px-6 py-4 rounded-2xl border-[1px] border-[#065F46]">
+                      <div className="flex justify-between items-start">
+                        <h2 className="text-xl font-bold">{data.title}</h2>
+                        <i className="bi bi-bookmark text-lg text-[#475569]"></i>
+                      </div>
+                      <p className="">{data.job_category[0]?.title}</p>
+                      <h2 className="text-[#4F5052] text-lg mt-1">{data.company}</h2>
 
-                  <div className="text-sm my-2">
-                    <p className="">Skills: <span className="text-black"> {data.required_skills.map(data => data.title + "/")}</span></p>
+                      <div className="text-sm my-2">
+                      <p className="">Skills: <span className="text-black"> 
+                          {
+                          data.required_skills.length >= 2 ?
+                          data.required_skills.map(
+                            (data,index) => index < 2 && 
+                                 <span key={index}>{index === 1 ? data.title + "..." : data.title + "/"}</span>
+                             
+                            
+                            
+                          )
+                          :
+                          data.required_skills.map((data) =>  data.title)
+                          }
+                          
+                          </span></p>
 
-                  </div>
 
-                  <div className="flex flex-col gap-2 mt-3">
-                    <div className="flex gap-2 items-center text-sm bg-[#FEF4DF] px-4 py-2 rounded-2xl max-w-max">
-                      <p className="">Location:</p>
-                      <p className="text-[#4F5052] font-light">{data.job_location}</p>
+                      </div>
+
+                      <div className="flex flex-col gap-2 mt-3">
+                        <div className="flex gap-2 items-center text-sm bg-[#FEF4DF] px-4 py-2 rounded-2xl max-w-max">
+                          <p className="">Location:</p>
+                          <p className="text-[#4F5052] font-light">{data.job_location}</p>
+                        </div>
+
+                        <div className="flex gap-2 items-center text-sm bg-[#FEF4DF] px-4 py-2 rounded-2xl max-w-max">
+                          <p className="">Experience Required:</p>
+                          <p className="text-[#4F5052] font-light capitalize">{data.required_years_of_experience}</p>
+                        </div>
+
+
+
+
+                      </div>
+                      <div className="flex gap-2 items-center mt-4">
+                        <i className="bi bi-coin text-[#FFB000] text-xl"></i>
+                        {
+                          data.salary && <p className="text-[#01B46A]">{data.salary} $/month </p>
+                        }
+                        {
+                          data.min_salary && <p className="text-[#01B46A]">{data.min_salary} - {data.max_salary} $/month </p>
+                        }
+
+                        {
+                          !data.min_salary && !data.salary && <p className="text-[#01B46A]">Undisclosed </p>
+                        }
+                      </div>
+
+                      <div className="flex justify-between mt-4 items-center">
+                        <div className="flex gap-2 items-center">
+                          <i className="bi bi-people text-xl"></i>
+                          <p className="text-[#01B46A]">{data.applied} Applied</p>
+                        </div>
+
+                        <p className="text-sm">Apply Before: {data.apply_before}</p>
+                      </div>
+
                     </div>
-
-                    <div className="flex gap-2 items-center text-sm bg-[#FEF4DF] px-4 py-2 rounded-2xl max-w-max">
-                      <p className="">Experience Required:</p>
-                      <p className="text-[#4F5052] font-light capitalize">{data.required_years_of_experience}</p>
-                    </div>
-
-
-
-
-                  </div>
-                  <div className="flex gap-2 items-center mt-4">
-                    <i className="bi bi-coin text-[#FFB000] text-xl"></i>
-                    <p className="text-[#01B46A]">{data.salary} $/month </p>
-                  </div>
-
-                  <div className="flex justify-between mt-4 items-center">
-                    <div className="flex gap-2 items-center">
-                      <i className="bi bi-people text-xl"></i>
-                      <p className="text-[#01B46A]">{data.applied} Applied</p>
-                    </div>
-
-                    <p className="text-sm">Apply Before: {data.apply_before}</p>
-                  </div>
-
-                </div>
-                </Link>
+                  </Link>
                 )
               })}
 

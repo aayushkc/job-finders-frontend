@@ -12,6 +12,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
+import { addYears } from "date-fns";
 
 export default function CreateProfile() {
     const router = useRouter()
@@ -23,6 +24,13 @@ export default function CreateProfile() {
     const [previewProfilePic, setPreviewProfilePic] = useState()
     const [skills, setSkills] = useState([])
     const [prefferedJobField, setPrefferedJobField] = useState([])
+    
+    const disableFutureDates = (date) => {
+        // Calculate the minimum birthdate allowed (14 years ago)
+        const minBirthDate = addYears(new Date(), -14);
+        // Disable future dates and dates where the user is less than 14 years old
+        return date > new Date() || date > minBirthDate;
+      };
 
 
     const getSkills = async () => {
@@ -95,6 +103,7 @@ export default function CreateProfile() {
 
     const handleChange = (e) => {
         setSelectedFile(e.target.files[0]);
+        setValue("resume",e.target.files[0])
     }
 
     const handleProfilePicChange = (e) => {
@@ -114,9 +123,9 @@ export default function CreateProfile() {
     //     return () => URL.revokeObjectURL(objectUrl)
     // }, [selectedFile])
 
-    useEffect(() =>{
-        if(!isLoggedIn) router.push("/signin")
-      },[isLoggedIn])
+    useEffect(() => {
+        if (!isLoggedIn) router.push("/signin")
+    }, [isLoggedIn])
 
     useEffect(() => {
         if (!selecteProfilePhoto) {
@@ -125,6 +134,7 @@ export default function CreateProfile() {
         }
 
         const objectUrl = URL.createObjectURL(selecteProfilePhoto)
+        setValue("profilePic",selecteProfilePhoto)
         setPreviewProfilePic(objectUrl)
 
         // free memory when ever this component is unmounted
@@ -136,16 +146,16 @@ export default function CreateProfile() {
         const da = { ...data, "resume": selectedFile, "profilePic": selecteProfilePhoto }
         console.log(da);
         const formData = new FormData()
-        Object.entries(da).forEach(([key, value]) => {formData.append(key, value);console.log(key,value);})
+        Object.entries(da).forEach(([key, value]) => { formData.append(key, value); console.log(key, value); })
         formData.delete("skills")
         formData.delete("prefferd_job")
         data.skills.forEach(item => {
             formData.append('skills', item);
-           });
+        });
 
         data.prefferd_job.forEach(item => {
             formData.append('prefferd_job', item);
-           });
+        });
         try {
             const res = await PostFormWithToken(`/job-seeker/create-details/`, formData)
             console.log("This is respooooooooooooooo");
@@ -188,50 +198,55 @@ export default function CreateProfile() {
                     <h2 className="font-bold text-3xl text-[#414C61] bg-[#FFF7E2] px-4 py-2 rounded-2xl max-w-max">Create Profile</h2>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="rounded-2xl bg-white/40 flex items-center p-2 mt-6">
-
-                            <div className="flex flex-col gap-4">
-                                <div className='mb-2'>
-                                    {
-                                        //Previews the file name
-                                        selectedFile ? selectedFile.name : ""
-                                    }
-                                </div>
-
-                                <div>
+                        <div className="mt-8">
 
                                     {/* Handle the upload changes done in the image field */}
                                     <Controller
                                         control={control}
                                         name="resume"
+                                        rules={{ required: "A CV in either .pdf or .docx format must be uploaded" }}
                                         render={({ field: { onChange } }) =>
-                                            <Button component="label" variant="contained" sx={{ backgroundColor: '#FAFAFA', color: 'black', textTransform: "capitalize", border: "1px solid #CFD1D4", width: "max-content" }}>
-                                                Upload CV
+                                            <Button
+                                                component="label"
+                                                variant="contained"
+                                                sx={
+                                                    {
+                                                        backgroundColor: '#FAFAFA',
+                                                        color: 'black',
+                                                        textTransform: "capitalize",
+                                                        border:errors.resume ? "1.5px solid red" : "1px solid #CFD1D4",
+                                                        width: "max-content",
+                                                        padding: "0.8rem 2.4rem",
+                                                        fontSize: "18px",
+                                                        fontWeight: "700"
+                                                    }
+                                                }
+                                            >
+                                                {
+                                                    //Previews the file name
+                                                    selectedFile ? selectedFile.name : "Upload CV"
+                                                }
                                                 <VisuallyHiddenInput type="file" accept=".pdf,.docx" onChange={handleChange} />
                                             </Button>}
-                                    ></Controller>
-
-
-                                </div>
-
-
-                            </div>
-
-
+                                    />
+                                 {errors.resume ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.resume.message}</p> : ""}
+                          
                         </div>
 
                         <div className="mt-6">
                             <h2 className="text-xl font-semibold">Personal Information</h2>
                             <div className="flex gap-10 items-start mt-6">
-                                <div className="w-[155px] h-[155px] rounded-2xl bg-white/40 flex items-center p-2 basis-[20%]">
+                                <div className="w-[155px] h-[155px]  bg-white/40 flex items-center p-2 basis-[20%]">
 
-                                    <div className="flex flex-col gap-4 items-center">
-                                        <div className='w-[125px] h-[125px] mb-1 border-[0.5px] mt-10 pt-4 px-4 border-[#514646]'>
+                                    <div className="flex flex-col gap-2 items-center">
+
+                                        <div className={`w-[155px] h-[155px] text-center rounded-2xl border-[0.5px] mt-10 pt-2 px-2 ${errors.profilePic ? 'border-red-600' : 'border-[#514646]'}`}>
                                             {
                                                 //Previews the image
-                                                selecteProfilePhoto ? <img src={previewProfilePic} alt="profile" className='w-full h-full object-contain' /> : <Image src={defaultProfile} alt="profile" className='w-full h-full object-contain' />
+                                                selecteProfilePhoto ? <Image src={previewProfilePic} alt="profile" width="155" height="155" className='w-full h-full object-contain' /> : <p className="font-bold mt-6 text-sm">Upload Profile Picture</p>
                                             }
                                         </div>
+                                        {errors.profilePic ? <p className="text-sm text-left font-bold text-[#E33629]">{errors.profilePic.message}</p> : ""}
 
                                         <div>
 
@@ -239,6 +254,7 @@ export default function CreateProfile() {
                                             <Controller
                                                 control={control}
                                                 name="profilePic"
+                                                rules={{ required: "Profile Picture is required" }}
                                                 render={({ field: { onChange } }) =>
                                                     <Button component="label" variant="contained" sx={{ backgroundColor: '#FFB000', color: 'white', textTransform: "capitalize", borderRadius: "17px", width: "max-content" }}>
                                                         Upload Profile Picture
@@ -260,28 +276,34 @@ export default function CreateProfile() {
                                         <div className="flex flex-col">
                                             <label htmlFor="first_name" className="text-sm">First Name*</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="first_name" {...register("first_name", { required: "First Name is required" })} />
+                                            {errors.first_name ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.first_name.message}</p> : ""}
                                         </div>
+                                        
+                                        <div className="flex flex-col mt-6">
+                                            <label htmlFor="last_name" className="text-sm">Last Name*</label>
+                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="last_name" {...register("last_name", { required: "Last Name is required" })} />
+                                            {errors.last_name ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.last_name.message}</p> : ""}
+                                        </div>
+                                    
 
                                         <div className="flex flex-col mt-6">
+                                            <label htmlFor="phone" className="text-sm">Phone Number*</label>
+                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" min={1} {...register("phone", { required: "Phone is required" })} />
+                                            {errors.phone ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.phone.message}</p> : ""}
+                                        </div>
+                                    </div>
+
+                                    <div className="w-[50%]">
+                                
+                                        <div className="flex flex-col">
                                             <label htmlFor="middle_name" className="text-sm">Middle Name</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="middle_name" {...register("middle_name")} />
                                         </div>
 
                                         <div className="flex flex-col mt-6">
-                                            <label htmlFor="phone" className="text-sm">Phone Number*</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" {...register("phone", { required: "First Name is required" })} />
-                                        </div>
-                                    </div>
-
-                                    <div className="w-[50%]">
-                                        <div className="flex flex-col">
-                                            <label htmlFor="last_name" className="text-sm">Last Name*</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="last_name" {...register("last_name", { required: "Last Name is required" })} />
-                                        </div>
-
-                                        <div className="flex flex-col mt-6">
                                             <label htmlFor="location" className="text-sm">Location*</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="location" {...register("location", { required: "Location Name is required" })} />
+                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="location" {...register("location", { required: "Location is required" })} />
+                                            {errors.location ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.location.message}</p> : ""}
                                         </div>
 
                                         <div className="flex flex-col mt-6">
@@ -306,25 +328,28 @@ export default function CreateProfile() {
                                         value: true,
                                         message: "Date of Birth is required",
                                     },
+                                    
                                 }}
                                 render={({ field: { onChange, value, ref } }) => (
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
                                             label="Date of Birth"
                                             disableFuture
-                                            onChange={(value) =>onChange(value.format("YYYY-MM-DD"))}
+                                            onChange={(value) => onChange(value.format("YYYY-MM-DD"))}
                                             value={value}
                                             inputRef={ref}
                                             format={"YYYY-MM-DD"}
+                                            shouldDisableDate={disableFutureDates}
                                             className="mt-4"
                                         />
                                     </LocalizationProvider>
                                 )}
                             />
+                            {errors.dob ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.dob.message}</p> : ""}
                         </div>
 
 
-                        <div className="mt-10">
+                        {/* <div className="mt-10">
                             <h2 className="text-xl font-semibold">Job Preference</h2>
                             <FormControl className="mt-4">
                                 <FormLabel id="demo-row-radio-buttons-group-label" className="text-sm">Job Type</FormLabel>
@@ -340,7 +365,7 @@ export default function CreateProfile() {
                                     <FormControlLabel value="Hybrid" control={<Radio size="small" {...register('job_location_type', { required: "Requried" })} />} label="Hybrid" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
                                 </RadioGroup>
                             </FormControl>
-                        </div>
+                        </div> */}
 
                         <div className="mt-10">
                             <h2 className="text-xl font-semibold mb-4">Choose Your Domain</h2>
@@ -348,6 +373,7 @@ export default function CreateProfile() {
                             <Controller
                                 control={control}
                                 name="industry"
+                                rules={{required:"You must choose one domain"}}
                                 render={({ field: { onChange } }) => (
                                     <Autocomplete
                                         defaultValue={null}
@@ -380,6 +406,7 @@ export default function CreateProfile() {
                                 <Controller
                                     control={control}
                                     name="skills"
+                                    rules={{required:"You must choose one or more Skills"}}
                                     render={({ field: { onChange } }) => (
                                         <Autocomplete
                                             defaultValue={[]}
@@ -413,6 +440,7 @@ export default function CreateProfile() {
                                 <Controller
                                     control={control}
                                     name="prefferd_job"
+                                    rules={{required:"You must choose one or more categories"}}
                                     render={({ field: { onChange } }) => (
                                         <Autocomplete
                                             defaultValue={[]}

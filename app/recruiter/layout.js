@@ -16,9 +16,9 @@ export const metadata = {
 export default function RecruiterLayout({children}){
   return (
     <html lang="en">
-      <body className={sans.className}>
+      <body className={sans.className + "relative"}>
         <AdminNav isRecruiter={true}></AdminNav>
-        <main className="">
+        <main className="mt-[80px]">
           
         {children}
         </main>

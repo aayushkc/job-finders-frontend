@@ -9,9 +9,13 @@
   background-size: 100% 100%;
 }
 .signin {
-  background-image: url("../public/images/singinbg.jfif");
+  background-image: url("../public/images/singinbg.png");
 }
 
 main{
   background-color: #F3F4F8;
+}
+
+.read-quill .ql-container.ql-snow{
+  border: none;
 }

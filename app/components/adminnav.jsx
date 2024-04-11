@@ -1,6 +1,5 @@
 "use client"
 import Image from "next/image"
-import Logo from "../../public/images/logo.png"
 
 import { Roboto } from "next/font/google";
 import Link from "next/link";
@@ -30,7 +29,7 @@ const SuperAdminNavItems = [
         "link": "/view-all-pending-jobs"
     },
 
-   
+
 
 
 ]
@@ -53,23 +52,23 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
     }
     return (
 
-        <header className="sm:px-40 sm:py-6">
+        <header className="sm:px-40 sm:py-8 h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
                     <Link href="/">
-                        <Image src={Logo} alt="logo" className="max-w-full max-h-full" />
+                        <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" />
                     </Link>
                 </div>
                 <button className="pr-4 sm:hidden" onClick={handleClick}>
                     {hamburg ? <i className="bi bi-x font-bold text-2xl"></i> : <i className="bi bi-list font-bold text-2xl"></i>}
                 </button>
 
-                <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" : "hidden "} bottom-0  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4`}>
-                    
+                <ul className={`bottom-0 z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4 ${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" : "hidden "}`}>
+
                     {/* Navitems for Recruiter Page */}
                     {
                         isRecruiter && RecruiterNavItems.map((data, index) => {
-                            return <Link href={data.link} key={index} onClick={handleClick}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
+                            return <Link href={data.link} key={index}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
                                 } mb-4 sm:mb-0`}>{data.item}</li></Link>
                         })
                     }
@@ -78,16 +77,16 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
                     {/* Navitems for Recruiter SuperAdmin */}
                     {
                         isSuperAdmin && SuperAdminNavItems.map((data, index) => {
-                            return <Link href={data.link} key={index} onClick={handleClick}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
+                            return <Link href={data.link} key={index}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
                                 } mb-4 sm:mb-0`}>{data.item}</li></Link>
                         })
                     }
 
-                    <Link href="/signin" className="sm:hidden" onClick={handleClick}><button className="border-b-2 border-gurkha-yellow">Login</button></Link>
+                    <button className="sm:hidden bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>
                 </ul>
 
 
-                <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>
+                <button className="hidden sm:block bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>
 
             </nav>
         </header>

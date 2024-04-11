@@ -11,7 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
 
-export default function DialogBox({url, dialogHeading,dialogText,goToPageName, success, error, deleteBox}) {
+export default function DialogBox({ url, dialogHeading, dialogText, goToPageName, success, error, deleteBox }) {
   const [open, setOpen] = React.useState(true);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -37,22 +37,27 @@ export default function DialogBox({url, dialogHeading,dialogText,goToPageName, s
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-           {dialogText}
+            {success &&
+              <div className='rounded-full flex justify-center '>
+                <i className="bi bi-check-circle-fill text-4xl mb-3 text-[#23A26D]"></i>
+              </div>
+            }
+            {dialogText}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           {
-            success ?<Button autoFocus onClick={handleRoute}>
-            Go to {goToPageName}
-          </Button> :   <Button onClick={handleClose} autoFocus>
-            Ok
-          </Button>
+            success ? <Button autoFocus onClick={handleRoute}>
+              Go {goToPageName}
+            </Button> : <Button onClick={handleClose} autoFocus>
+              Ok
+            </Button>
           }
-          
+
           {!deleteBox && <Button onClick={handleClose} autoFocus>
             Close
           </Button>}
-          
+
         </DialogActions>
       </Dialog>
     </React.Fragment>

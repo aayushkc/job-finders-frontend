@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from 'react';
-import logo from "../../../public/images/footerLogo.png"
+
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -26,6 +26,10 @@ export default function SignInUser() {
     const [registrationError, setRegistrationError] = useState([])
     const [errorStatus, setErrorStatus] = useState(false)
     const [registrationSuccess, setRegistrationSuccess] = useState(false)
+    const [emailError, setEmailError] = useState(null)
+    const [nameError, setNameError] = useState(null)
+    const [phoneError, setPhoneError] = useState(null)
+    const [formError, setFormError] = useState(false)
     const [formData, setFormData] = useState(
         {
             "email": "",
@@ -47,7 +51,24 @@ export default function SignInUser() {
 
     const handleNextClick = (e) => {
         e.preventDefault();
-        setIsNextClicked(true)
+        setFormError(false)
+        setEmailError(null)
+        setNameError(null)
+        setPhoneError(null)
+        console.log(formData);
+        if(formData.email && formData.name && formData.phone){
+            setIsNextClicked(true)
+        }else if(!formData.email){
+            setEmailError("Invalid Email Address")
+        }else if(!formData.name){
+            setNameError("Invalid Name")
+        }else if(!formData.phone){
+            setPhoneError("Invalid Phone Number")
+        }else if(!formData.email && !formData.name && !formData.phone){
+            setFormError(true)
+        }else{
+            return;
+        }
     }
 
     const handleRegisterClick = async (e) => {
@@ -96,6 +117,7 @@ export default function SignInUser() {
 
     const handleTime = (t) => {
         const timeFormat = `${t.$H}:${t.$m}`
+        const ti = t.format("HH:MM:SS")
         console.log(timeFormat)
         setFormData(prevState => ({
             ...prevState,
@@ -127,10 +149,8 @@ export default function SignInUser() {
             {
                 errorStatus && <DialogBox
                     url={"/register-as-recruiter"}
-                    goToPageName={"Back"}
                     dialogHeading={"Error Encountered"}
-                    dialogText={"An error occured while sending email. Try again later."}
-                    success={true}
+                    dialogText={errorStatus && Object.entries(registrationError).map(([key, value]) => <li key={key} className="text-red-900 capitalize font-bold">{value}</li>)}
                 />
             }
 
@@ -138,7 +158,7 @@ export default function SignInUser() {
                 {isNextClicked ? <i className="bi bi-arrow-left text-2xl text-left place-self-start pl-6 cursor-pointer" onClick={() => setIsNextClicked(false)}></i> : <Link href="/signin" className='place-self-start pl-6'><i className="bi bi-arrow-left text-2xl text-left"></i></Link>}
                 <div className="flex justify-center">
 
-                    <Image src={logo} alt="logo" />
+                    <Image src="/images/Footerlogo.png" alt="logo" width="102" height="42" />
                 </div>
                 <h1 className="text-3xl font-bold my-3">Register as Recruiter</h1>
                 <div className="flex gap-2 justify-center items-center mt-4">
@@ -172,17 +192,20 @@ export default function SignInUser() {
 
                                 <div className="flex flex-col gap-2 items-start">
                                     <label>Company Email*</label>
-                                    <input type="email" name="email" onChange={handleChange} required className="rounded-xl border-2 border-[#E2E8F0] py-2 px-6 w-full" />
+                                    <input type="email" name="email" defaultValue={formData.email} onChange={handleChange} required className={`rounded-xl py-2 px-6 w-full ${emailError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`} />
+                                    {emailError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{emailError}</p> : ""}
                                 </div>
 
                                 <div className="flex flex-col gap-2 items-start">
                                     <label>Company Name*</label>
-                                    <input type="text" name="name" onChange={handleChange} required className="rounded-xl border-2 border-[#E2E8F0] py-2 px-6 w-full" />
+                                    <input type="text" name="name" defaultValue={formData.name} onChange={handleChange} required className={`rounded-xl py-2 px-6 w-full ${nameError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`}/>
+                                    {nameError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{nameError}</p> : ""}
                                 </div>
 
                                 <div className="flex flex-col gap-2 items-start">
                                     <label>Phone Nubmer*</label>
-                                    <input type="text" name="phone" onChange={handleChange} required className="rounded-xl border-2 border-[#E2E8F0] py-2 px-6 w-full" />
+                                    <input type="text" name="phone" defaultValue={formData.phone} onChange={handleChange} required className={`rounded-xl py-2 px-6 w-full ${phoneError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`}/>
+                                    {phoneError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{phoneError}</p> : ""}
                                 </div>
                             </>
                     }

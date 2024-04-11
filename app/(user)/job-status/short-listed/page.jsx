@@ -15,7 +15,7 @@ export default function ShortlListed() {
                 throw new Error("Cannot Fetch")
             }
             console.log(data);
-            setAppliedJobs(data.filter(data => data.seen_status === 1 && data.status === 0))
+            setAppliedJobs(data.filter(data => data.status === 2))
             // The total count of data needs to be dividd by the number of data sent per page by backend
 
 
@@ -43,7 +43,7 @@ export default function ShortlListed() {
                                     </div>
 
                                     <div>
-                                        Applied on:
+                                        Applied on: {data.applied_on}
                                     </div>
                                 </div>
 
@@ -55,7 +55,18 @@ export default function ShortlListed() {
 
                                 <div className="flex flex-col gap-1 font-medium  mt-8">
                                     <p className=""> Salary/Month</p>
-                                    <p className="text-lg">{data.job.salary}$ <span className="text-[#828282] text-sm">/Per month</span></p>
+                                    <p className="text-lg">
+                                         {
+                                            data.salary && <p>{data.salary}$ <span className="text-[#828282]">/month</span></p>
+                                        }
+                                        {
+                                            data.min_salary && <p>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282]">/month</span> </p>
+                                        }
+
+                                        {
+                                            !data.min_salary && !data.salary && <p>Undisclosed </p>
+                                        }
+                                        </p>
                                 </div>
 
                                 <div className="bg-gurkha-yellow w-full rounded-xl p-4 flex gap-4 items-center mt-6">

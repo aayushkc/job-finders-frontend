@@ -44,7 +44,7 @@ export default function AdminDashBoardLayout({ children }) {
   ];
   return (
     <ProtectedAdminPage>
-      <div className=" flex  min-h-screen">
+      <div className="flex  min-h-screen">
         <div className=" basis-[20%]  pt-10 border-r-2 ml-8 px-4 mt-6  border-[#CCC5FA]  bg-white ">
           <div>
             <ul className=" flex flex-col gap-4 text-base text-[#324054] font-semibold capitalize">

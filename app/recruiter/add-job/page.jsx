@@ -31,7 +31,7 @@ export default function Page() {
     const [skills, setSkills] = useState([]);
     const [jobcategory, setJobCategory] = useState([]);
     const [educationIfon, setEducationInfo] = useState([]);
-    const [jobSuccess,setJobSuccess] = useState(false)
+    const [jobSuccess, setJobSuccess] = useState(false)
     const [jobError, setJobError] = useState(false)
     const getIndustries = async () => {
 
@@ -144,14 +144,14 @@ export default function Page() {
     ]
     const onSubmit = async (data) => {
         console.log(data);
-        
+
         try {
             const res = await PostWithTokien('/recruiter/add-job/', data)
             console.log(res);
             if (res.detail) {
                 throw new Error("Cannot Fetch")
             }
-           setJobSuccess(true)
+            setJobSuccess(true)
         }
         catch (errors) {
             console.log("ENteerereddddddd");
@@ -169,21 +169,21 @@ export default function Page() {
     return (
         <AdminDashBoardLayout>
             {
-                jobSuccess &&<DialogBox 
-                                dialogHeading={"Job Added Sucessfully"} 
-                                dialogText={"Job has been Added SuccessFully"}
-                                goToPageName={"View All Jobs"}
-                                url={"/recruiter/view-all-jobs"}
-                                success={true}
-                        />
+                jobSuccess && <DialogBox
+                    dialogHeading={"Job Added Sucessfully"}
+                    dialogText={"Job has been Added SuccessFully"}
+                    goToPageName={"To View All Pending Jobs"}
+                    url={"/recruiter/view-all-pending-jobs"}
+                    success={true}
+                />
             }
 
             {
-                jobError &&<DialogBox 
-                                dialogHeading={"An Error occured during Submission"} 
-                                dialogText={"Please try again"}
-                                error={true}
-                        />
+                jobError && <DialogBox
+                    dialogHeading={"An Error occured during Submission"}
+                    dialogText={"Please try again"}
+                    error={true}
+                />
             }
             <h1 className="text-3xl font-semibold">Add Job Vacancy</h1>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
@@ -199,12 +199,12 @@ export default function Page() {
                             id="title"
                             className="w-full rounded-xl bg-white py-4 px-3 text-black"
                             placeholder="Enter Job Title" />
-                
-                       
+
+
                     </div>
-                    {errors.title && 
-                          <p>{console.log(errors.title.message)}</p>
-                        }
+                    {errors.title &&
+                        <p>{console.log(errors.title.message)}</p>
+                    }
                 </div>
 
                 {/* Number of Vacancy */}
@@ -212,7 +212,7 @@ export default function Page() {
                     <label htmlFor="vacancy-number" className="text-sm">Number of Vacancy*</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input
-                            {...register("number_of_vacancy", { required: true, min:1 })}
+                            {...register("number_of_vacancy", { required: true, min: 1 })}
                             type="number"
                             name='number_of_vacancy'
                             id="number_of_vacancy"
@@ -271,7 +271,7 @@ export default function Page() {
 
                 {/*Job Experence Required */}
 
-                <SelectComponent
+                {/* <SelectComponent
                     name={"required_years_of_experience"}
                     label={"Required Years of Experience"}
                     control={control}
@@ -285,7 +285,23 @@ export default function Page() {
                         })
                     }
 
-                </SelectComponent>
+                </SelectComponent> */}
+
+                <ReactHookFormSelect
+                    id="required_years_of_experience-select"
+                    name="required_years_of_experience"
+                    label="Required Years of Experience"
+                    control={control}
+                    defaultValue={""}
+                >
+                    {
+                        workExpereinceChoices?.map(data => {
+                            return <MenuItem   key={data.id} value={data.id}>
+                                 {data.type}
+                            </MenuItem>
+                        })
+                    }
+                </ReactHookFormSelect>
 
 
 
@@ -332,7 +348,7 @@ export default function Page() {
                     name="required_skills"
                     control={control}
                     defaultValue={[]}
-                    rules={{required:true}}
+                    rules={{ required: true }}
                     render={({ field }) => (
                         <FormControl fullWidth>
                             <InputLabel id="skills">Skills</InputLabel>
@@ -362,7 +378,7 @@ export default function Page() {
                     name="job_category"
                     control={control}
                     defaultValue={[]}
-                    rules={{required:true}}
+                    rules={{ required: true }}
                     render={({ field }) => (
                         <FormControl fullWidth>
                             <InputLabel id="job_category">Job Category</InputLabel>
@@ -392,7 +408,7 @@ export default function Page() {
                     name="education_info"
                     control={control}
                     defaultValue={[]}
-                    rules={{required:true}}
+                    rules={{ required: true }}
                     render={({ field }) => (
                         <FormControl fullWidth>
                             <InputLabel id="education_info">Select Required Degree</InputLabel>
@@ -450,7 +466,7 @@ export default function Page() {
                             control={control}
                             name="description"
                             defaultValue={""}
-                            rules={{required:true}}
+                            rules={{ required: true }}
                             render={({ field: { onChange, value } }) => (
                                 <FroalaEditor
                                     model={value}

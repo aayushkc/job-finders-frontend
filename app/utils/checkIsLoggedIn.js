@@ -9,9 +9,11 @@ export const AuthProvider = ({ children }) => {
 
   // Check cookie on mount
   useEffect(() => {
-    const loggedInCookie = Cookies.get('isLoggedIn');
-    if (loggedInCookie === 'true') {
+    const loggedInCookie = Cookies.get('accessToken');
+    if (loggedInCookie) {
       setIsLoggedIn(true);
+    }else{
+      setIsLoggedIn(false)
     }
   }, []);
 

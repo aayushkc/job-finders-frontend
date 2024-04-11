@@ -18,7 +18,7 @@ import PostWithTokien from "@/app/api/postWithToken"
 import PostFormWithToken from "@/app/api/postFormWithToken"
 import DialogBox from "@/app/components/sucessbox"
 import JobPanelData from "@/app/components/JobPanelData"
-import { useParams, useSearchParams,useRouter, usePathname } from "next/navigation"
+import { useParams, useSearchParams, useRouter, usePathname } from "next/navigation"
 
 
 
@@ -41,7 +41,7 @@ export default function JobDetail() {
     const [jobPanelData, setJobPanelData] = useState()
     const [totalPage, setTotalPage] = useState(1)
     const [totalJobMatch, setTotalJobMatch] = useState(0)
-    const [pageNum, setPageNum] = useState(serachParam.get("pageNum")||1)
+    const [pageNum, setPageNum] = useState(serachParam.get("pageNum") || 1)
     const [isAppliedClicked, setIsApplied] = useState(false)
     const [open, setOpen] = useState(true);
     const [success, setSuccess] = useState(false)
@@ -71,7 +71,7 @@ export default function JobDetail() {
             setTotalJobMatch(data.count)
             setTotalPage(pages)
             setRecommendedJobs(data.results)
-            if(pageChange){
+            if (pageChange) {
                 setJobPanelData(data.results[0])
 
             }
@@ -89,7 +89,7 @@ export default function JobDetail() {
             }
             console.log(data);
             // The total count of data needs to be dividd by the number of data sent per page by backend
-            
+
             setJobPanelData(data)
 
         }
@@ -101,12 +101,12 @@ export default function JobDetail() {
     const handlePageChange = (e, page) => {
         console.log(page);
         setPageNum(page)
-        
+
     }
 
     const handledApplied = async () => {
         console.log("Enterererserssfonsdfdsnoin");
-       
+
         const formData = new FormData()
         formData.append("job", jobPanelData.id)
         try {
@@ -129,38 +129,38 @@ export default function JobDetail() {
     }
 
     useEffect(() => {
-        
-        if(serachParam.get("id") && serachParam.get("pageNum")){
+
+        if (serachParam.get("id") && serachParam.get("pageNum")) {
             getRecommendedJobs()
         }
-            const nextSearchParams = new URLSearchParams(serachParam.toString())
-            nextSearchParams.delete('id')
-            nextSearchParams.delete('pageNum')
-            
-            router.replace(`${pathname}?${nextSearchParams}`)
-        if(!serachParam.get("id")){
+        const nextSearchParams = new URLSearchParams(serachParam.toString())
+        nextSearchParams.delete('id')
+        nextSearchParams.delete('pageNum')
+
+        router.replace(`${pathname}?${nextSearchParams}`)
+        if (!serachParam.get("id")) {
             getRecommendedJobs(true)
         }
-           
+
     }, [pageNum])
 
 
-    useEffect(()=>{
-        if(serachParam.get("id") && serachParam.get("pageNum")){
+    useEffect(() => {
+        if (serachParam.get("id") && serachParam.get("pageNum")) {
             getJobFromId(serachParam.get("id"))
             setPageNum(serachParam.get("pageNum"))
         }
-        else{
+        else {
             getRecommendedJobs(true)
         }
-     
-      
 
-    },[])
+
+
+    }, [])
 
     return (
         <section className="max-w-[1440px] pt-6 pb-10">
-           
+
 
             {
                 success && <DialogBox
@@ -223,78 +223,103 @@ export default function JobDetail() {
             }
 
             {
-                recommendedJobs.length >0 ? 
-                <div className="bg-white pb-6  mx-20 grid grid-cols-[450px_1fr]">
-                <div>
-                    <div className="pl-6 py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
-                        <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
-                            <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
+                recommendedJobs.length > 0 ?
+                    <div className="bg-white pb-6  mx-20 grid grid-cols-[450px_1fr]">
+                        <div>
+                            <div className="pl-6 py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
+                                <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
+                                    <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
+                                </div>
+
+                                {
+                                    recommendedJobs?.map(data => {
+                                        return (
+                                            <div key={data.id}>
+                                                <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => { setJobPanelData(data); getJobFromId(data.id); }}>
+                                                    <div className="flex items-center gap-6">
+                                                        <div className="w-[55px] h-[55px]">
+                                                            <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
+                                                        </div>
+
+                                                        <div>
+                                                            <h2 className="font-bold text-lg capitalize">{data.title}</h2>
+                                                            <p className="text-[#79767C]"> {data.company}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-sm mt-8 mb-2 text-[#4F5052] capitalize mt-2">
+                                                        <p className="">Skills:
+                                                            <span className="text-black">
+                                                                {
+                                                                    data.required_skills.length >= 2 ?
+                                                                        data.required_skills.map(
+                                                                            (data, index) => index < 2 &&
+                                                                                <span key={index}>{index === 1 ? data.title + "..." : data.title + "/"}</span>
+
+
+
+                                                                        )
+                                                                        :
+                                                                        data.required_skills.map((data) => data.title)
+                                                                }
+                                                            </span>
+                                                        </p>
+
+                                                    </div>
+
+                                                    <div className="flex gap-2 font-medium items-center mt-8">
+                                                        <p className="text-[#3C831B]"> {data.work_location_type} |</p>
+
+                                                        {
+                                                            data.salary && <p>{data.salary}$ <span className="text-[#828282] text-sm">/month</span></p>
+                                                        }
+                                                        {
+                                                            data.min_salary && <p>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282] text-sm">/month</span> </p>
+                                                        }
+
+                                                        {
+                                                            !data.min_salary && !data.salary && <p>Undisclosed </p>
+                                                        }
+                                                    </div>
+
+
+                                                </div>
+                                                <hr className=""></hr>
+                                            </div>
+                                        )
+                                    })
+                                }
+
+                            </div>
+                            <div className="flex justify-center">
+                                <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
+                            </div>
+
                         </div>
+
+
 
                         {
-                            recommendedJobs?.map(data => {
-                                return (
-                                    <div>
-                                        <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => {setJobPanelData(data); getJobFromId(data.id); }}>
-                                            <div className="flex items-center gap-6">
-                                                <div className="w-[55px] h-[55px]">
-                                                    <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
-                                                </div>
-
-                                                <div>
-                                                    <h2 className="font-bold text-lg capitalize">{data.title}</h2>
-                                                    <p className="text-[#79767C]"> {data.company}</p>
-                                                </div>
-                                            </div>
-                                            <div className="text-sm mt-8 mb-2 text-[#4F5052] capitalize mt-2">
-                                                <p className="">Skills: <span className="text-black"> {data.required_skills.map(data => data.title + "/")}</span></p>
-
-                                            </div>
-
-                                            <div className="flex gap-2 font-medium items-center mt-8">
-                                                <p className="text-[#3C831B]"> {data.work_location_type} |</p>
-                                                <p>{data.salary}$ <span className="text-[#828282] text-sm">/month</span></p>
-                                            </div>
+                            jobPanelData?.id ?
 
 
-                                        </div>
-                                        <hr className=""></hr>
-                                    </div>
-                                )
-                            })
+                                <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick} isUserLoged={accessToken} />
+                                :
+                                <div className="flex justify-center items-center text-4xl font-bold">
+                                    <h2>Loading.........</h2>
+                                </div>
                         }
 
+
+
+
+
                     </div>
-                    <div className="flex justify-center">
-                        <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
+                    :
+                    <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
+                        Could not Find Any Jobs!
                     </div>
-
-                </div>
-
-           
-
-                    {
-                        jobPanelData?.id ?
-
-                        
-                        <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick} isUserLoged = {accessToken}/>
-                        :
-                        <div className="flex justify-center items-center text-4xl font-bold">
-                                <h2>Loading.........</h2>
-                        </div>
-                    }
-
-
-               
-
-
-            </div>
-            :
-            <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
-                Could not Find Any Jobs!
-            </div>
             }
-           
+
         </section>
     )
 }

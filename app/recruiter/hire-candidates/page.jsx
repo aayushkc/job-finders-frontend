@@ -18,19 +18,46 @@ import 'react-quill/dist/quill.snow.css';
 
 
 const ReactQuillEditable = dynamic(
-    () => import ('react-quill'),
-    { ssr: false }
+  () => import('react-quill'),
+  { ssr: false }
 );
 export default function HireCandidates() {
   const router = useRouter()
+  //React Quill Modules
+  const modules = {
+    toolbar: false
 
+  }
   const [industries, setIndustries] = useState([]);
   const [skills, setSkills] = useState([]);
   const [jobcategory, setJobCategory] = useState([]);
   const [educationIfon, setEducationInfo] = useState([]);
   const [showCalendly, setShowCalendly] = useState(false);
-  const [jobSuccess,setJobSuccess] = useState(false)
+  const [jobSuccess, setJobSuccess] = useState(false)
   const [jobError, setJobError] = useState(false)
+  const [showSalaryRange, setShowSalaryRange] = useState(false)
+  const [showFixedSalary, setShowFixedSalary] = useState(false)
+
+
+  const workExpereinceChoices = [
+    {
+      "id": 0,
+      "type": "0-1 Year"
+    },
+    {
+      "id": 1,
+      "type": "1-3 years"
+    },
+    {
+      "id": 2,
+      "type": "3-6 yearrs"
+    },
+    {
+      "id": 3,
+      "type": "More than Six years"
+    }
+  ]
+
 
   const getSkills = async () => {
     try {
@@ -105,69 +132,96 @@ export default function HireCandidates() {
 
   useCalendlyEventListener({
 
-    onEventScheduled: (e) => handleSubmit(async(data) => {
+    onEventScheduled: (e) => handleSubmit(async (data) => {
       // Submit the form data to your backend or perform any other action
-      const d ={...data, 
-        "job_location_type":parseInt(data.job_location_type),
-        "required_years_of_experience":parseInt(data.required_years_of_experience),
-      "level":parseInt(data.level)}
+      const d = {
+        ...data,
+
+        "required_years_of_experience": parseInt(data.required_years_of_experience),
+        "level": parseInt(data.level)
+      }
 
       try {
         const res = await PostWithTokien('/recruiter/add-job/', d)
         console.log(res);
         if (res.detail) {
-            console.log(res);
-            throw new Error("Cannot Fetch")
+          console.log(res);
+          throw new Error("Cannot Fetch")
         }
-       setJobSuccess(true)
-    }
-    catch (errors) {
+        setJobSuccess(true)
+      }
+      catch (errors) {
         console.log("ENteerereddddddd");
         console.log(errors);
         setJobError(true)
-    }
+      }
     })()
   })
 
   const onSubmit = async (data) => {
-  
-    const d ={...data, 
-      "job_location_type":parseInt(data.job_location_type),
-      "required_years_of_experience":parseInt(data.required_years_of_experience),
-    "level":parseInt(data.level)}
+
+    const d = {
+      ...data,
+
+      "required_years_of_experience": parseInt(data.required_years_of_experience),
+      "level": parseInt(data.level)
+    }
     console.log("Form Data: ", d);
     setShowCalendly(true)
 
   }
 
 
+  const handleSalaryRadioChange = (e) => {
+    const { name, value } = e.target
+    if (value === "0") {
+      setShowSalaryRange(false)
+      setShowFixedSalary(false)
+      setValue("min_salary", null)
+      setValue("max_salary", null)
+      setValue("salary", null)
+    }
+    if (value === "1") {
+      setShowFixedSalary(false)
+      setValue("salary", null)
+      setShowSalaryRange(true)
+    }
+    if (value === "2") {
+      setValue("min_salary", null)
+      setValue("max_salary", null)
+      setShowSalaryRange(false)
+      setShowFixedSalary(true)
+    }
+  }
+
   useEffect(() => {
     getIndustries()
     getSkills()
     getJobCategory()
     getEducationInfo()
+    setShowCalendly(false)
   }, [])
 
 
   return (
     <ProtectedAdminPage>
-       {
-                jobSuccess &&<DialogBox
-                                dialogHeading={"Job Request Sent Sucessfully"} 
-                                dialogText={"Request for Job Approval has benn sent successFully"}
-                                goToPageName={"View All Jobs"}
-                                url={"/recruiter/view-all-jobs"}
-                                success={true}
-                        />
-            }
+      {
+        jobSuccess && <DialogBox
+          dialogHeading={"Job Request Sent Sucessfully"}
+          dialogText={"Request for Job Approval has benn sent successFully"}
+          goToPageName={"View All Pending Jobs"}
+          url={"/recruiter/view-all-pending-jobs"}
+          success={true}
+        />
+      }
 
-            {
-                jobError &&<DialogBox 
-                                dialogHeading={"An Error occured during Submission"} 
-                                dialogText={"Please try again"}
-                                error={true}
-                        />
-            }
+      {
+        jobError && <DialogBox
+          dialogHeading={"An Error occured during Submission"}
+          dialogText={"Please try again"}
+          error={true}
+        />
+      }
       <section className="flex">
         <div className="bg-white  mt-6 ml-12 w-[95%] rounded-2xl mb-8">
           <h1 className="text-5xl text-[#193855] font-bold text-center pt-10">Welcome to Hire Gurkha</h1>
@@ -183,327 +237,372 @@ export default function HireCandidates() {
           </section>
 
           {
-            showCalendly ?<div className="">
+            showCalendly ? <div className="">
               <InlineWidget url="https://calendly.com/aayush-nexsewa/job-request" />
             </div>
-            :
-            (
-              <section className="flex justify-center mb-6">
-              <form onSubmit={handleSubmit(onSubmit)} className="mt-6 bg-[#F3F4F8] p-6 rounded-xl max-w-[800px]">
-  
-                {/* Job Title */}
-                <div className="my-4">
-                  <label htmlFor="tile" className="text-sm">Job Title*</label>
-                  <div className="flex gap-4 items-center mt-1">
-                    <input
-                      {...register("title", { required: "This field is required" })}
-                      type="text"
-                      name='title'
-                      id="title"
-                      className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                      placeholder="Enter Job Title" />
-  
-  
-                  </div>
-                  {errors.title &&
-                    <p>{console.log(errors.title.message)}</p>
-                  }
-                </div>
-  
-                {/* Number of Vacancy */}
-                <div className="my-4">
-                  <label htmlFor="vacancy-number" className="text-sm">Number of Vacancy*</label>
-                  <div className="flex gap-4 items-center mt-1">
-                    <input
-                      {...register("number_of_vacancy", { required: true, min: 1 })}
-                      type="number"
-                      name='number_of_vacancy'
-                      id="number_of_vacancy"
-                      className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                      placeholder="Enter Number of Vacancy" />
-                  </div>
-                </div>
-  
-                {/* Salary Amount */}
-                <div className="my-4">
-                  <label htmlFor="salary" className="text-sm">Salary</label>
-                  <div className="flex gap-4 items-center mt-1">
-                    <input
-                      {...register("salary", { required: true })}
-                      type="number"
-                      name='salary'
-                      id="salary"
-                      className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                      placeholder="Enter Salary" />
-                  </div>
-                </div>
-  
-  
-                {/* Site Location */}
-                <div className="my-4">
-                  <label htmlFor="site-location" className="text-sm">Site Location*</label>
-                  <div className="flex gap-4 items-center mt-1">
-                    <input
-                      {...register("job_location", { required: true })}
-                      type="text"
-                      name='job_location'
-                      id="job_location"
-                      className="w-full rounded-xl bg-white py-4 px-3 text-black"
-                      placeholder="Enter Job Site Location" />
-                  </div>
-                </div>
-  
-  
-                {/* work Location Type */}
-  
-                <div className="my-4">
-                  <FormControl className="mt-4">
-                    <FormLabel id="demo-row-radio-buttons-group-label" className="text-sm">Job Type</FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                      className="mt-3 ml-2 gap-3"
-  
-                    >
-                      <FormControlLabel value="0" control={<Radio size="small" {...register('work_location_type', { required: "Requried" })} />} label="Remote" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                      <FormControlLabel value="1" control={<Radio size="small" {...register('work_location_type', { required: "Requried" })} />} label="On-Site" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                      <FormControlLabel value="2" control={<Radio size="small" {...register('work_location_type', { required: "Requried" })} />} label="Hybrid" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-  
-  
-                {/*Job Experence Required */}
-  
-                <div className="my-4">
-                  <FormControl className="mt-4">
-                    <FormLabel id="demo-row-radio-buttons-group-label" className="text-sm">Required Years of Experience</FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                      className="mt-3 ml-2 gap-3"
-  
-                    >
-                      <FormControlLabel value="0" control={<Radio size="small" {...register('required_years_of_experience', { required: "Requried" })} />} label="Not Important" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                      <FormControlLabel value="1" control={<Radio size="small" {...register('required_years_of_experience', { required: "Requried" })} />} label="Less Than Three" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                      <FormControlLabel value="2" control={<Radio size="small" {...register('required_years_of_experience', { required: "Requried" })} />} label="Between Three and Six" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                      <FormControlLabel value="3" control={<Radio size="small" {...register('required_years_of_experience', { required: "Requried" })} />} label="More Than Six" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-  
-  
-  
-                {/* Job Level required  */}
-  
-                <div className="my-4">
-                  <FormControl className="mt-4">
-                    <FormLabel id="demo-row-radio-buttons-group-label" className="text-sm">Required Job Experience Level</FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                      className="mt-3 ml-2 gap-3"
-  
-                    >
-                      <FormControlLabel value="0" control={<Radio size="small" {...register('level', { required: "Requried" })} />} label="Intern" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                      <FormControlLabel value="1" control={<Radio size="small" {...register('level', { required: "Requried" })} />} label="Freshers" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                      <FormControlLabel value="2" control={<Radio size="small" {...register('level', { required: "Requried" })} />} label="Experienced" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-  
-                {/* Choose Industry */}
-                <div className="my-4">
-                  <Controller
-                    control={control}
-                    name="industry"
-                    render={({ field: { onChange } }) => (
-                      <Autocomplete
-                        defaultValue={null}
-                        options={industries}
-                        getOptionLabel={(option) => option.title_name}
-                        onChange={(event, values) => {
-                          onChange(values?.id)
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Choose One Domain"
-                            placeholder="Choose One Domain"
-                            helperText={errors.industry?.message}
-                            error={!!errors.industry}
-                          />
-                        )}
-                      />)}
-                  />
-  
-                </div>
-  
-  
-  
-  
-                {/* Choose Skills */}
-                <div className="my-4">
-  
-                  <Controller
-                    control={control}
-                    name="required_skills"
-                    render={({ field: { onChange } }) => (
-                      <Autocomplete
-                        defaultValue={[]}
-                        multiple
-                        disableCloseOnSelect
-                        options={skills}
-                        getOptionLabel={(option) => option.title}
-                        onChange={(event, values) => {
-                          onChange(values.map(val => { return val.id }))
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Required Skills"
-                            placeholder="Required Skills"
-                            helperText={errors.skills?.message}
-                            error={!!errors.skills}
-                          />
-                        )}
+              :
+              (
+                <section className="flex justify-center mb-6">
+                  <form onSubmit={handleSubmit(onSubmit)} className="mt-6 bg-[#F3F4F8] p-6 rounded-xl max-w-[800px]">
+
+                    {/* Job Title */}
+                    <div className="my-4">
+                      <label htmlFor="tile" className="text-sm">Job Title*</label>
+                      <div className="flex gap-4 items-center mt-1">
+                        <input
+                          {...register("title", { required: "This field is required" })}
+                          type="text"
+                          name='title'
+                          id="title"
+                          className="w-full rounded-xl bg-white py-4 px-3 text-black"
+                          placeholder="Enter Job Title" />
+
+
+                      </div>
+                      {errors.title ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.title.message}</p> : ""}
+                    </div>
+
+                    {/* Number of Vacancy */}
+                    <div className="my-4">
+                      <label htmlFor="vacancy-number" className="text-sm">Number of Vacancy*</label>
+                      <div className="flex gap-4 items-center mt-1">
+                        <input
+                          {...register("number_of_vacancy", { required: "This field is required", min: 1 })}
+                          type="number"
+                          name='number_of_vacancy'
+                          id="number_of_vacancy"
+                          className="w-full rounded-xl bg-white py-4 px-3 text-black"
+                          placeholder="Enter Number of Vacancy" />
+                      </div>
+                      {errors.number_of_vacancy ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.number_of_vacancy.message}</p> : ""}
+                    </div>
+
+                    {/* Salary Amount */}
+                    <div className="my-4">
+                      <FormControl className="mt-4">
+                        <FormLabel id="salary-radio-buttons-group-label" className="text-sm">Salary</FormLabel>
+                        <RadioGroup
+                          row
+                          aria-labelledby="salary-radio-buttons-group-label"
+                          name="salary-radio-buttons-group"
+                          className="mt-3 ml-2 gap-3"
+                          onChange={handleSalaryRadioChange}
+
+                        >
+                          <FormControlLabel value="0" control={<Radio size="small" />} label="Undisclosed" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                          <FormControlLabel value="1" control={<Radio size="small" />} label="Choose a range" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                          <FormControlLabel value="2" control={<Radio size="small" />} label="Choose fixed Salary" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                        </RadioGroup>
+                        {showSalaryRange &&
+                          (
+                            <div className="flex gap-8 items-center mt-2 w-full">
+                              <div className="flex gap-4 items-center mt-1 mb-4">
+                                <label htmlFor="min_salary" className="text-sm basis-[30%]">Min</label>
+                                <input min="1" type="number" {...register("min_salary", { required: "Salary is required" })} id="min_salary" className="w-full rounded-xl bg-white py-4 px-3 text-black" />
+
+                              </div>
+
+                              <div className="flex gap-4 items-center mt-1 mb-4">
+                                <label htmlFor="max_salary" className="text-sm basis-[30%]">Max</label>
+                                <input min="1" type="number" {...register("max_salary", { required: "Salary is required" })} id="max_salary" className="w-full rounded-xl bg-white py-4 px-3 text-black" />
+
+                              </div>
+
+                            </div>
+                          )
+                        }
+
+                        {showFixedSalary &&
+                          (
+
+
+                            <div className="flex gap-4 items-center mt-3 mb-4">
+                              <label htmlFor="salary" className="text-sm basis-[20%] font-bold">Enter Salary</label>
+                              <input min="1" type="number" {...register("salary", { required: "Salary is required" })} id="salary" className="w-full rounded-xl bg-white py-4 px-3 text-black" />
+
+                            </div>
+
+
+                          )
+                        }
+                      </FormControl>
+                    </div>
+
+
+                    {/* Site Location */}
+                    <div className="my-4">
+                      <label htmlFor="site-location" className="text-sm">Site Location*</label>
+                      <div className="flex gap-4 items-center mt-1">
+                        <input
+                          {...register("job_location", { required: "This field is required" })}
+                          type="text"
+                          name='job_location'
+                          id="job_location"
+                          className="w-full rounded-xl bg-white py-4 px-3 text-black"
+                          placeholder="Enter Job Site Location" />
+                      </div>
+                      {errors.job_location ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.job_location.message}</p> : ""}
+                    </div>
+
+
+                    {/* work Location Type */}
+
+                    <div className="my-4">
+                      <FormControl className="mt-4">
+                        <FormLabel id="demo-row-radio-buttons-group-label" className="text-sm">Job Type*</FormLabel>
+                        <RadioGroup
+                          row
+                          aria-labelledby="demo-row-radio-buttons-group-label"
+                          name="row-radio-buttons-group"
+                          className="mt-3 ml-2 gap-3"
+
+                        >
+                          <FormControlLabel value="0" control={<Radio size="small" {...register('work_location_type', { required: "This field is required" })} />} label="Remote" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                          <FormControlLabel value="1" control={<Radio size="small" {...register('work_location_type', { required: "This field is required" })} />} label="On-Site" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                          <FormControlLabel value="2" control={<Radio size="small" {...register('work_location_type', { required: "This field is required" })} />} label="Hybrid" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                        </RadioGroup>
+                      </FormControl>
+                      {errors.work_location_type ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.work_location_type.message}</p> : ""}
+                    </div>
+
+                    {/* Job Level required  */}
+
+                    <div className="my-4">
+                      <FormControl className="mt-4">
+                        <FormLabel id="demo-row-radio-buttons-group-label" className="text-sm">Required Job Experience Level*</FormLabel>
+                        <RadioGroup
+                          row
+                          aria-labelledby="demo-row-radio-buttons-group-label"
+                          name="row-radio-buttons-group"
+                          className="mt-3 ml-2 gap-3"
+
+                        >
+                          <FormControlLabel value="0" control={<Radio size="small" {...register('level', { required: "This field is required" })} />} label="Intern" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                          <FormControlLabel value="1" control={<Radio size="small" {...register('level', { required: "This field is required" })} />} label="Freshers" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                          <FormControlLabel value="2" control={<Radio size="small" {...register('level', { required: "This field is required" })} />} label="Experienced" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                        </RadioGroup>
+                      </FormControl>
+                      {errors.level ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.level.message}</p> : ""}
+                    </div>
+
+                    {/* Choose Industry */}
+                    <div className="my-4">
+                      <Controller
+                        control={control}
+                        name="industry"
+                        rules={{ required: "Industry is Required" }}
+                        render={({ field: { onChange } }) => (
+                          <Autocomplete
+                            defaultValue={null}
+                            options={industries}
+                            getOptionLabel={(option) => option.title_name}
+                            onChange={(event, values) => {
+                              onChange(values?.id)
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Choose One Domain"
+                                placeholder="Choose One Domain"
+                                helperText={errors.industry?.message}
+                                error={!!errors.industry}
+                              />
+                            )}
+                          />)}
                       />
-                    )}
-                  />
-                </div>
-  
-  
-                {/* Choose Job Category */}
-                <div className="my-4">
-                  <Controller
-                    control={control}
-                    name="job_category"
-                    render={({ field: { onChange } }) => (
-                      <Autocomplete
-                        defaultValue={[]}
-                        multiple
-                        disableCloseOnSelect
-                        options={jobcategory}
-                        getOptionLabel={(option) => option.title}
-                        onChange={(event, values) => {
-                          onChange(values.map(val => { return val.id }))
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Choose Job KeyWords"
-                            placeholder="Choose Job KeyWords"
-                            helperText={errors.job_category?.message}
-                            error={!!errors.job_category}
-                          />
-                        )}
+
+                    </div>
+
+                    {/*Job Experence Required */}
+
+                    <div className="my-4">
+
+                      <Controller
+                        control={control}
+                        name="required_years_of_experience"
+                        rules={{ required: "This field is Required" }}
+                        render={({ field: { onChange } }) => (
+                          <Autocomplete
+                            defaultValue={null}
+                            options={workExpereinceChoices}
+                            getOptionLabel={(option) => option.type}
+                            onChange={(event, values) => {
+                              onChange(values?.id)
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Choose One Required Years of Experience"
+                                placeholder="Choose One Required Years of Experience"
+                                helperText={errors.required_years_of_experience?.message}
+                                error={!!errors.required_years_of_experience}
+                              />
+                            )}
+                          />)}
                       />
-                    )}
-                  />
-  
-                </div>
-  
-  
-                {/* Select Degree */}
-                <div className="my-4">
-                  <Controller
-                    control={control}
-                    name="education_info"
-                    render={({ field: { onChange } }) => (
-                      <Autocomplete
-                        defaultValue={[]}
-                        multiple
-                        disableCloseOnSelect
-                        options={educationIfon}
-                        getOptionLabel={(option) => option.degree_name}
-                        onChange={(event, values) => {
-                          onChange(values.map(val => { return val.id }))
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Choose Required Education Level"
-                            placeholder="Choose Required Education Level"
-                            helperText={errors.prefferd_job?.message}
-                            error={!!errors.prefferd_job}
+                    </div>
+
+
+
+
+                    {/* Choose Skills */}
+                    <div className="my-4">
+
+                      <Controller
+                        control={control}
+                        name="required_skills"
+                        rules={{ required: "Skills is Required" }}
+                        render={({ field: { onChange } }) => (
+                          <Autocomplete
+                            defaultValue={[]}
+                            multiple
+                            disableCloseOnSelect
+                            options={skills}
+                            getOptionLabel={(option) => option.title}
+                            onChange={(event, values) => {
+                              onChange(values.map(val => { return val.id }))
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Required Skills"
+                                placeholder="Required Skills"
+                                helperText={errors.required_skills?.message}
+                                error={!!errors.required_skills}
+                              />
+                            )}
                           />
                         )}
                       />
-                    )}
-                  />
-  
-                </div>
-  
-  
-  
-                {/* Apply before Before */}
-                <Controller
-                  control={control}
-                  defaultValue={''}
-                  name="apply_before"
-                  rules={{
-                    required: {
-                      value: true,
-                      message: "Date of Birth is required",
-                    },
-                  }}
-                  render={({ field: { onChange, value, ref } }) => (
-                    <LocalizationProvider dateAdapter={AdapterDayjs} >
-                      <DatePicker
-                        label="Apply Before"
-                        disablePast
-                        onChange={(value) => onChange(value.format("YYYY-MM-DD"))}
-                        value={value}
-                        inputRef={ref}
-                        format={"YYYY-MM-DD"}
-                        className="mt-4"
+                    </div>
+
+
+                    {/* Choose Job Category */}
+                    <div className="my-4">
+                      <Controller
+                        control={control}
+                        name="job_category"
+                        rules={{ required: "Job Keywords is Required" }}
+                        render={({ field: { onChange } }) => (
+                          <Autocomplete
+                            defaultValue={[]}
+                            multiple
+                            disableCloseOnSelect
+                            options={jobcategory}
+                            getOptionLabel={(option) => option.title}
+                            onChange={(event, values) => {
+                              onChange(values.map(val => { return val.id }))
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Choose Job KeyWords"
+                                placeholder="Choose Job KeyWords"
+                                helperText={errors.job_category?.message}
+                                error={!!errors.job_category}
+                              />
+                            )}
+                          />
+                        )}
                       />
-                    </LocalizationProvider>
-                  )}
-                />
-  
-                {/* Job Description */}
-  
-                <div className="mt-6">
-                  <label htmlFor="description" className="text-sm">Job Description</label>
-                  <div className="flex gap-4 items-center mt-1">
+
+                    </div>
+
+
+                    {/* Select Degree */}
+                    <div className="my-4">
+                      <Controller
+                        control={control}
+                        name="education_info"
+                        rules={{ required: "Education Info is Required" }}
+                        render={({ field: { onChange } }) => (
+                          <Autocomplete
+                            defaultValue={[]}
+                            multiple
+                            disableCloseOnSelect
+                            options={educationIfon}
+                            getOptionLabel={(option) => option.degree_name}
+                            onChange={(event, values) => {
+                              onChange(values.map(val => { return val.id }))
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Choose Required Education Level"
+                                placeholder="Choose Required Education Level"
+                                helperText={errors.education_info?.message}
+                                error={!!errors.education_info}
+                              />
+                            )}
+                          />
+                        )}
+                      />
+
+                    </div>
+
+
+
+                    {/* Apply before Before */}
                     <Controller
                       control={control}
-                      name="description"
-                      defaultValue={""}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <ReactQuillEditable 
-                              theme="snow" 
-                              value={value} 
-                              onChange={onChange} 
-                              className="w-full bg-white "/>
-  
+                      defaultValue={''}
+                      name="apply_before"
+                      rules={{ required: "Appy Before Data is Required" }}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <LocalizationProvider dateAdapter={AdapterDayjs} >
+                          <DatePicker
+                            label="Apply Before"
+                            disablePast
+                            onChange={(value) => onChange(value.format("YYYY-MM-DD"))}
+                            value={value}
+                            inputRef={ref}
+                            format={"YYYY-MM-DD"}
+                            className="mt-4"
+                          />
+                        </LocalizationProvider>
                       )}
                     />
-  
-  
-  
-                  </div>
-                </div>
-                <button
-                  className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
-                  type="submit"
-                  disabled={!isValid}
-                >
-                  Next
-                </button>
-              </form>
-            </section>
-            )
+
+                    {/* Job Description */}
+
+                    <div className="mt-6">
+                      <label htmlFor="description" className="text-sm">Job Description</label>
+                      <div className="flex gap-4 items-center mt-1">
+                        <Controller
+                          control={control}
+                          name="description"
+                          defaultValue={""}
+                          rules={{ required: "Description is Required" }}
+                          render={({ field: { onChange, value } }) => (
+                            <ReactQuillEditable
+                              theme="snow"
+                              value={value}
+                              modules={modules}
+                              onChange={onChange}
+                              className="w-full bg-white read-quill min-h-[200px]" />
+
+                          )}
+                        />
+
+
+
+                      </div>
+                      {errors.description ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.description.message}</p> : ""}
+                    </div>
+                    <button
+                      className="mt-6 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
+                      type="submit"
+                    >
+                      Next
+                    </button>
+                  </form>
+                </section>
+              )
           }
 
 
-         
-         
+
+
 
 
 

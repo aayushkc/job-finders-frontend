@@ -5,7 +5,7 @@ export default function JobDisplayCard({ jobs, isApplicantCard }) {
     return jobs.map(data => {
         return (
 
-            <div className="bg-white px-8 py-4 rounded-xl border-[1px] border-[#D9D9D9] mt-4">
+            <div className="bg-white px-8 py-4 rounded-xl border-[1px] border-[#D9D9D9] mt-4" key={data.id}>
 
                 <h2 className="text-xl font-bold">{data.title}</h2>
                 <div className="flex gap-2 items-center mt-3">
@@ -43,7 +43,16 @@ export default function JobDisplayCard({ jobs, isApplicantCard }) {
                 </div>
                 <div className="flex gap-2 items-center mt-4">
                     <i className="bi bi-coin text-[#FFB000] text-xl"></i>
-                    <p>{data.salary}</p>
+                    {
+                            data.salary && <p className="text-[#01B46A]">{data.salary} $/month </p>
+                          }
+                          {
+                            data.min_salary && <p className="text-[#01B46A]">{data.min_salary} - {data.max_salary} $/month </p>
+                          }
+
+                          {
+                            !data.min_salary && !data.salary && <p className="text-[#01B46A]">Undisclosed </p>
+                          }
                 </div>
                 {
                     isApplicantCard &&

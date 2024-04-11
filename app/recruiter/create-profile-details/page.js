@@ -17,7 +17,7 @@ import 'react-quill/dist/quill.snow.css';
 
 
 const ReactQuillEditable = dynamic(
-    () => import ('react-quill'),
+    () => import('react-quill'),
     { ssr: false }
 );
 
@@ -27,10 +27,47 @@ export default function CreateProfileDetails() {
     const [selectedFile, setSelectedFile] = useState()
     const [preview, setPreview] = useState()
 
+
+    const comapnySizeChoices = [
+        {
+            "id": 0,
+            "type": "1-10 employees"
+        },
+        {
+            "id": 1,
+            "type": "11-50 employees"
+        },
+        {
+            "id": 2,
+            "type": "51-200 employees"
+        },
+        {
+            "id": 3,
+            "type": "201-500 employees"
+        },
+        {
+            "id": 4,
+            "type": "501-1000 employees"
+        },
+        {
+            "id": 5,
+            "type": "1001-5000 employees"
+        },
+        {
+            "id": 6,
+            "type": "5001-10,000 employees"
+        },
+        {
+            "id": 7,
+            "type": "10,001+ employees"
+        }
+    ]
+
     const {
         handleSubmit,
         register,
         control,
+        setValue,
         formState: { errors, isSubmitting, isDirty, isValid },
     } = useForm()
 
@@ -77,6 +114,8 @@ export default function CreateProfileDetails() {
         formData.append("name", data.name)
         formData.append("company_url", data.company_url)
         formData.append("company_size", data.company_size)
+        // formData.append("company_min_size", data.company_min_size)
+        // formData.append("company_max_size", data.company_max_size)
         formData.append("location", data.location)
         formData.append("phone", data.phone)
         formData.append("company_email", data.company_email)
@@ -103,6 +142,7 @@ export default function CreateProfileDetails() {
 
 
 
+
     //Code to preview the selected image file on browser
     useEffect(() => {
         if (!selectedFile) {
@@ -111,37 +151,38 @@ export default function CreateProfileDetails() {
         }
 
         const objectUrl = URL.createObjectURL(selectedFile)
+        setValue("logo", selectedFile)
         setPreview(objectUrl)
 
         // free memory when ever this component is unmounted
         return () => URL.revokeObjectURL(objectUrl)
     }, [selectedFile])
 
-    async function chekcProfile(){
+    async function chekcProfile() {
         const accessToken = Cookies.get('accessToken');
 
 
         const requestOptions = {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            
-            Authorization: `Bearer ${accessToken}`,
-          },
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+
+                Authorization: `Bearer ${accessToken}`,
+            },
         };
-    
+
         try {
-          const response = await fetch(`${APIENDPOINT}/recruiter/get-recruiter-profile/`, requestOptions);
-          if (response.ok) {
-            // Handle non-successful responses
-            router.push("/recruiter")
-            
-          }
-        return;
+            const response = await fetch(`${APIENDPOINT}/recruiter/get-recruiter-profile/`, requestOptions);
+            if (response.ok) {
+                // Handle non-successful responses
+                router.push("/recruiter")
+
+            }
+            return;
         } catch (error) {
-          console.error('There was a problem with the fetch request:', error);
-          // Handle error
-          return { error: error.message };
+            console.error('There was a problem with the fetch request:', error);
+            // Handle error
+            return { error: error.message };
         }
     }
 
@@ -149,87 +190,115 @@ export default function CreateProfileDetails() {
     useEffect(() => {
         getIndustries()
         chekcProfile()
-        
+
     }, [])
 
     return (
 
         <AdminDashBoardLayout>
-            
+
             <div>
                 <h1 className="text-3xl font-semibold">Add Profile Details</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
 
-               
-
-                {/* Comapny Name Fields */}
 
 
-                <label htmlFor="name" className="text-sm">Company Name</label>
-                <div className="flex gap-4 items-center mt-1">
-                    <input type="text" {...register("name", { required: "Name is Required" })} id="name" className={`w-full rounded-xl bg-white py-4 px-3 text-black`} placeholder="Enter Company Name" />
-                </div>
+                    {/* Comapny Name Fields */}
 
 
-
-                {/* Company Email Fields  */}
-
-                <label htmlFor="email" className="text-sm">Company Email</label>
-                <div className="flex gap-4 items-center mt-1">
-                    <input type="email" {...register("company_email", { required: "Email is required" })} id="email" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Email" />
-
-
-                </div>
+                    <label htmlFor="name" className="text-sm">Company Name</label>
+                    <div className="flex gap-4 items-center mt-1">
+                        <input type="text" {...register("name", { required: "Name is Required" })} id="name" className={`w-full rounded-xl bg-white py-4 px-3 text-black`} placeholder="Enter Company Name" />
+                    </div>
 
 
 
-                {/* Phone Fields */}
+                    {/* Company Email Fields  */}
 
-                <label htmlFor="phone" className="text-sm">Phone</label>
-                <div className="flex gap-4 items-center mt-1">
-                    <input min="1" type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Phone number" />
-
-                </div>
+                    <label htmlFor="email" className="text-sm">Company Email</label>
+                    <div className="flex gap-4 items-center mt-1">
+                        <input type="email" {...register("company_email", { required: "Email is required" })} id="email" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Email" />
 
 
-                 {/* COmpany sizze Fields */}
-
-                 <label htmlFor="size" className="text-sm">Company Size</label>
-                <div className="flex gap-4 items-center mt-1">
-                    <input min="1" type="number" {...register("company_size", { required: "Size is required" })} id="size" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Number of Employee" />
-
-                </div>
+                    </div>
 
 
 
+                    {/* Phone Fields */}
+
+                    <label htmlFor="phone" className="text-sm">Phone</label>
+                    <div className="flex gap-4 items-center mt-1">
+                        <input min="1" type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Phone number" />
+
+                    </div>
+
+
+                    {/* COmpany sizze Fields */}
+
+                    {/* <h3 htmlFor="size" className="text-base font-semibold mt-2">Company Size</h3> */}
+                    <div className="my-4">
+
+                        <Controller
+                            control={control}
+                            name="company_size"
+                            rules={{ required: "This field is Required" }}
+                            render={({ field: { onChange } }) => (
+                                <Autocomplete
+                                    defaultValue={null}
+                                    options={comapnySizeChoices}
+                                    getOptionLabel={(option) => option.type}
+                                    onChange={(event, values) => {
+                                        onChange(values?.id)
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Choose One Company Size Option"
+                                            placeholder="Choose One Company Size Option"
+                                            helperText={errors.company_size?.message}
+                                            error={!!errors.company_size}
+                                        />
+                                    )}
+                                />)}
+                        />
+                        {errors.company_size ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.company_size.message}</p> : ""}
+                    </div>
 
 
 
-                {/* Comapany Logo Fields */}
 
 
-                <div className="w-[155px] h-[155px] rounded-2xl bg-white/40 flex items-center p-2 justify-center">
 
-                    <div className="flex flex-col gap-4">
-                        <div className='w-[101px] h-[71px] mb-3'>
-                            {
-                                //Previews the image
-                                selectedFile ? <img src={preview} className='w-full h-full object-contain' /> : ""
-                            }
-                        </div>
 
-                        <div>
+                    {/* Comapany Logo Fields */}
+                    {errors.logo ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.logo.message}</p> : ""}
 
-                            {/* Handle the upload changes done in the image field */}
-                            <Controller
-                                control={control}
-                                name="logo"
-                                render={({ field: { onChange } }) =>
-                                    <Button component="label" variant="contained" sx={{ backgroundColor: '#49C199', color: 'white', textTransform: "capitalize", border: "1px solid #475569", width: "max-content" }}>
-                                        Choose Image
-                                        <VisuallyHiddenInput type="file" onChange={handleChange} accept=".jpeg,.jpg, .png"/>
-                                    </Button>}
-                            ></Controller>
+                    <div className="w-[155px] h-[155px] mb-10">
+
+                        <div className="flex flex-col gap-2">
+                            <div className={`w-[140px] h-[140px] relative border-2 ${errors.logo ? 'border-red-600' : 'border-[#514646]'}`}>
+                                {
+                                    //Previews the image
+                                    selectedFile ? <img src={preview} className='w-full h-full object-contain' /> : <p className="absolute top-[30%] text-center font-bold text-sm">Upload Company Logo</p>
+                                }
+                            </div>
+
+                            <div>
+
+                                {/* Handle the upload changes done in the image field */}
+                                <Controller
+                                    control={control}
+                                    name="logo"
+                                    rules={{ required: "Company logo is required" }}
+                                    render={({ field: { onChange } }) =>
+                                        <Button component="label" variant="contained" sx={{ backgroundColor: '#49C199', color: 'white', textTransform: "capitalize", border: "1px solid #475569", width: "max-content" }}>
+                                            Choose Company Logo
+                                            <VisuallyHiddenInput type="file" onChange={handleChange} accept=".jpeg,.jpg, .png" />
+                                        </Button>}
+                                ></Controller>
+
+
+                            </div>
 
 
                         </div>
@@ -238,123 +307,114 @@ export default function CreateProfileDetails() {
                     </div>
 
 
-                </div>
+
+
+
+                    {/* Company Location Fields */}
+
+                    <label htmlFor="location" className="text-sm">Location</label>
+                    <div className="flex gap-4 items-center mt-1">
+                        <input type="text" {...register("location", { required: "Location is required" })} id="location" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Location" />
+
+                    </div>
+
+
+                    {/* Comapny Url Fields */}
+
+                    <label htmlFor="company_url" className={`text-sm  ${errors.company_url && 'text-red-600'}`}>Company Website URL</label>
+                    <div className="flex gap-4 items-center mt-1">
+                        <input
+                            type="text"
+                            {...register("company_url",
+                                {
+                                    pattern: {
+                                        value: /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+                                        message: "Url must start with https:// or http://"
+                                    }
+
+                                })
+                            }
+                            id="company_url"
+                            className={`w-full rounded-xl bg-white py-4 px-3 text-black ${errors.company_url && 'border-2 border-red-600'}`}
+                            placeholder="https://example.com"
+                        />
+                    </div>
+                    {errors.company_url ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.company_url.message}</p> : ""}
+
+
+
+
+                    {/* Comany Industry Fields */}
+                    <div className="my-4">
+                        <Controller
+                            control={control}
+                            name="industry"
+                            rules={{ required: "Industry is required" }}
+                            render={({ field: { onChange } }) => (
+                                <Autocomplete
+                                    defaultValue={null}
+                                    options={industries}
+                                    getOptionLabel={(option) => option.title_name}
+                                    onChange={(event, values) => {
+                                        onChange(values?.id)
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Choose One Domain"
+                                            placeholder="Choose One Domain"
+                                            helperText={errors.industry?.message}
+                                            error={!!errors.industry}
+                                        />
+                                    )}
+                                />)}
+                        />
+
+                    </div>
 
 
 
 
 
-                {/* Company Location Fields */}
-
-                <label htmlFor="location" className="text-sm">Location</label>
-                <div className="flex gap-4 items-center mt-1">
-                    <input type="text" {...register("location", { required: "Location is required" })} id="location" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Location" />
-
-                </div>
+                    {/* Description Fields */}
 
 
-                {/* Comapny Url Fields */}
+                    <label htmlFor="description" className="text-sm">Description</label>
+                    <div className="flex gap-4 items-center mt-1">
 
-                <label htmlFor="company_url" className="text-sm">Company Website URL</label>
-                <div className="flex gap-4 items-center mt-1">
-                    <input type="text" {...register("company_url", { required: "Url is required" })} id="company_url" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="https://example.com" />
+                        <Controller
+                            name="description"
+                            control={control}
+                            rules={{
+                                required: "Description is Required"
+                            }}
+                            defaultValue={""}
+                            render={({ field: { onChange, value } }) => (
 
-                </div>
+                                <ReactQuillEditable theme="snow" value={value} onChange={onChange} className="w-full bg-white " />
+                            )}
+                        />
+
+                    </div>
 
 
-
-                {/* Comany Industry Fields */}
-                <div className="my-4">
-                  <Controller
-                    control={control}
-                    name="industry"
-                    rules={{required:"Industry is required"}}
-                    render={({ field: { onChange } }) => (
-                      <Autocomplete
-                        defaultValue={null}
-                        options={industries}
-                        getOptionLabel={(option) => option.title_name}
-                        onChange={(event, values) => {
-                          onChange(values?.id)
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Choose One Domain"
-                            placeholder="Choose One Domain"
-                            helperText={errors.industry?.message}
-                            error={!!errors.industry}
-                          />
-                        )}
-                      />)}
-                  />
-  
-                </div>
-  
-
-                {/* <label htmlFor="industry" className="text-sm">Industry</label>
-                <div className="flex gap-4 items-center mt-1">
-
-                    <ReactHookFormSelect
-                        id="idustry-select"
-                        name="industry"
-                        label="Choose one Industry"
-                        control={control}
-                        defaultValue={''}
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
                     >
-                        {
-                            industries?.map(industry => {
-                                return <MenuItem key={industry.title} value={industry.id}>
-                                    {industry.title_name}
-                                </MenuItem>
-                            })
-                        }
-                    </ReactHookFormSelect>
-
-
-
-                </div> */}
-
-
-                {/* Description Fields */}
-
-
-                <label htmlFor="description" className="text-sm">Description</label>
-                <div className="flex gap-4 items-center mt-1">
-
-                    <Controller
-                        name="description"
-                        control={control}
-                        rules={{
-                            required:"Description is Required"
-                        }}
-                        defaultValue={""}
-                        render={({ field: { onChange, value } }) => (
-            
-                            <ReactQuillEditable theme="snow" value={value} onChange={onChange} className="w-full bg-white "/>
+                        {isSubmitting ? (
+                            <ClipLoader
+                                color={"#FFFFFF"}
+                                loading={true}
+                                size={20}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                            />
+                        ) : (
+                            "Submit Details"
                         )}
-                    />
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    disabled={!isDirty || !isValid || isSubmitting}
-                    className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
-                >
-                    {isSubmitting ? (
-                        <ClipLoader
-                        color={"#FFFFFF"}
-                        loading={true}
-                        size={20}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                      />
-                    ) : (
-                        "Submit Details"
-                    )}
-                </button>
+                    </button>
 
                 </form>
             </div>

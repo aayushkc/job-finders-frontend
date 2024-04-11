@@ -45,7 +45,7 @@ export default function Applicants(){
             {
                 jobs.length > 0 ? <JobDisplayCard jobs = {jobs} isApplicantCard={true}/>:(
                     <div className="bg-white w-full h-[400px] grid">
-                        <h1 className="place-self-center font-bold text-4xl">No Jobs to Display!</h1>
+                        <h1 className="place-self-center font-bold text-4xl">No Applicants to Display!</h1>
                     </div>
                 )
             }

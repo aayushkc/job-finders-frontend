@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import Cookies from "js-cookie";
 import PatchRequest from "@/app/api/patchRequest";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
+import { addYears } from 'date-fns';
 
 export default function UpdateProfile() {
     const router = useRouter()
@@ -61,7 +62,7 @@ export default function UpdateProfile() {
                         "prefferd_job": []
                     }
                 )
-                router.push("/recruiter/create-profile-details")
+                router.push("/create-profile")
 
             }
             const data = await response.json();
@@ -170,22 +171,22 @@ export default function UpdateProfile() {
 
 
     const onSubmit = async (data) => {
-       
-        let da = { ...data,"dob":data.dob.format("YYYY-MM-DD")}
 
-        if(selectedFile){
-             da = { ...da, "resume":  selectedFile }
+        let da = { ...data, "dob": data.dob.format("YYYY-MM-DD") }
+
+        if (selectedFile) {
+            da = { ...da, "resume": selectedFile }
         }
 
-        if(selecteProfilePhoto){
-             da = { ...da, "profilePic":  selecteProfilePhoto }
+        if (selecteProfilePhoto) {
+            da = { ...da, "profilePic": selecteProfilePhoto }
         }
-        
-        if(!selectedFile){
+
+        if (!selectedFile) {
             delete da.resume
         }
         console.log("Profile Photttttttt:", selecteProfilePhoto);
-        if(!selecteProfilePhoto){
+        if (!selecteProfilePhoto) {
             delete da.profilePic
         }
 
@@ -195,14 +196,14 @@ export default function UpdateProfile() {
         formData.delete("skills")
         formData.delete("prefferd_job")
         data.skills.forEach(item => {
-            formData.append('skills',item);
+            formData.append('skills', item);
         });
 
         data.prefferd_job.forEach(item => {
             formData.append('prefferd_job', item);
         });
         try {
-            const res = await PatchRequest(`/job-seeker/get-update-details/${profileDetail[0].id}`, formData,  true)
+            const res = await PatchRequest(`/job-seeker/get-update-details/${profileDetail[0].id}`, formData, true)
             console.log("This is respooooooooooooooo");
             if (res.detail) {
                 console.log(res);
@@ -232,6 +233,13 @@ export default function UpdateProfile() {
         setValue("profilePic", profileDetail[0]?.profilePic || "")
         setValue("resume", profileDetail[0]?.resume || "")
     }, [profileDetail])
+
+    const disableFutureDates = (date) => {
+        // Calculate the minimum birthdate allowed (14 years ago)
+        const minBirthDate = addYears(new Date(), -14);
+        // Disable future dates and dates where the user is less than 14 years old
+        return date > new Date() || date > minBirthDate;
+      };
 
     useEffect(() => {
         if (profileDetail && profileDetail[0]?.skills) {
@@ -336,10 +344,9 @@ export default function UpdateProfile() {
                                             <label htmlFor="first_name" className="text-sm">First Name*</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="first_name" {...register("first_name", { required: "First Name is required" })} />
                                         </div>
-
-                                        <div className="flex flex-col mt-6">
-                                            <label htmlFor="middle_name" className="text-sm">Middle Name</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="middle_name" {...register("middle_name")} />
+                                        <div className="flex flex-col  mt-6">
+                                            <label htmlFor="last_name" className="text-sm">Last Name*</label>
+                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="last_name" {...register("last_name", { required: "Last Name is required" })} />
                                         </div>
 
                                         <div className="flex flex-col mt-6">
@@ -350,8 +357,8 @@ export default function UpdateProfile() {
 
                                     <div className="w-[50%]">
                                         <div className="flex flex-col">
-                                            <label htmlFor="last_name" className="text-sm">Last Name*</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="last_name" {...register("last_name", { required: "Last Name is required" })} />
+                                            <label htmlFor="middle_name" className="text-sm">Middle Name</label>
+                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="middle_name" {...register("middle_name")} />
                                         </div>
 
                                         <div className="flex flex-col mt-6">
@@ -391,6 +398,7 @@ export default function UpdateProfile() {
                                             value={value}
                                             inputRef={ref}
                                             format={"YYYY-MM-DD"}
+                                            shouldDisableDate={disableFutureDates}
                                             className="mt-4"
                                         />
                                     </LocalizationProvider>
@@ -399,7 +407,7 @@ export default function UpdateProfile() {
                         </div>
 
 
-                        <div className="mt-10">
+                        {/* <div className="mt-10">
                             <h2 className="text-xl font-semibold">Job Preference</h2>
                             <FormControl className="mt-4">
                                 <FormLabel id="demo-row-radio-buttons-group-label" className="text-sm">Job Type</FormLabel>
@@ -410,12 +418,12 @@ export default function UpdateProfile() {
                                     className="mt-3 ml-2 gap-3"
 
                                 >
-                                    <FormControlLabel value="remote" control={<Radio size="small" {...register('job_location_type', { required: "Requried" })} />} label="Remote" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                                    <FormControlLabel value="onSite" control={<Radio size="small" {...register('job_location_type', { required: "Requried" })} />} label="On-Site" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
-                                    <FormControlLabel value="Hybrid" control={<Radio size="small" {...register('job_location_type', { required: "Requried" })} />} label="Hybrid" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                                    <FormControlLabel value="remote" control={<Radio size="small" {...register('job_location_type')} />} label="Remote" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                                    <FormControlLabel value="onSite" control={<Radio size="small" {...register('job_location_type')} />} label="On-Site" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
+                                    <FormControlLabel value="Hybrid" control={<Radio size="small" {...register('job_location_type')} />} label="Hybrid" className="border-[0.5px] border-[#CFD1D4] rounded py-[4px] pr-2" />
                                 </RadioGroup>
                             </FormControl>
-                        </div>
+                        </div> */}
 
                         <div className="mt-10">
                             <h2 className="text-xl font-semibold mb-4">Choose Your Domain</h2>
@@ -427,8 +435,8 @@ export default function UpdateProfile() {
                                     <Autocomplete
                                         {...field}
                                         options={industries}
-                                        getOptionLabel={(option) =>{return option.title_name? option.title_name :industries.filter(data =>  data.id === option)[0]?.title_name}}
-                                        isOptionEqualToValue={(option,value) =>{return typeof(value) === "number" ? option.id === value : option.id === value.id}}
+                                        getOptionLabel={(option) => { return option.title_name ? option.title_name : industries.filter(data => data.id === option)[0]?.title_name }}
+                                        isOptionEqualToValue={(option, value) => { return typeof (value) === "number" ? option.id === value : option.id === value.id }}
                                         onChange={(event, values) => {
                                             field.onChange(values?.id)
                                         }}
@@ -463,19 +471,19 @@ export default function UpdateProfile() {
                                             disableCloseOnSelect
                                             options={skills}
                                             getOptionLabel={(option) =>
-                                                option?
-                                                typeof option === "number" ?
-                                                    (skills.find(skill => skill.id === option) || {}).title || '' :
-                                                    option.title :""
-                                                }
+                                                option ?
+                                                    typeof option === "number" ?
+                                                        (skills.find(skill => skill.id === option) || {}).title || '' :
+                                                        option.title : ""
+                                            }
                                             isOptionEqualToValue={(option, value) => {
-                                                
+
                                                 return option.id === value
                                             }
                                             }
                                             onChange={(event, values) => {
-                                               
-                                                field.onChange(values.map(val => {return typeof(val) === "number"? val:  val.id }))
+
+                                                field.onChange(values.map(val => { return typeof (val) === "number" ? val : val.id }))
                                             }}
                                             renderInput={(params) => (
                                                 <TextField
@@ -497,7 +505,7 @@ export default function UpdateProfile() {
                             <h2 className="text-xl font-semibold">Choose Your Preffered Job Fields</h2>
                             <p className="text-xs text-[#4F5052] mb-4">(We will use this to recommend you jobs)</p>
                             <div style={{ marginBottom: 16, marginTop: 6 }}>
-                            <Controller
+                                <Controller
                                     control={control}
                                     name="prefferd_job"
                                     defaultValue={profileDetail && profileDetail[0]?.prefferd_job ? profileDetail[0].prefferd_job.map(data => data.id) : []}
@@ -508,19 +516,19 @@ export default function UpdateProfile() {
                                             disableCloseOnSelect
                                             options={prefferedJobField}
                                             getOptionLabel={(option) =>
-                                                option?
-                                                typeof option === "number" ?
-                                                    (prefferedJobField.find(preffJob => preffJob.id === option) || {}).title || '' :
-                                                    option.title :""
-                                                }
+                                                option ?
+                                                    typeof option === "number" ?
+                                                        (prefferedJobField.find(preffJob => preffJob.id === option) || {}).title || '' :
+                                                        option.title : ""
+                                            }
                                             isOptionEqualToValue={(option, value) => {
-                                               
+
                                                 return option.id === value
                                             }
                                             }
                                             onChange={(event, values) => {
-                                            
-                                                field.onChange(values.map(val => {return typeof(val) === "number"? val:  val.id }))
+
+                                                field.onChange(values.map(val => { return typeof (val) === "number" ? val : val.id }))
                                             }}
                                             renderInput={(params) => (
                                                 <TextField

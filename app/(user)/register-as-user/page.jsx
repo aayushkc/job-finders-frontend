@@ -17,6 +17,7 @@ export default function SignInUser() {
     const [emailExists, setEmailExists] = useState(false)
     
     const handleFormSubmit = async (data) => {
+        setEmailExists(false)
 
         try {
             const response = await fetch(`${APIENDPOINT}/auth/register/job-seeker`, {
@@ -31,7 +32,11 @@ export default function SignInUser() {
                 const er = await response.json();
                 console.log(er);
                 if(er.email){
-                    setEmailExists(true)
+                    if(er.email[0].startsWith("cus")){
+                        setEmailExists({email:["Email aready Exists"]})
+                        return
+                    }
+                    setEmailExists(er)
                 }else{
                     setEmailExists(false)
                 }
@@ -52,8 +57,8 @@ export default function SignInUser() {
     const formSchema = Yup.object().shape({
         username: Yup.string().required('Please Enter a username'),
         email: Yup.string()
-          .email()
-          .required('Please Enter your Email'),
+          .required('Please Enter your Email')
+          .email('Invalid Email Address'),
         password: Yup.string()
           .required("Password is required")
           .matches(
@@ -83,14 +88,13 @@ export default function SignInUser() {
             <section className="sm:place-self-center grid bg-white sm:rounded-xl  text-center sm:w-[30%] py-8 sm:my-10">
             <Link href="/signin" className='place-self-start pl-6'><i className="bi bi-arrow-left text-2xl text-left"></i></Link>
                 <div className="flex justify-center">
-                    <Image src={logo} alt="logo" />
+                    <Image src="/images/Footerlogo.png" alt="logo" width={100} height={40}/>
                 </div>
                 <h1 className="text-3xl font-bold my-3">Register as User</h1>
 
                 <form className="px-14 mt-4" onSubmit={handleSubmit(handleFormSubmit)}>
                     <div className="flex flex-col gap-2 items-start">
-                        {emailExists ? <p className="text-sm text-[#E33629]">Email Already Exists</p> :""}
-                        {errors.email ?<p className="text-sm text-[#E33629]">{errors.email.message}</p> :""}
+                        {emailExists ? <p className="text-sm text-[#E33629]">{emailExists.email}</p> :""}
                         <label>Email*</label>
                         <input 
                                 type="email" 
@@ -99,6 +103,8 @@ export default function SignInUser() {
                                 required 
                                 className="rounded-xl border-2 border-[#E2E8F0] py-2 px-6 w-full" 
                         />
+                    
+                        {errors.email ? <p className="text-sm text-[#E33629]">{errors.email.message}</p> :""}
                     </div>
 
                     <div className="flex flex-col gap-2 items-start">

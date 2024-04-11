@@ -22,6 +22,11 @@ const ReactQuillEditable = dynamic(
 );
 
 export default function Home() {
+  //React Quill Modules
+  const modules = {
+    toolbar: false
+
+}
   const router = useRouter()
   const {
     handleSubmit,
@@ -303,7 +308,7 @@ export default function Home() {
                         name="logo"
                         render={({ field: { onChange } }) =>
                           <Button component="label" variant="contained" sx={{ backgroundColor: '#49C199', color: 'white', textTransform: "capitalize", border: "1px solid #475569", width: "max-content" }}>
-                            Choose Image
+                            Choose Compny logo
                             <VisuallyHiddenInput type="file" onChange={handleChange} />
                           </Button>}
                       ></Controller>
@@ -358,17 +363,32 @@ export default function Home() {
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="company_url" className="text-sm">Company Website URL</label>
           <div className="flex gap-4 items-center mt-1">
-            <input type="text" {...register("company_url", { required: "Url is required" })} id="company_url" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editUrl ? false : true} placeholder="URL" />
+            <input 
+                type="text" 
+                {...register("company_url", { 
+                            pattern:{
+                                value:/^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
+                                message:"Url must be in the form http(s)://www.example.com"
+                            }
+                                
+                            })}
+                 id="company_url" 
+                 className="w-full rounded-xl bg-white py-4 px-3 text-black" 
+                 disabled={editUrl ? false : true} 
+                 placeholder="URL" />
             {
               editUrl ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
-                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Edit</button>
+                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
                   <button onClick={() => setEditUrl(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :
                 <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditUrl(true)}></i>
             }
+            
           </div>
+          
+          {errors.company_url ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.company_url.message}</p> : ""}
         </form>
 
 
@@ -412,8 +432,7 @@ export default function Home() {
         </form>
 
         {/* Description Fields */}
-        {/* In import FroalaEditorEditable is the editable editor while
-              FroalaEditor is a viewable editor */}
+    
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="description" className="text-sm">Description</label>
           <div className="flex gap-4 items-center mt-1">
@@ -429,7 +448,7 @@ export default function Home() {
                       theme="snow"
                       value={value}
                       onChange={onChange}
-                      className="w-full bg-white "
+                      className="w-full bg-white min-h-[300px] read-quill"
                     />
 
                   )}
@@ -440,7 +459,9 @@ export default function Home() {
                    <ReactQuillEditable
                       theme="snow"
                       readOnly
-                      className="w-full bg-white min-h-[300px]"
+                      value={profileDetail[0]?.description}
+                      modules={modules}
+                      className="w-full bg-white min-h-[300px] read-quill"
                     />
                 </div>
 
