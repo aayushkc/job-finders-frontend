@@ -9,6 +9,7 @@ import Link from "next/link";
 import PaginationComponent from "../components/paginationcomponent";
 import { APIENDPOINT } from "../api/APIENDPOINT";
 import AnonUserHomePage from "../components/anonymoususerhomepage";
+import Footer from "../components/footer";
 export default function Home() {
   const accessToken = Cookies.get('accessToken')
   const [recommendedJobs, setRecommendedJobs] = useState([])
@@ -22,7 +23,7 @@ export default function Home() {
       if (data.detail) {
         throw new Error("Cannot Fetch")
       }
-      console.log(data);
+    
       // The total count of data needs to be dividd by the number of data sent per page by backend
       const pages = Math.ceil(data.count / 4)
       setTotalPage(pages)
@@ -39,7 +40,7 @@ export default function Home() {
       if (data.detail) {
         throw new Error("Cannot Fetch")
       }
-      console.log(data);
+     
       setTopTwo(data.results)
     }
     catch (errors) {
@@ -73,7 +74,7 @@ export default function Home() {
   }
 
   const handlePageChange = (e, page) => {
-    console.log(page);
+  
     setPageNum(page)
 
   }
@@ -293,6 +294,8 @@ export default function Home() {
         <div className="flex justify-center mt-10">
           <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
         </div>
+
+        <Footer />
 
       </>
   );

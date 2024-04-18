@@ -16,7 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={sans.className  + "relative"}>
+      <body className={sans.className  + " relative"}>
         <AuthProvider>
           <Navbar />
           <main className="mt-[80px]">

@@ -24,6 +24,18 @@ export default function CreateProfile() {
     const [previewProfilePic, setPreviewProfilePic] = useState()
     const [skills, setSkills] = useState([])
     const [prefferedJobField, setPrefferedJobField] = useState([])
+
+    const {
+        handleSubmit,
+        register,
+        control,
+        setValue,
+        watch,
+        formState: { errors, isSubmitting, isDirty, isValid },
+    } = useForm()
+
+
+    const formIndustryId = watch("industry")
     
     const disableFutureDates = (date) => {
         // Calculate the minimum birthdate allowed (14 years ago)
@@ -35,7 +47,7 @@ export default function CreateProfile() {
 
     const getSkills = async () => {
         try {
-            const data = await GetRequestNoToken('/skills/')
+            const data = await GetRequestNoToken(`/get-skills/?industry=${formIndustryId ? formIndustryId : null}`)
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
@@ -45,16 +57,7 @@ export default function CreateProfile() {
             setSkills([{ "id": "", "title": "" }])
         }
     }
-    const {
-        handleSubmit,
-        register,
-        control,
-        setValue,
-        formState: { errors, isSubmitting, isDirty, isValid },
-    } = useForm()
-
-
-
+  
     const getIndustries = async () => {
 
         try {
@@ -144,9 +147,8 @@ export default function CreateProfile() {
 
     const onSubmit = async (data) => {
         const da = { ...data, "resume": selectedFile, "profilePic": selecteProfilePhoto }
-        console.log(da);
         const formData = new FormData()
-        Object.entries(da).forEach(([key, value]) => { formData.append(key, value); console.log(key, value); })
+        Object.entries(da).forEach(([key, value]) => { formData.append(key, value); })
         formData.delete("skills")
         formData.delete("prefferd_job")
         data.skills.forEach(item => {
@@ -158,26 +160,30 @@ export default function CreateProfile() {
         });
         try {
             const res = await PostFormWithToken(`/job-seeker/create-details/`, formData)
-            console.log("This is respooooooooooooooo");
+           
             if (res.detail) {
-                console.log(res);
+                
                 throw new Error("Cannot Fetch")
             }
-            console.log("Helooooooooooooooo");
+           
             router.push("/")
 
         }
         catch (errors) {
-            console.log("ENteerereddddddd Tissssssss");
+           
             console.log(errors);
         }
     }
 
     useEffect(() => {
         getIndustries()
-        getSkills()
         getJobCategory()
     }, [])
+
+    useEffect(() => {
+        getSkills()
+    
+      }, [formIndustryId])
 
     return (
         <>
@@ -381,6 +387,7 @@ export default function CreateProfile() {
                                         getOptionLabel={(option) => option.title_name}
                                         onChange={(event, values) => {
                                             onChange(values?.id)
+                                            setValue("skills",[])
                                         }}
                                         renderInput={(params) => (
                                             <TextField
@@ -398,40 +405,58 @@ export default function CreateProfile() {
 
 
                         </div>
-
-                        <div className="mt-10">
-                            <h2 className="text-xl font-semibold">Choose Your Skills</h2>
-                            <p className="text-xs text-[#4F5052] mb-4">(We will use this to recommend you jobs)</p>
-                            <div style={{ marginBottom: 16, marginTop: 6 }}>
-                                <Controller
-                                    control={control}
-                                    name="skills"
-                                    rules={{required:"You must choose one or more Skills"}}
-                                    render={({ field: { onChange } }) => (
-                                        <Autocomplete
-                                            defaultValue={[]}
-                                            multiple
-                                            disableCloseOnSelect
-                                            options={skills}
-                                            getOptionLabel={(option) => option.title}
-                                            onChange={(event, values) => {
-                                                onChange(values.map(val => { return val.id }))
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Required Skills"
-                                                    placeholder="Required Skills"
-                                                    helperText={errors.skills?.message}
-                                                    error={!!errors.skills}
-                                                />
-                                            )}
-                                        />
-                                    )}
-                                />
-
+                        {
+                            formIndustryId && (
+                                <div className="mt-10">
+                                <h2 className="text-xl font-semibold">Choose Your Skills</h2>
+                                <p className="text-xs text-[#4F5052] mb-4">(We will use this to recommend you jobs)</p>
+                                <div style={{ marginBottom: 16, marginTop: 6 }}>
+                                    <Controller
+                                        control={control}
+                                        name="skills"
+                                        rules={{required:"You must choose one or more Skills"}}
+                                        render={({ field}) => (
+                                            <Autocomplete
+                                                {...field}
+                                                defaultValue={[]}
+                                                multiple
+                                                disableCloseOnSelect
+                                                options={skills}
+                                                getOptionLabel={(option) =>
+                                                    option ?
+                                                      typeof option === "number" ?
+                                                        (skills.find(skill => skill.id === option) || {}).title || '' :
+                                                        option.title : ""
+                                                  }
+                                                  isOptionEqualToValue={(option, value) => {
+                  
+                                                    return option.id === value
+                                                  }
+                                                  }
+                                                  onChange={(event, values) => {
+                  
+                                                    field.onChange(values.map(val => { return typeof (val) === "number" ? val : val.id }))
+                                                  }}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        label="Required Skills"
+                                                        placeholder="Required Skills"
+                                                        helperText={errors.skills?.message}
+                                                        error={!!errors.skills}
+                                                    />
+                                                )}
+                                            />
+                                        )}
+                                    />
+    
+                                </div>
                             </div>
-                        </div>
+                                
+                            )
+                        }
+
+                       
 
                         <div className="mt-10">
                             <h2 className="text-xl font-semibold">Choose Your Preffered Job Fields</h2>

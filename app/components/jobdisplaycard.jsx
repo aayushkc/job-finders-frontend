@@ -11,7 +11,7 @@ export default function JobDisplayCard({ jobs, isApplicantCard }) {
                 <div className="flex gap-2 items-center mt-3">
                     <p className="text-[#4F5052] text-sm">Skills:</p>
                     {data.required_skills.map((data, index) => {
-                        console.log(data)
+                     
                         return <p className="bg-[#F3F4F8] text-black text-xs font-light p-2 rounded-xl" key={index}>{data.title}</p>
                     })}
 

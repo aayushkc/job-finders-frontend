@@ -38,6 +38,16 @@ export default function HireCandidates() {
   const [showSalaryRange, setShowSalaryRange] = useState(false)
   const [showFixedSalary, setShowFixedSalary] = useState(false)
 
+  const {
+    handleSubmit,
+    register,
+    control,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting, isDirty, isValid },
+  } = useForm()
+
+  const formData = watch();
 
   const workExpereinceChoices = [
     {
@@ -61,7 +71,7 @@ export default function HireCandidates() {
 
   const getSkills = async () => {
     try {
-      const data = await GetRequestNoToken('/skills/')
+      const data = await GetRequestNoToken(`/get-skills/?industry=${formData.industry ? formData.industry : null}`)
       if (data.detail) {
         throw new Error("Cannot Fetch")
       }
@@ -71,16 +81,6 @@ export default function HireCandidates() {
       setSkills([{ "id": "", "title": "" }])
     }
   }
-  const {
-    handleSubmit,
-    register,
-    control,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting, isDirty, isValid },
-  } = useForm()
-
-  const formData = watch();
 
   const getIndustries = async () => {
 
@@ -117,9 +117,8 @@ export default function HireCandidates() {
       if (data.detail) {
         throw new Error("Cannot Fetch")
       }
-      console.log(data);
       setEducationInfo(data)
-      console.log(educationIfon);
+     
     }
     catch (errors) {
       setEducationInfo([{
@@ -143,16 +142,15 @@ export default function HireCandidates() {
 
       try {
         const res = await PostWithTokien('/recruiter/add-job/', d)
-        console.log(res);
+       
         if (res.detail) {
-          console.log(res);
+         
           throw new Error("Cannot Fetch")
         }
         setJobSuccess(true)
       }
       catch (errors) {
-        console.log("ENteerereddddddd");
-        console.log(errors);
+      
         setJobError(true)
       }
     })()
@@ -166,7 +164,6 @@ export default function HireCandidates() {
       "required_years_of_experience": parseInt(data.required_years_of_experience),
       "level": parseInt(data.level)
     }
-    console.log("Form Data: ", d);
     setShowCalendly(true)
 
   }
@@ -196,12 +193,15 @@ export default function HireCandidates() {
 
   useEffect(() => {
     getIndustries()
-    getSkills()
     getJobCategory()
     getEducationInfo()
     setShowCalendly(false)
   }, [])
 
+  useEffect(() => {
+    getSkills()
+
+  }, [formData.industry])
 
   return (
     <ProtectedAdminPage>
@@ -398,6 +398,7 @@ export default function HireCandidates() {
                             getOptionLabel={(option) => option.title_name}
                             onChange={(event, values) => {
                               onChange(values?.id)
+                              setValue("required_skills", [])
                             }}
                             renderInput={(params) => (
                               <TextField
@@ -412,6 +413,56 @@ export default function HireCandidates() {
                       />
 
                     </div>
+
+
+                    {/* Choose Skills */}
+
+                    {
+                      formData.industry && (
+                        <div className="my-4">
+
+                          <Controller
+                            control={control}
+                            name="required_skills"
+                            rules={{ required: "Skills is Required" }}
+                            render={({ field }) => (
+                              <Autocomplete
+                                {...field}
+                                defaultValue={[]}
+                                multiple
+                                disableCloseOnSelect
+                                options={skills}
+                                getOptionLabel={(option) =>
+                                  option ?
+                                    typeof option === "number" ?
+                                      (skills.find(skill => skill.id === option) || {}).title || '' :
+                                      option.title : ""
+                                }
+                                isOptionEqualToValue={(option, value) => {
+
+                                  return option.id === value
+                                }
+                                }
+                                onChange={(event, values) => {
+
+                                  field.onChange(values.map(val => { return typeof (val) === "number" ? val : val.id }))
+                                }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label="Required Skills"
+                                    placeholder="Required Skills"
+                                    helperText={errors.required_skills?.message}
+                                    error={!!errors.required_skills}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        </div>
+                      )
+                    }
+
 
                     {/*Job Experence Required */}
 
@@ -439,40 +490,6 @@ export default function HireCandidates() {
                               />
                             )}
                           />)}
-                      />
-                    </div>
-
-
-
-
-                    {/* Choose Skills */}
-                    <div className="my-4">
-
-                      <Controller
-                        control={control}
-                        name="required_skills"
-                        rules={{ required: "Skills is Required" }}
-                        render={({ field: { onChange } }) => (
-                          <Autocomplete
-                            defaultValue={[]}
-                            multiple
-                            disableCloseOnSelect
-                            options={skills}
-                            getOptionLabel={(option) => option.title}
-                            onChange={(event, values) => {
-                              onChange(values.map(val => { return val.id }))
-                            }}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                label="Required Skills"
-                                placeholder="Required Skills"
-                                helperText={errors.required_skills?.message}
-                                error={!!errors.required_skills}
-                              />
-                            )}
-                          />
-                        )}
                       />
                     </div>
 
@@ -577,9 +594,8 @@ export default function HireCandidates() {
                             <ReactQuillEditable
                               theme="snow"
                               value={value}
-                              modules={modules}
                               onChange={onChange}
-                              className="w-full bg-white read-quill min-h-[200px]" />
+                              className="w-full bg-white read-quill write-quill" />
 
                           )}
                         />

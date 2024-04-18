@@ -46,7 +46,7 @@ export default function JobDetail() {
     const [open, setOpen] = useState(true);
     const [success, setSuccess] = useState(false)
     const [falliure, setFaliure] = useState(false)
-    console.log(serachParam.get("id"), serachParam.get("pageNum"));
+  
     const handleClose = () => {
         setOpen(false);
         setIsApplied(false)
@@ -65,7 +65,7 @@ export default function JobDetail() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+           
             // The total count of data needs to be dividd by the number of data sent per page by backend
             const pages = Math.ceil(data.count / 4)
             setTotalJobMatch(data.count)
@@ -87,7 +87,7 @@ export default function JobDetail() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+           
             // The total count of data needs to be dividd by the number of data sent per page by backend
 
             setJobPanelData(data)
@@ -99,13 +99,13 @@ export default function JobDetail() {
     }
 
     const handlePageChange = (e, page) => {
-        console.log(page);
+       
         setPageNum(page)
 
     }
 
     const handledApplied = async () => {
-        console.log("Enterererserssfonsdfdsnoin");
+        
 
         const formData = new FormData()
         formData.append("job", jobPanelData.id)
@@ -114,7 +114,7 @@ export default function JobDetail() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+            
             getJobFromId(data.job)
             setIsApplied(false)
             setSuccess(true)
@@ -122,7 +122,7 @@ export default function JobDetail() {
 
         }
         catch (errors) {
-            console.log(errors);
+           
             setIsApplied(false)
             setFaliure(true)
         }

@@ -26,14 +26,27 @@ export default function UpdateProfile() {
     const [previewProfilePic, setPreviewProfilePic] = useState()
     const [skills, setSkills] = useState([])
     const [prefferedJobField, setPrefferedJobField] = useState([])
-    const [requiedSkills, setRequiredSkills] = useState()
+    const [requiedSkills, setRequiredSkills] = useState([])
     const [selectedJobCategory, setSelectedJobCategory] = useState()
     const [selectedIndustry, setSelectedIndustry] = useState(null)
+
+    const {
+        handleSubmit,
+        register,
+        control,
+        setValue,
+        watch,
+        formState: { errors, isSubmitting, isDirty, isValid },
+    } = useForm({
+
+        shouldUnregister: false
+    })
+
+
+    const formIndustryId = watch()
     // Gets all the profileDetail of the request user
     const getProfile = async () => {
         const accessToken = Cookies.get('accessToken');
-
-
         const requestOptions = {
             method: 'GET',
             headers: {
@@ -47,7 +60,7 @@ export default function UpdateProfile() {
             const response = await fetch(`${APIENDPOINT}/job-seeker/check-seeker-details/`, requestOptions);
             if (!response.ok) {
                 const data = await response.json();
-                console.log(data);
+               
                 // Handle non-successful responses
                 setProfileDetails(
                     {
@@ -67,7 +80,6 @@ export default function UpdateProfile() {
             }
             const data = await response.json();
             setProfileDetails(data)
-            setSelectedIndustry(data[0].industry)
         } catch (error) {
             console.error('There was a problem with the fetch request:', error);
             // Handle error
@@ -77,8 +89,9 @@ export default function UpdateProfile() {
 
 
     const getSkills = async () => {
+        
         try {
-            const data = await GetRequestNoToken('/skills/')
+            const data = await GetRequestNoToken(`/get-skills/?industry=${formIndustryId.industry ? formIndustryId.industry : null}`)
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
@@ -88,17 +101,7 @@ export default function UpdateProfile() {
             setSkills([{ "id": "", "title": "" }])
         }
     }
-    const {
-        handleSubmit,
-        register,
-        control,
-        setValue,
-        formState: { errors, isSubmitting, isDirty, isValid },
-    } = useForm({
-
-        shouldUnregister: false
-    })
-
+   
 
 
     const getIndustries = async () => {
@@ -185,14 +188,14 @@ export default function UpdateProfile() {
         if (!selectedFile) {
             delete da.resume
         }
-        console.log("Profile Photttttttt:", selecteProfilePhoto);
+       
         if (!selecteProfilePhoto) {
             delete da.profilePic
         }
 
-        console.log(da);
+       
         const formData = new FormData()
-        Object.entries(da).forEach(([key, value]) => { formData.append(key, value); console.log(key, value); })
+        Object.entries(da).forEach(([key, value]) => { formData.append(key, value); })
         formData.delete("skills")
         formData.delete("prefferd_job")
         data.skills.forEach(item => {
@@ -204,18 +207,17 @@ export default function UpdateProfile() {
         });
         try {
             const res = await PatchRequest(`/job-seeker/get-update-details/${profileDetail[0].id}`, formData, true)
-            console.log("This is respooooooooooooooo");
+            
             if (res.detail) {
-                console.log(res);
+               
                 throw new Error("Cannot Fetch")
             }
-            console.log(res);
-            console.log("Helooooooooooooooo");
+          
             router.push("/")
 
         }
         catch (errors) {
-            console.log("ENteerereddddddd Tissssssss");
+          
             console.log(errors);
         }
     }
@@ -253,9 +255,12 @@ export default function UpdateProfile() {
         }
     }, [profileDetail, setValue]);
 
+    useEffect(()=>{
+        getSkills()
+    },[formIndustryId.industry, profileDetail])
+
     useEffect(() => {
         getIndustries()
-        getSkills()
         getJobCategory()
         getProfile()
     }, [])
@@ -263,7 +268,7 @@ export default function UpdateProfile() {
 
     return (
         <>
-            {console.log(profileDetail)}
+           
 
 
             <section className="py-10 flex justify-center">
@@ -439,6 +444,7 @@ export default function UpdateProfile() {
                                         isOptionEqualToValue={(option, value) => { return typeof (value) === "number" ? option.id === value : option.id === value.id }}
                                         onChange={(event, values) => {
                                             field.onChange(values?.id)
+                                            setValue("skills", [])
                                         }}
                                         renderInput={(params) => (
                                             <TextField

@@ -21,7 +21,7 @@ export default function ApplicantList(){
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+            
             // The total count of data needs to be dividd by the number of data sent per page by backend
             const pages = Math.ceil(data.count / 3)
             setTotalPage(pages)
@@ -37,12 +37,12 @@ export default function ApplicantList(){
     },[])
 
     const handlePageChange = (e, page) => {
-        console.log(page);
+        
         setPageNum(page)
     }
     return(
        <AdminDashBoardLayout>
-            {console.log(jobsRequests)}
+        
             <section>
                 {
                     jobsRequests.length > 0 ? <ApplicantDisplayCard applicant = {jobsRequests}/> :(

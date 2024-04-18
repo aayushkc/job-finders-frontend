@@ -87,7 +87,7 @@ export default function Home() {
       const response = await fetch(`${APIENDPOINT}/recruiter/get-recruiter-profile/`, requestOptions);
       if (!response.ok) {
         const data = await response.json();
-        console.log(data);
+        
         // Handle non-successful responses
         setProfileDetails(
           {
@@ -134,15 +134,15 @@ export default function Home() {
   // Handle Submission of All Fields Expcept for the logo(image) field
   const onSubmit = async (data) => {
     delete data.logo //Delete the logo from the object before submisssion
-    console.log(data);
+    
     try {
       const res = await PatchRequest(`/recruiter/view-recruiter-details/${profileDetail[0].id}`, data)
-      console.log("This is respooooooooooooooo");
+    
       if (res.detail) {
-        console.log(res);
+       
         throw new Error("Cannot Fetch")
       }
-      console.log("Helooooooooooooooo");
+  
       setEditName(false)
       setEditEmail(false)
       setEditPhone(false)
@@ -153,7 +153,7 @@ export default function Home() {
       getProfile()
     }
     catch (errors) {
-      console.log("ENteerereddddddd Tissssssss");
+   
       console.log(errors);
     }
   }
@@ -165,17 +165,17 @@ export default function Home() {
     formData.append("logo", selectedFile)
     try {
       const res = await PatchRequest(`/recruiter/view-recruiter-details/${profileDetail[0].id}`, formData, true) //True need to be sent to indicate that the recieved data is a file
-      console.log("This is respooooooooooooooo");
+      
       if (res.detail) {
-        console.log(res);
+       
         throw new Error("Cannot Fetch")
       }
-      console.log("Helooooooooooooooo");
+     
       setProfilePic(false)
       getProfile()
     }
     catch (errors) {
-      console.log("ENteerereddddddd Tissssssss");
+    
       console.log(errors);
     }
   }
@@ -221,7 +221,7 @@ export default function Home() {
   return (
 
     <AdminDashBoardLayout>
-      {console.log(profileDetail)}
+  
       <div>
         <h1 className="text-3xl font-semibold">Profile</h1>
         <div className="flex justify-between">

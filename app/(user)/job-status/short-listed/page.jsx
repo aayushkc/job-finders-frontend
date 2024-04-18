@@ -14,7 +14,7 @@ export default function ShortlListed() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+           
             setAppliedJobs(data.filter(data => data.status === 2))
             // The total count of data needs to be dividd by the number of data sent per page by backend
 

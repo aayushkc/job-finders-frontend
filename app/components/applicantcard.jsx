@@ -62,7 +62,7 @@ export default function ApplicantDisplayCard({ applicant }) {
                                 <div className="flex gap-2 items-center mt-3">
                                     <p className="text-[#4F5052] text-sm">Skills:</p>
                                     {data.job_seeker.seeker_details.skills.map((data, index) => {
-                                        console.log(data)
+                                        
                                         return <p className="bg-[#F3F4F8] text-black text-xs font-light p-2 rounded-xl" key={index}>{data.title}</p>
                                     })}
 
@@ -112,15 +112,15 @@ const ChangeStatusModal = ({ open, handleModalClose, id }) => {
     } = useForm()
 
     const onSubmit = async (data) => {
-        console.log(data);
+        
         try {
             const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${id}`, data)
-            console.log("This is respooooooooooooooo");
+         
             if (res.detail) {
-                console.log(res);
+                
                 throw new Error("Cannot Fetch")
             }
-            console.log("Helooooooooooooooo");
+          
             handleModalClose()
             window.location.reload()
         }
@@ -135,8 +135,8 @@ const ChangeStatusModal = ({ open, handleModalClose, id }) => {
                 progress: undefined,
                 theme: "light",
                 });
-            console.log("ENteerereddddddd Tissssssss");
-            console.log(errors);
+           
+            
         }
     }
 

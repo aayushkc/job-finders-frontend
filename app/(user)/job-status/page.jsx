@@ -15,7 +15,7 @@ export default function JobStatus() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+        
             setAppliedJobs(data.filter(data => data.seen_status === 0 && data.status === 0))
             // The total count of data needs to be dividd by the number of data sent per page by backend
 

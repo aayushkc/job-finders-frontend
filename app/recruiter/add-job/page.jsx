@@ -169,7 +169,6 @@ export default function Page() {
     return (
         <AdminDashBoardLayout>
             {
-<<<<<<< HEAD
                 jobSuccess && <DialogBox
                     dialogHeading={"Job Added Sucessfully"}
                     dialogText={"Job has been Added SuccessFully"}
@@ -177,15 +176,6 @@ export default function Page() {
                     url={"/recruiter/view-all-pending-jobs"}
                     success={true}
                 />
-=======
-                jobSuccess &&<DialogBox 
-                                dialogHeading={"Job Added Sucessfully"} 
-                                dialogText={"Job has been Added SuccessFully"}
-                                goToPageName={"To View All Pending Jobs"}
-                                url={"/recruiter/view-all-pending-jobs"}
-                                success={true}
-                        />
->>>>>>> 6065d95909bf43d85631dbeea53c47c784c36650
             }
 
             {

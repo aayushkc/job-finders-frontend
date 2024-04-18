@@ -15,7 +15,7 @@ export default async function DeleteRequest(endpoint){
         const response = await fetch(`${APIENDPOINT}${endpoint}`, requestOptions);
         if (!response.ok) {
           // Handle non-successful responses
-          console.log("Entereedddddddddddddd");
+          
           throw new Error('Network response was not ok.');
         }
         return await response.json();

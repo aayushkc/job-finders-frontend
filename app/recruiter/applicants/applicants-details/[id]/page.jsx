@@ -43,7 +43,7 @@ export default function UpdateProfile() {
             const response = await fetch(`${APIENDPOINT}/recruiter/job-seeker-deatails/${param.id}`, requestOptions);
             if (!response.ok) {
                 const data = await response.json();
-                console.log(data);
+                
                 // Handle non-successful responses
                 setProfileDetails(
                     {
@@ -81,12 +81,12 @@ export default function UpdateProfile() {
         e.preventDefault();
         try {
             const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, {"status":"0"})
-            console.log("This is respooooooooooooooo");
+            
             if (res.detail) {
-                console.log(res);
+                
                 throw new Error("Cannot Fetch")
             }
-            console.log("Helooooooooooooooo");
+           
 
             router.back()
             
@@ -102,8 +102,7 @@ export default function UpdateProfile() {
                 progress: undefined,
                 theme: "light",
                 });
-            console.log("ENteerereddddddd Tissssssss");
-            console.log(errors);
+            
         }
     }
 
@@ -111,12 +110,12 @@ export default function UpdateProfile() {
         e.preventDefault();
         try {
             const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, {"status":"1"})
-            console.log("This is respooooooooooooooo");
+            
             if (res.detail) {
-                console.log(res);
+               
                 throw new Error("Cannot Fetch")
             }
-            console.log("Helooooooooooooooo");
+            
 
             router.back()
             
@@ -132,8 +131,7 @@ export default function UpdateProfile() {
                 progress: undefined,
                 theme: "light",
                 });
-            console.log("ENteerereddddddd Tissssssss");
-            console.log(errors);
+            
         }
     }
 
@@ -147,7 +145,7 @@ export default function UpdateProfile() {
 
     return (
         <>
-            {console.log(profileDetail)}
+            
             <AdminDashBoardLayout>
 
                 <section className="">
@@ -223,7 +221,7 @@ export default function UpdateProfile() {
 
                             <div style={{ marginBottom: 16, marginTop: 6 }} className="flex gap-4 flex-wrap">
                                 {profileDetail.skills?.map((data, index) => {
-                                    console.log(data)
+                                    
                                     return <p className="bg-white text-black font-light p-2 rounded-xl" key={index}>{data.title}</p>
                                 })}
 

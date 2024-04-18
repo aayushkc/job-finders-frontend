@@ -44,7 +44,7 @@ export default function LoginForm(){
         if (response.ok) {
           const data = await response.json();
           const decodedToken = jwt.decode(data.access); // Decode the access token
-          console.log(decodedToken);
+          
           const userId = decodedToken.userId; 
           const isRecruiter = decodedToken.isRecruiter; 
           const isSeeker = decodedToken.isSeeker; 
@@ -66,7 +66,7 @@ export default function LoginForm(){
           // Handle error response
           const data = await response.json()
           setLogInErr(true)
-          console.log(data);
+          
         }
       } catch (error) {
         console.error('Error during login:', error);

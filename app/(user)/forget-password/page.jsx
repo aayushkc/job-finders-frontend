@@ -19,13 +19,13 @@ export default function SignIn() {
         formState: { isSubmitting }
     } = useForm()
     const router = useRouter()
-    console.log(isLoggedIn);
+    
     const [isMailSent, setIsMailSent] = useState(false)
     const [mailError, setMailError] = useState(false)
     const handlePassReset = async (data) => {
         setIsMailSent(false)
         setMailError(false)
-        console.log(data);
+     
         try {
             const response = await fetch(`${APIENDPOINT}/api/password_reset/`, {
                 method: "POST",
@@ -38,9 +38,9 @@ export default function SignIn() {
 
             if (!response.ok) {
                 // Handle non-successful responses
-                console.log("Entereedddddddddddddd");
+          
                 const data = await response.json()
-                console.log(data);
+                
                 setIsMailSent(false);
                 setMailError(true)
                 throw new Error("Cannot Fetch")
@@ -61,11 +61,11 @@ export default function SignIn() {
             setTimeout(() =>{
                 router.push('/signin');
             },1200)
-            console.log(res);
+          
 
         } catch (err) {
             setMailError(true)
-            console.log(err);
+           
         }
     }
 

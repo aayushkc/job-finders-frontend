@@ -110,7 +110,7 @@ export default function CreateProfileDetails() {
 
     const onSubmit = async (data) => {
         const formData = new FormData()
-        console.log(data);
+        
         formData.append("name", data.name)
         formData.append("company_url", data.company_url)
         formData.append("company_size", data.company_size)
@@ -122,20 +122,20 @@ export default function CreateProfileDetails() {
         formData.append("industry", data.industry)
         formData.append("description", data.description)
         formData.append("logo", selectedFile)
-        console.log(formData);
+        
         try {
             const res = await PostFormWithToken(`/recruiter/recruiter-details/`, formData)
-            console.log("This is respooooooooooooooo");
+            
             if (res.detail) {
-                console.log(res);
+                
                 throw new Error("Cannot Fetch")
             }
-            console.log("Helooooooooooooooo");
+            
             router.push("/recruiter")
 
         }
         catch (errors) {
-            console.log("ENteerereddddddd Tissssssss");
+            
             console.log(errors);
         }
     }

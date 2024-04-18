@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 export default function SignIn() {
   const { isLoggedIn } = useAuth();
   const router = useRouter()
-  console.log(isLoggedIn);
+
   useEffect(() =>{
     if(isLoggedIn) router.back()
   },[isLoggedIn])

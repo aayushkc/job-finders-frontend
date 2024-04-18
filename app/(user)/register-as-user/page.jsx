@@ -30,7 +30,7 @@ export default function SignInUser() {
 
             if (!response.ok) {
                 const er = await response.json();
-                console.log(er);
+                
                 if(er.email){
                     if(er.email[0].startsWith("cus")){
                         setEmailExists({email:["Email aready Exists"]})
@@ -45,7 +45,7 @@ export default function SignInUser() {
             }
 
             const res = await response.json();
-            console.log('User registered successfully:', res);
+            
             router.push('/signin')
         } catch (error) {
             console.error('Error registering user:', error);

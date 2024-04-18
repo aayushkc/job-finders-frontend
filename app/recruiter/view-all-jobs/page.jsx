@@ -19,7 +19,7 @@ export default function ViewJobs() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+            
             // The total count of data needs to be dividd by the number of data sent per page by backend
             const pages = Math.ceil(data.count / 3)
             setTotalPage(pages)
@@ -27,13 +27,13 @@ export default function ViewJobs() {
 
         }
         catch (errors) {
-            console.log(errors);
+           
            setJobs([])
         }
     }
 
     const handlePageChange = (e, page) => {
-        console.log(page);
+        
         setPageNum(page)
     }
     useEffect(() => {
@@ -43,7 +43,7 @@ export default function ViewJobs() {
 
     return (
         <AdminDashBoardLayout>
-            {console.log(jobs)}
+           
             <section>
                 {
                     jobs.length > 0 ? <JobDisplayCard jobs = {jobs}/>:(

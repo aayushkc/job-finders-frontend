@@ -21,6 +21,7 @@ import DeleteRequest from "@/app/api/deleteRequest";
 import { useTheme } from '@mui/material/styles';
 import { ClipLoader } from "react-spinners";
 import 'react-quill/dist/quill.snow.css';
+import { format } from "date-fns";
 
 
 const ReactQuillEditable = dynamic(
@@ -30,15 +31,18 @@ const ReactQuillEditable = dynamic(
 export default function Page() {
     const accessToken = Cookies.get('accessToken')
     const router = useParams()
-    console.log(router.id)
+    
     const navigate = useRouter()
     const {
         handleSubmit,
         register,
         control,
         setValue,
+        watch,
         formState: { errors, isSubmitting, isDirty, isValid },
     } = useForm()
+
+    const formIndustry = watch()
 
 
     const [industries, setIndustries] = useState([]);
@@ -60,6 +64,7 @@ export default function Page() {
     const [open, setOpen] = useState(true);
     const [showSalaryRange, setShowSalaryRange] = useState(false)
     const [showFixedSalary, setShowFixedSalary] = useState(false)
+    const [industryId, setIndustryId] = useState()
     const [salaryRadio, setSalaryRadio] = useState()
     const handleModalClose = () => {
         setOpen(false);
@@ -83,7 +88,7 @@ export default function Page() {
 
     const getSkills = async () => {
         try {
-            const data = await GetRequestNoToken('/skills/')
+            const data = await GetRequestNoToken(`/get-skills/?industry=${formIndustry.industry ? formIndustry.industry : null}`)
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
@@ -113,9 +118,9 @@ export default function Page() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+            
             setEducationInfo(data)
-            console.log(educationIfon);
+            
         }
         catch (errors) {
             setEducationInfo([{
@@ -181,7 +186,7 @@ export default function Page() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log(data);
+            
             // The total count of data needs to be dividd by the number of data sent per page by backend
             setJobDetails(data)
             setRequiredSkills(data.required_skills.map(data => data.id))
@@ -210,23 +215,22 @@ export default function Page() {
     }
 
     const onSubmit = async (data) => {
-        console.log(data.apply_before.format("YYYY-MM-DD"));
+        
         const subData = { ...data, 'apply_before': data.apply_before.format("YYYY-MM-DD") }
-        console.log(subData);
+        
         setJobSuccess(false)
         setJobError(false)
         try {
             const res = await PutWithTokien(`/recruiter/get-job/${router.id}`, subData)
-            console.log("This is respooooooooooooooo");
+           
             if (res.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log("Helooooooooooooooo");
+         
             setJobSuccess(true)
         }
         catch (errors) {
-            console.log("ENteerereddddddd Tissssssss");
-            console.log(errors);
+            
             setJobError(true)
         }
     }
@@ -237,18 +241,18 @@ export default function Page() {
         setOpen(true)
         try {
             const res = await DeleteRequest(`/recruiter/delete-job/${router.id}`)
-            console.log(res);
+            
             if (res.detail) {
                 throw new Error("Cannot Fetch")
             }
-            console.log("Helooooooooooooooo");
+            
             setDeleteSuccess(true)
 
 
         }
         catch (errors) {
-            console.log("ENteerereddddddd Tissssssss");
-            console.log(errors);
+           
+           
             setDeleteError(true)
         }
     }
@@ -297,7 +301,7 @@ export default function Page() {
         }
 
         if (selectedJobLevel) {
-            console.log(selectedJobLevel);
+           
             setValue("level", selectedJobLevel.id || 0)
         }
 
@@ -320,9 +324,14 @@ export default function Page() {
 
     }, [jobDetails])
 
+    useEffect(()=>{
+        getSkills()
+    },[formIndustry.industry, jobDetails])
+
+  
+
     useEffect(() => {
         getIndustries()
-        getSkills()
         getJobCategory()
         getEducationInfo()
         getJob()
@@ -332,7 +341,7 @@ export default function Page() {
 
     return (
         <AdminDashBoardLayout>
-            {console.log(jobDetails)}
+            
             {
                 jobSuccess && <DialogBox
                     dialogHeading={"Job Has Been Edited Sucessfully"}
@@ -573,6 +582,7 @@ export default function Page() {
                                 isOptionEqualToValue={(option, value) => { return typeof (value) === "number" ? option.id === value : option.id === value.id }}
                                 onChange={(event, values) => {
                                     field.onChange(values?.id)
+                                    setValue("required_skills", [])
                                 }}
                                 renderInput={(params) => (
                                     <TextField
@@ -594,7 +604,7 @@ export default function Page() {
 
 
                 {/* Choose Skills */}
-                {console.log(requiedSkills)}
+               
 
                 <div className="my-8">
                     <Controller

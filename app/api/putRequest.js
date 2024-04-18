@@ -2,7 +2,7 @@ import { APIENDPOINT } from "./APIENDPOINT";
 import Cookies from 'js-cookie';
 export default async function PutWithTokien(endpoint, data){
     const accessToken = Cookies.get('accessToken');
-    console.log(data);
+    
     const requestOptions = {
         method: 'PUT',
         headers: {
@@ -16,7 +16,7 @@ export default async function PutWithTokien(endpoint, data){
         const response = await fetch(`${APIENDPOINT}${endpoint}`, requestOptions);
         if (!response.ok) {
           // Handle non-successful responses
-          console.log("Entereedddddddddddddd");
+         
           throw new Error('Network response was not ok.');
         }
         return await response.json();

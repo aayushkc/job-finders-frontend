@@ -55,7 +55,7 @@ export default function SignInUser() {
         setEmailError(null)
         setNameError(null)
         setPhoneError(null)
-        console.log(formData);
+        
         if(formData.email && formData.name && formData.phone){
             setIsNextClicked(true)
         }else if(!formData.email){
@@ -73,7 +73,7 @@ export default function SignInUser() {
 
     const handleRegisterClick = async (e) => {
         e.preventDefault();
-        console.log(formData);
+       
         setIsButtonDisabled(true)
         setRegistrationSuccess(false)
         setErrorStatus(false)
@@ -87,16 +87,16 @@ export default function SignInUser() {
             });
             if (!response.ok) {
                 const error = await response.json()
-                console.log(error);
+                
                 setRegistrationError(error)
-                console.log(registrationError);
+              
                 setErrorStatus(true)
                 setIsButtonDisabled(false)
                 throw new Error('Failed to register');
             }
 
             const data = await response.json();
-            console.log('User registered successfully:', data);
+            
             setRegistrationSuccess(true)
         } catch (error) {
             console.error('Error registering user:', error);
@@ -118,7 +118,7 @@ export default function SignInUser() {
     const handleTime = (t) => {
         const timeFormat = `${t.$H}:${t.$m}`
         const ti = t.format("HH:MM:SS")
-        console.log(timeFormat)
+       
         setFormData(prevState => ({
             ...prevState,
             meeting_time: timeFormat

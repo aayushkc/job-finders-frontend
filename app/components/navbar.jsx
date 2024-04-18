@@ -51,10 +51,10 @@ export default function NavBar(){
     const [hamburg, setHamBurg] = useState(false)
     const router = useRouter();
     const currentRoute = usePathname();
-    console.log(currentRoute);
+   
 
     const handleClick = () =>{
-        console.log("Aaaa");
+        
         setHamBurg(!hamburg)
     }
 
@@ -73,7 +73,7 @@ export default function NavBar(){
     },[handleLogOut])
     return(
 
-        <header className="sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] max-h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
+        <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
                     <Link href="/">

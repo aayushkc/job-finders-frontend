@@ -42,11 +42,11 @@ export default function SignIn() {
         resolver: yupResolver(formSchema)
     })
     const router = useRouter()
-    console.log(isLoggedIn);
+    
     const [resetPasswordConfirm, setResetPasswordConfirm] = useState(false)
     const [resetPasswordError, setResetPasswordError] = useState(false)
     const handlePassReset = async (data) => {
-        console.log(data);
+        
         setResetPasswordConfirm(false)
         setResetPasswordError(false)
         try {
@@ -61,9 +61,9 @@ export default function SignIn() {
 
             if (!response.ok) {
                 // Handle non-successful responses
-                console.log("Entereedddddddddddddd");
+               
                 const data = await response.json()
-                console.log(data);
+                
                 setResetPasswordConfirm(false)
                 setResetPasswordError(true)
                 throw new Error("Cannot Fetch")
@@ -74,12 +74,12 @@ export default function SignIn() {
             setResetPasswordError(false)
             toast.success('Password reset email sent!');
             router.push('/signin');
-            console.log(res);
+            
 
         } catch (err) {
             setResetPasswordError(true)
             setResetPasswordConfirm(false)
-            console.log(err);
+           
         }
     }
 

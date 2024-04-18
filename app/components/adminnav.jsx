@@ -41,7 +41,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
 
 
     const handleClick = () => {
-        console.log("Aaaa");
+        
         setHamBurg(!hamburg)
     }
 
@@ -55,7 +55,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
         <header className="sm:px-40 sm:py-8 h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
-                    <Link href="/">
+                    <Link href="/recruiter">
                         <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" />
                     </Link>
                 </div>
