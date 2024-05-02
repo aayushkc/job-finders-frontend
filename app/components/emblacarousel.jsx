@@ -40,7 +40,7 @@ const EmblaCarousel = (props) => {
                                     </div>
                                 </div>
 
-                                <p className='text-[#414C61] mt-6 font-normal pr-8 '>
+                                <p className='font-sm sm:font-base text-[#414C61] mt-6 font-normal sm:pr-8 '>
                                     {data.review}
                                 </p>
                                 {

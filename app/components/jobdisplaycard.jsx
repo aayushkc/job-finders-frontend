@@ -8,11 +8,11 @@ export default function JobDisplayCard({ jobs, isApplicantCard }) {
             <div className="bg-white px-8 py-4 rounded-xl border-[1px] border-[#D9D9D9] mt-4" key={data.id}>
 
                 <h2 className="text-xl font-bold">{data.title}</h2>
-                <div className="flex gap-2 items-center mt-3">
+                <div className="flex flex-wrap gap-2  sm:items-center mt-3">
                     <p className="text-[#4F5052] text-sm">Skills:</p>
                     {data.required_skills.map((data, index) => {
                      
-                        return <p className="bg-[#F3F4F8] text-black text-xs font-light p-2 rounded-xl" key={index}>{data.title}</p>
+                        return <p className="bg-[#F3F4F8] text-black text-xs font-light p-2 rounded-xl max-w-max" key={index}>{data.title}</p>
                     })}
 
                 </div>
@@ -68,7 +68,7 @@ export default function JobDisplayCard({ jobs, isApplicantCard }) {
                     isApplicantCard ? 
                     (
                         <Link href={`/recruiter/applicants/${data.id}`}>
-                        <div className="flex justify-end items-center text-[#0B69FF] gap-2">
+                        <div className="flex mt-4 sm:mt-0 sm:justify-end items-center text-[#0B69FF] gap-2">
     
                             <p>View Applicants</p>
                             <i className="bi bi-arrow-up-right text-xl"></i>

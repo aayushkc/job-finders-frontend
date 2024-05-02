@@ -6,6 +6,7 @@ import Link from "next/link";
 import GetRequestNoToken from "../api/getRequestNoToken";
 import Image from "next/image";
 import hero from "../../public/images/hero-img.png"
+import mobileHero from "../../public/images/mobileHero.png"
 import Bolb from "../../public/images/blob.png"
 import Cube from "../../public/images/cube.png"
 import airAsia from "../../public/images/airAsia.png"
@@ -151,13 +152,14 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
   return (
     <div className="bg-white">
-      <section className="flex gap-10 pt-16 relative px-8 sm:px-24">
-        <div className="hidden sm:block">
-          <Image src={hero} alt="hero" className="max-h-[690px] max-w-[557px]" />
+      <section className="flex flex-col sm:flex-row gap-10 pt-16 relative px-8 sm:px-24">
+        <div className="order-last sm:order-first block">
+          <Image src={hero} alt="hero" className="max-h-[690px] max-w-[557px] hidden sm:block" />
+          <Image src={mobileHero} alt="hero" className="max-h-[300px] max-w-[300px] block sm:hidden" />
         </div>
 
-        <div className="py-8 text-center relative px-6 text-[#212529]">
-          <h2 className="text-5xl font-bold sm:leading-[62px]">
+        <div className="py-2 sm:py-8 text-center relative sm:px-6 text-[#212529]">
+          <h2 className="text-3xl sm:text-5xl font-bold sm:leading-[62px]">
             Secure The <span className="text-[#FD810E]"> Job</span> You Desire  With Our
             <br></br>
             <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">
@@ -166,12 +168,15 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
           </h2>
 
-          <h4 className="text-xl font-bold mt-8 leading-[30px]">Pursue your ambitions and shape your ideal professional path with our support.</h4>
+          <h4 className="text-lg sm:text-xl font-bold mt-8 sm:leading-[30px]">Pursue your ambitions and shape your ideal professional path with our support.</h4>
 
           <div className="flex mt-8 justify-center">
+            <Link href="/jobs">
             <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
               Search Job
             </button>
+            </Link>
+         
 
           </div>
 
@@ -182,20 +187,22 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
           <h2 className="text-5xl font-bold  mb-4 sm:leading-[62px]"><span className="text-[#FD810E]">Hire </span> Top Talents </h2>
           <h4 className="text-xl font-bold mt-8 leading-[30px]">With Our AI Powered Process</h4>
           <div className="flex mt-8 justify-center">
-            <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
+           <Link href="/register-as-recruiter">
+           <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
               Recruit Employees
             </button>
 
+            </Link> 
           </div>
 
 
 
-          <div className="absolute left-10 -bottom-14 sm:bottom-4">
+          <div className="hidden sm:block absolute left-10 -bottom-14 sm:bottom-4">
             <Image src={Cube} alt="cube" />
           </div>
         </div>
 
-        <div className="absolute right-0 bottom-20">
+        <div className="hidden sm:block absolute right-0 bottom-20">
           <Image src={Bolb} alt="bolb" />
         </div>
 
@@ -203,8 +210,8 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
       </section>
 
       <section className=" sm:px-32 mt-12">
-        <div className="p-10">
-          <h2 className=" text-xl sm:text-3xl font-bold text-center sm:leading-[48px]">Trusted and has been used by <span className="text-[#FE810F]">leading companies</span> around the <span className="text-[#FE810F]">world</span></h2>
+        <div className="px-4 sm:p-10">
+          <h2 className="text-3xl font-bold text-center sm:leading-[48px]">Trusted and has been used by <span className="text-[#FE810F]">leading companies</span> around the <span className="text-[#FE810F]">world</span></h2>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-14 mt-12">
 
@@ -222,7 +229,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
       {/* Job Seeker Testimonial Carousel */}
       <section className="mt-12">
-        <h2 className="text-2xl text-center font-bold">We help <span className="text-[#FD810E]"> talents</span> find their perfect spots</h2>
+        <h2 className="text-2xl text-center font-bold px-4">We help <span className="text-[#FD810E]"> talents</span> find their perfect spots</h2>
         <div className="mt-10 flex justify-center">
 
           <EmblaCarousel slides={CLIENT_SLIDES} options={OPTIONS} delay={2500} />
@@ -239,7 +246,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
       {/* Recruiter Testimonial Carousel */}
       <section className="mt-12">
-        <h2 className="text-2xl text-center font-bold">We accelerate <span className="text-[#FD810E]"> businesses</span> towards their goals</h2>
+        <h2 className="text-2xl text-center font-bold px-4">We accelerate <span className="text-[#FD810E]"> businesses</span> towards their goals</h2>
         <div className="mt-10 flex justify-center">
 
           <EmblaCarousel slides={BUSINESS_SLIDES} options={OPTIONS} delay={2000} />
@@ -250,26 +257,26 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
 
       {/* Grid Section */}
-      <section className="mt-16">
+      <section className="mt-16 px-4">
         <h2 className="text-3xl font-bold text-center">Recruit top-tier talent from our </h2>
         <h2 className="text-3xl font-bold text-center text-[#FE810F] mt-4">Well Curated Domains</h2>
         <p className="text-[#84888E] text-center mt-4">Our expansive global network comprises leading business, design, and tech professionals, primed to address your key initiatives</p>
 
         <div className="grid sm:grid-cols-3 mt-10 sm:mx-20 sm:border-b-2 border-[#D8D9DC] text-center sm:text-left">
-          <div className="px-10 pt-8 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
+          <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
             <Image src="/images/codeCom.png" width={51} height={51} alt="computer"/>
             <h3 className="text-lg mt-4">Software Development</h3>
             <p className="py-8">Experienced software engineers, coders, and architects proficient in a multitude of technologies</p>
           </div>
 
-          <div className="px-10 pt-8 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
+          <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
             <Image src="/images/it.png" width={51} height={51} alt="Information Technology" style={{width:'51px', height:'51px'}}/>
             <h3 className="text-lg mt-4">Information Technology</h3>
             <p className="py-8">Skilled IT professionals specializing in UI, UX, Visual, Interaction  design etc.</p>
           </div>
 
 
-          <div className="px-10 pt-8 flex flex-col items-center sm:items-start">
+          <div className="px-10 pt-8 border-b-2 flex flex-col items-center sm:items-start">
             <Image src="/images/finance.png" width={51} height={51} alt="finance" style={{width:'51px', height:'51px'}}/>
             <h3 className="text-lg mt-4">Finance and Accounting</h3>
             <p className="py-8">Professionals proficient in financial modeling & valuation, startup funding, interim etc.</p>
@@ -277,20 +284,20 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         </div>
 
         <div className="grid sm:grid-cols-3 text-center sm:text-left sm:mx-20">
-          <div className="px-10 pt-8 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
+          <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
             <Image src="/images/cusSupppng.png" width={51} height={51} alt="Customer Support"/>
             <h3 className="text-lg mt-4">Customer support</h3>
             <p className="py-8">Professionals in customer support specialized in addressing various needs</p>
           </div>
 
-          <div className="px-10 pt-8 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
+          <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
             <Image src="/images/hr.png" width={51} height={51} alt="HR"/>
             <h3 className="text-lg mt-4">Human Resource</h3>
             <p className="py-8">HR professionals often play a crucial role in fostering a positive  workplace culture and supporting the organization's overall strategic  goals.</p>
           </div>
 
 
-          <div className="px-10 pt-8 flex flex-col items-center sm:items-start">
+          <div className="px-10 pt-8 border-b-2 flex flex-col items-center sm:items-start">
             <Image src="/images/market.png" width={51} height={51} alt="marketing"/>
             <h3 className="text-lg mt-4">Marketing</h3>
             <p className="py-8">Professionals in marketing are responsible for developing and  implementing strategies to promote products or services, attract  customers, and drive sales.</p>

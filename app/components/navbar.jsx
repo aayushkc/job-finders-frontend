@@ -12,100 +12,105 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
 
 const NavItems = [
     {
-        "item":"Home",
-        "link":"/"
+        "item": "Home",
+        "link": "/"
     },
 
     {
-        "item":"Job",
-        "link":"/jobs"
+        "item": "Job",
+        "link": "/jobs"
     },
     {
-        "item":"Job Status",
-        "link":"/job-status"
+        "item": "Job Status",
+        "link": "/job-status"
     },
     {
-        "item":"My profile",
-        "link":"/my-profile"
+        "item": "My profile",
+        "link": "/my-profile"
     },
-  
+
 ]
 
 
 
 const NavAnonItems = [
     {
-        "item":"Home",
-        "link":"/"
+        "item": "Home",
+        "link": "/"
     },
 
     {
-        "item":"Job",
-        "link":"/jobs"
+        "item": "Job",
+        "link": "/jobs"
     },
-   
-  
+
+    {
+        "item": "Blogs",
+        "link": "/blogs"
+    },
+
+
 ]
-export default function NavBar(){
-    const {isLoggedIn, setIsLoggedIn} = useAuth()
+export default function NavBar() {
+    const { isLoggedIn, setIsLoggedIn } = useAuth()
     const [hamburg, setHamBurg] = useState(false)
     const router = useRouter();
     const currentRoute = usePathname();
-   
 
-    const handleClick = () =>{
-        
+
+    const handleClick = () => {
+
         setHamBurg(!hamburg)
     }
 
-    const handleLogOut = () =>{
+    const handleLogOut = () => {
         Cookies.remove('accessToken')
         router.push('/signin')
     }
 
-    useEffect(()=>{
-        if(Cookies.get('accessToken')){
+    useEffect(() => {
+        if (Cookies.get('accessToken')) {
             setIsLoggedIn(true)
-        }else{
+        } else {
             setIsLoggedIn(false)
         }
-       
-    },[handleLogOut])
-    return(
+
+    }, [handleLogOut])
+    return (
 
         <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
                     <Link href="/">
-                        <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95"/>
+                        <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" />
                     </Link>
                 </div>
                 <button className="pr-4 sm:hidden" onClick={handleClick}>
                     {hamburg ? <i className="bi bi-x font-bold text-2xl"></i> : <i className="bi bi-list font-bold text-2xl"></i>}
                 </button>
-              
-               <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" :"hidden "} bottom-0  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-12`}>
+
+                <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit border-2 " : "hidden "} bottom-0 border-[#D8D9DC] sm:border-none  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-12`}>
                     {
-                        isLoggedIn ?NavItems.map((data,index) =>{
-                            return <Link href={data.link} key={index}>
+                        isLoggedIn ? NavItems.map((data, index) => {
+                            return <Link href={data.link} onClick={handleClick} key={index}>
                                 <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
-                                </Link>
+                            </Link>
                         })
 
-                        :
-                        NavAnonItems.map((data,index) =>{
-                            return <Link href={data.link} key={index}>
-                                <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
+                            :
+                            NavAnonItems.map((data, index) => {
+                                return <Link href={data.link} onClick={handleClick} key={index}>
+                                    <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                                 </Link>
-                        })
+                            })
                     }
 
-                    <Link href="/signin" className="sm:hidden"><button className="border-b-2 border-gurkha-yellow">Login</button></Link> 
+                    {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
                 </ul>
-             
-                  
-                   {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>: <Link href="/signin" className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl">Login</button></Link> }
-               
+
+
+                {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block" onClick={handleLogOut}>Log Out</button> : <Link href="/signin" className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
+
             </nav>
         </header>
     )

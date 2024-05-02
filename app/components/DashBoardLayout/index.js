@@ -44,8 +44,8 @@ export default function AdminDashBoardLayout({ children }) {
   ];
   return (
     <ProtectedAdminPage>
-      <div className="flex  min-h-screen">
-        <div className=" basis-[20%]  pt-10 border-r-2 ml-8 px-4 mt-6  border-[#CCC5FA]  bg-white ">
+      <div className={`flex flex-col sm:flex-row sm:min-h-screen`}>
+        <div className=" basis-[20%]  pt-10 sm:border-r-2 mx-4 sm:ml-8 sm:mr-0 px-4 mt-6  border-[#CCC5FA]  bg-white ">
           <div>
             <ul className=" flex flex-col gap-4 text-base text-[#324054] font-semibold capitalize">
               {sideMenu.map((item) => (
@@ -61,7 +61,7 @@ export default function AdminDashBoardLayout({ children }) {
             </ul>
           </div>
         </div>
-        <div className=" basis-[80%] py-10 px-10 ">{children}</div>
+        <div className=" sm:basis-[80%] px-4 py-10 sm:px-10 ">{children}</div>
       </div>
     </ProtectedAdminPage>
 

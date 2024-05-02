@@ -99,28 +99,28 @@ export default function Home() {
 
       <>
         <section className="text-center bg-white pt-8">
-          <h1 className="text-[#193855] font-bold text-5xl leading-[78.4px]">Welcome to Hire Gurkha</h1>
-          <p className="font-semibold text-3xl text-[#6A6666] mt-4">Ready to Apply for <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">Jobs?</span></p>
+          <h1 className="text-[#193855] font-bold text-3xl sm:text-5xl sm:leading-[78.4px]">Welcome to Hire Gurkha</h1>
+          <p className="font-semibold text-2xl sm:text-3xl text-[#6A6666] mt-4">Ready to Apply for <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">Jobs?</span></p>
 
-          <div className="flex justify-center">
-            <div className="bg-[#F3F4F8] mt-8 p-6 w-[80%]">
+          <div className="flex justify-center px-4">
+            <div className="bg-[#F3F4F8] mt-8 p-6 sm:w-[80%]">
               <div>
-                <h2 className="text-[#193855]  text-2xl">Best jobs that match your Skills</h2>
+                <h2 className="text-[#193855] text-lg sm:text-2xl">Best jobs that match your Skills</h2>
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-6">
+              <div className="mt-4 grid sm:grid-cols-2 gap-6">
                 {
                   topTwo?.map((data, index) => {
 
                     return (
                       index < 2 &&
-                      <div className="bg-white p-6 text-left rounded-lg" key={index}>
+                      <div className="bg-white p-4 sm:p-6 text-left rounded-lg" key={index}>
                         <div className="flex gap-4 items-center">
                           <div className="w-[35px] h-[35px]">
                             <img src={data ? data.logo : logo} className="w-full h-full object-contain" alt="logo" />
                           </div>
                           <div>
-                            <h2 className="font-bold text-xl">{data.title}</h2>
+                            <h2 className="font-bold text-lg sm:text-xl">{data.title}</h2>
                             <p className="">{data.job_category[0].title}</p>
                           </div>
                         </div>
@@ -144,10 +144,10 @@ export default function Home() {
 
                         </div>
 
-                        <div className="flex justify-between items-center mt-3 pr-4">
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center mt-3 pr-4">
                           <p className="text-[#01B46A]">Location Type: <span>{data.work_location_type}</span></p>
                           <Link href={`/jobs?id=${data.id}&pageNum=1`}>
-                            <button className="text-[#0B69FF]">View Details <i className="bi bi-arrow-up-right"></i></button>
+                            <button className="text-[#0B69FF] mt-3 sm:mt-0">View Details <i className="bi bi-arrow-up-right"></i></button>
                           </Link>
 
                         </div>
@@ -167,13 +167,13 @@ export default function Home() {
                         </p>
                         <hr className="my-3"></hr>
 
-                        <div className="flex justify-between">
+                        <div className="flex flex-col sm:flex-row sm:justify-between">
                           <div className="flex gap-2 items-center">
                             <i className="bi bi-people text-xl"></i>
                             <p className="text-[#01B46A]">{data.applied} Applied</p>
                           </div>
                           <Link href={`/jobs?id=${data.id}&pageNum=1`}>
-                            <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                            <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white mt-4 sm:mt-0">
                               Apply Now
                             </button>
                           </Link>
@@ -196,10 +196,10 @@ export default function Home() {
         </section>
 
         <section className="text-center bg-white p-8  grid">
-          <div className="px-16">
+          <div className="sm:px-16">
             <h2 className="text-xl">Recommended Jobs</h2>
 
-            <div className="grid grid-cols-3 gap-4 text-left mt-6">
+            <div className="grid sm:grid-cols-3 gap-4 text-left mt-6">
               {
                 recommendedJobs?.map(data => {
                   return (
@@ -261,13 +261,13 @@ export default function Home() {
 
                         </div>
 
-                        <div className="flex justify-between mt-4 items-center">
+                        <div className="flex flex-col sm:flex-row sm:justify-between mt-4 sm:items-center">
                           <div className="flex gap-2 items-center">
                             <i className="bi bi-people text-xl"></i>
                             <p className="text-[#01B46A]">{data.applied} Applied</p>
                           </div>
 
-                          <p className="text-sm">Apply Before: {data.apply_before}</p>
+                          <p className="text-sm mt-4 sm:mt-0">Apply Before: {data.apply_before}</p>
                         </div>
 
                       </div>

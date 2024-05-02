@@ -134,6 +134,8 @@ export default function SignInUser() {
         setRegistrationSuccess(false)
         setErrorStatus(false)
     },[])
+
+    const todayDate = (date) =>date.isSame(new Date(), 'day');
     return (
         <main className="signin grid">
             {
@@ -154,18 +156,18 @@ export default function SignInUser() {
                 />
             }
 
-            <section className="sm:place-self-center grid bg-white sm:rounded-xl  text-center sm:w-[30%] py-8 sm:my-10">
+            <section className="sm:place-self-center grid bg-[#F3F4F8] sm:bg-white sm:rounded-xl  text-center sm:w-[30%] py-8 sm:my-10">
                 {isNextClicked ? <i className="bi bi-arrow-left text-2xl text-left place-self-start pl-6 cursor-pointer" onClick={() => setIsNextClicked(false)}></i> : <Link href="/signin" className='place-self-start pl-6'><i className="bi bi-arrow-left text-2xl text-left"></i></Link>}
                 <div className="flex justify-center">
 
                     <Image src="/images/Footerlogo.png" alt="logo" width="102" height="42" />
                 </div>
-                <h1 className="text-3xl font-bold my-3">Register as Recruiter</h1>
+                <h1 className="text-xl sm:text-3xl font-bold my-3">Register as Recruiter</h1>
                 <div className="flex gap-2 justify-center items-center mt-4">
                     <div className={`rounded-2xl ${isNextClicked ? 'bg-[#D9D9D9]' : 'bg-gurkha-yellow'} w-[33px] h-[6px]`}></div>
                     <div className={`rounded-2xl ${isNextClicked ? 'bg-gurkha-yellow' : 'bg-[#D9D9D9]'}  w-[33px] h-[6px]`}></div>
                 </div>
-                <form className="px-14 mt-4">
+                <form className="px-4 sm:px-14 mt-4">
                     {errorStatus && Object.entries(registrationError).map(([key, value]) => <li key={key} className="text-red-900 capitalize font-bold">{value}</li>)}
                     {
                         isNextClicked ?
@@ -173,8 +175,17 @@ export default function SignInUser() {
                             <em className="text-lg font-bold">Choose Meeting date and Meeting Time to verify profile.</em>
 
                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                    <DateCalendar className="bg-white text-black m-0 rounded-xl border-2 border-black" disablePast={true} onChange={handleDate} />
-                                    <div className="mt-8 mb-8">
+                                    
+                                    <DateCalendar 
+                                            className="bg-white text-black m-0 rounded-xl border-2 border-black" 
+                                            disablePast={true} 
+                                            onChange={handleDate}
+                                            defaultValue={dayjs().add(1,'day')} 
+                                            shouldDisableDate={todayDate}
+                                    />
+                              
+                                    
+                                    <div className="mt-8 mb-8 w-[90%]">
                                         <label >Select Time*</label>
                                         <DigitalClock
                                             className="bg-white text-black rounded xl mt-10"

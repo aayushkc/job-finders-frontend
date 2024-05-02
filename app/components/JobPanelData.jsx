@@ -17,9 +17,17 @@ export default function JobPanelData({ jobPanelData, handleApplyClick, isUserLog
 
     }
     return (
-        <div className="py-4 px-16 h-screen overflow-y-scroll">
-            <div className="flex justify-between items-center">
-                <h2 className="font-bold text-2xl">{jobPanelData.title}</h2>
+        <>
+        <Link href="/jobs" className='sm:hidden'>
+        <div className='p-5 flex gap-4 items-center'>
+            <i className='bi bi-arrow-left'></i>
+            <p className='text-[#537FE7] underline'>Go Back</p>
+        </div>
+        </Link>
+       
+         <div className="p-6   sm:px-16 bg-white">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                <h2 className="font-bold text-xl sm:text-2xl mb-5">{jobPanelData.title}</h2>
                 {
                     isUserLoged ?
                         jobPanelData.hasApplied ?
@@ -116,7 +124,7 @@ export default function JobPanelData({ jobPanelData, handleApplyClick, isUserLog
                 </div>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-8 mb-6">
                 <h2 className="font-semibold text-xl">Salary</h2>
                 <div className="text-lg text-[#79767C] mt-3 capitalize flex gap-4 items-center">
                     <i className="bi bi-coin text-[#FFB000] text-2xl"></i>
@@ -153,5 +161,7 @@ export default function JobPanelData({ jobPanelData, handleApplyClick, isUserLog
 
 
         </div>
+        </>
+       
     )
 }

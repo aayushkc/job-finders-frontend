@@ -160,16 +160,16 @@ export default function UpdateProfile() {
 
                         <div className="mt-6">
                             <h2 className="text-xl font-semibold">Personal Information</h2>
-                            <div className="flex gap-10 items-start mt-6">
-                                <div className="w-[155px] h-[155px]  basis-[20%] grid">
+                            <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 items-start mt-6">
+                                <div className="w-24  sm:basis-[20%] grid">
 
                                     <div className='place-self-center'>
-                                        <img src={profileDetail ? profileDetail?.profilePic : "/images/defaultProfile.png"} alt="profile" className='w-24 h-18 object-cover rounded-md shadow-md' />
+                                        <img src={profileDetail ? profileDetail?.profilePic : "/images/defaultProfile.png"} alt="profile" className='w-24 object-cover rounded-md shadow-md' />
                                     </div>
                                 </div>
 
-                                <div className="flex gap-10 basis-[80%]">
-                                    <div className="w-[50%]">
+                                <div className="flex gap-10 flex-col sm:flex-row sm:basis-[80%]">
+                                    <div className="mt-4 sm:mt-0 sm:w-[50%]">
                                         <div className="flex flex-col">
                                             <label htmlFor="first_name" className="text-sm">First Name</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="first_name" value={profileDetail.first_name} disabled />
@@ -185,7 +185,7 @@ export default function UpdateProfile() {
                                         </div>
                                     </div>
 
-                                    <div className="w-[50%]">
+                                    <div className="mt-4 sm:mt-0 sm:w-[50%]">
                                         <div className="flex flex-col">
                                             <label htmlFor="middle_name" className="text-sm">Middle Name</label>
                                             <input disabled className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="middle_name" value={profileDetail.middle_name} />
@@ -230,7 +230,7 @@ export default function UpdateProfile() {
 
 
                         <hr className="my-8"></hr>
-                        <div className="flex w-full items-center gap-4 justify-end">
+                        <div className="flex flex-col sm:flex-row w-full items-center gap-4 justify-end">
                         <form className="" onSubmit={onShortListSubmit}>
                             <button className="text-white font-bold bg-gurkha-yellow py-2 px-12 rounded-2xl" type="submit" disabled={isSubmitting}>Shortlist</button>
 

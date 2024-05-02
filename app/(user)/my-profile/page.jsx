@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import PatchRequest from "@/app/api/patchRequest";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import { addYears } from 'date-fns';
+import Link from "next/link";
 
 export default function UpdateProfile() {
     const router = useRouter()
@@ -271,9 +272,9 @@ export default function UpdateProfile() {
            
 
 
-            <section className="py-10 flex justify-center">
-                <div className="bg-white p-10 w-[80%] mb-10">
-                    <h2 className="font-bold text-3xl text-[#414C61] bg-[#FFF7E2] px-4 py-2 rounded-2xl max-w-max">Edit Profile</h2>
+            <section className="sm:py-10 sm:flex sm:justify-center">
+                <div className="bg-white px-6 py-10 sm:p-10 sm:w-[80%] mb-10">
+                    <h2 className="font-bold text-3xl text-[#414C61] bg-[#FFF7E2] px-4 py-2 rounded-2xl max-w-max text-center sm:text-left">Edit Profile</h2>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="rounded-2xl bg-white/40 flex items-center p-2 mt-6">
@@ -282,7 +283,7 @@ export default function UpdateProfile() {
                                 <div className='mb-2'>
                                     {
                                         //Previews the file name
-                                        selectedFile ? selectedFile.name : profileDetail ? profileDetail[0]?.resume : ''
+                                        selectedFile ? selectedFile.name : profileDetail ? <button className="bg-gurkha-yellow py-2 px-4 rounded-xl text-white"><Link href={profileDetail[0]? profileDetail[0]?.resume:"#"}>Download Resume</Link></button>: ''
                                     }
                                 </div>
 
@@ -310,7 +311,7 @@ export default function UpdateProfile() {
 
                         <div className="mt-6">
                             <h2 className="text-xl font-semibold">Personal Information</h2>
-                            <div className="flex gap-10 items-start mt-6">
+                            <div className="flex flex-col sm:flex-row sm:gap-10 items-start mt-6">
                                 <div className="w-[155px] h-[155px] rounded-2xl bg-white/40 flex items-center p-2 basis-[20%]">
 
                                     <div className="flex flex-col gap-4 items-center">
@@ -343,8 +344,8 @@ export default function UpdateProfile() {
 
                                 </div>
 
-                                <div className="flex gap-10 basis-[80%]">
-                                    <div className="w-[50%]">
+                                <div className="flex flex-col sm:flex-row sm:gap-10 sm:basis-[80%]">
+                                    <div className="sm:w-[50%] mt-6 sm:mt-0">
                                         <div className="flex flex-col">
                                             <label htmlFor="first_name" className="text-sm">First Name*</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="first_name" {...register("first_name", { required: "First Name is required" })} />
@@ -360,7 +361,7 @@ export default function UpdateProfile() {
                                         </div>
                                     </div>
 
-                                    <div className="w-[50%]">
+                                    <div className="sm:w-[50%] mt-6 sm:mt-0">
                                         <div className="flex flex-col">
                                             <label htmlFor="middle_name" className="text-sm">Middle Name</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="middle_name" {...register("middle_name")} />
@@ -553,7 +554,7 @@ export default function UpdateProfile() {
 
                         <hr className="my-8"></hr>
 
-                        <div className="flex w-full justify-end">
+                        <div className="flex w-full justify-center sm:justify-end">
                             <button className="text-white bg-gurkha-yellow py-2 px-12 rounded-2xl" type="submit">Submit</button>
 
                         </div>

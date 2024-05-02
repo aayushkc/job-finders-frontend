@@ -116,3 +116,7 @@ main{
     margin: 0 -32px;
   }
 }
+
+.css-jgls56-MuiButtonBase-root-MuiPickersDay-root:not(.Mui-selected){
+  border: transparent;
+}

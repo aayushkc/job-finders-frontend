@@ -188,20 +188,20 @@ export default function CreateProfile() {
     return (
         <>
             <section className="text-center bg-white py-8">
-                <h1 className="text-[#193855] font-bold text-5xl leading-[78.4px]">Welcome to Hire Gurkha</h1>
-                <p className="font-semibold text-3xl bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text mt-4"> Create Your Profile</p>
+                <h1 className="text-[#193855] font-bold text-3xl sm:text-5xl sm:leading-[78.4px]">Welcome to Hire Gurkha</h1>
+                <p className="font-semibold text-xl sm:text-3xl bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text mt-4"> Create Your Profile</p>
                 <div className="flex justify-center">
                     <div className="bg-[#F3F4F8] mt-8 p-4 w-[80%]">
                         <div>
-                            <h2 className="text-[#193855]  text-2xl">So that you can start Applying for Jobs</h2>
+                            <h2 className="text-[#193855] text-xl sm:text-2xl">So that you can start Applying for Jobs</h2>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section className=" my-10 flex justify-center">
-                <div className="bg-white p-10 w-[80%] mb-10">
-                    <h2 className="font-bold text-3xl text-[#414C61] bg-[#FFF7E2] px-4 py-2 rounded-2xl max-w-max">Create Profile</h2>
+                <div className="bg-white p-10 sm:w-[80%] mb-10">
+                    <h2 className="font-bold text-xl sm:text-3xl text-[#414C61] bg-[#FFF7E2] px-4 py-2 rounded-2xl max-w-max">Create Profile</h2>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="mt-8">
@@ -222,15 +222,17 @@ export default function CreateProfile() {
                                                         textTransform: "capitalize",
                                                         border:errors.resume ? "1.5px solid red" : "1px solid #CFD1D4",
                                                         width: "max-content",
+                                                        maxWidth:"230px",
                                                         padding: "0.8rem 2.4rem",
                                                         fontSize: "18px",
-                                                        fontWeight: "700"
+                                                        fontWeight: "700",
+                                                        
                                                     }
                                                 }
                                             >
                                                 {
                                                     //Previews the file name
-                                                    selectedFile ? selectedFile.name : "Upload CV"
+                                                    selectedFile ? <p className="text-sm overflow-clip">{selectedFile.name}</p> : "Upload CV"
                                                 }
                                                 <VisuallyHiddenInput type="file" accept=".pdf,.docx" onChange={handleChange} />
                                             </Button>}
@@ -241,7 +243,7 @@ export default function CreateProfile() {
 
                         <div className="mt-6">
                             <h2 className="text-xl font-semibold">Personal Information</h2>
-                            <div className="flex gap-10 items-start mt-6">
+                            <div className="flex flex-col sm:flex-row gap-10 items-start mt-6">
                                 <div className="w-[155px] h-[155px]  bg-white/40 flex items-center p-2 basis-[20%]">
 
                                     <div className="flex flex-col gap-2 items-center">
@@ -277,8 +279,8 @@ export default function CreateProfile() {
 
                                 </div>
 
-                                <div className="flex gap-10 basis-[80%]">
-                                    <div className="w-[50%]">
+                                <div className="flex flex-col sm:flex-row sm:gap-10 sm:basis-[80%]">
+                                    <div className="mt-6 sm:mt-0 sm:w-[50%]">
                                         <div className="flex flex-col">
                                             <label htmlFor="first_name" className="text-sm">First Name*</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="first_name" {...register("first_name", { required: "First Name is required" })} />
@@ -299,7 +301,7 @@ export default function CreateProfile() {
                                         </div>
                                     </div>
 
-                                    <div className="w-[50%]">
+                                    <div className="mt-6 sm:mt-0 sm:w-[50%]">
                                 
                                         <div className="flex flex-col">
                                             <label htmlFor="middle_name" className="text-sm">Middle Name</label>

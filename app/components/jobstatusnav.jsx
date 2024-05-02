@@ -29,7 +29,7 @@ export default function JobStatusNav(){
         
         <div className="mb-4 py-3 px-4 bg-white w-full rounded-xl ">
           <nav>
-            <ul className=" flex justify-between text-[#324054] font-semibold capitalize">
+            <ul className=" flex flex-col sm:flex-row justify-between text-[#324054] font-semibold capitalize">
               {sideMenu.map((item) => (
                 <Link key={item.path} href={`${item.path}`}>
                   <li

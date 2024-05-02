@@ -43,7 +43,7 @@ export default function ApplicantDisplayCard({ applicant }) {
                 applicant.map(data => {
                     return (
                         
-                        <div className="bg-white px-8 py-4 rounded-xl border-[1px] border-[#D9D9D9] mt-4 flex gap-10 items-center" key={data.id}>
+                        <div className="bg-white px-4 sm:px-8 py-4 rounded-xl border-[1px] border-[#D9D9D9] mt-4 flex flex-col gap-4 sm:flex-row sm:gap-10 items-center" key={data.id}>
 
 
                             <div className='w-[125px] h-[125px] grid'>
@@ -59,7 +59,7 @@ export default function ApplicantDisplayCard({ applicant }) {
 
                                 </div>
 
-                                <div className="flex gap-2 items-center mt-3">
+                                <div className="flex flex-wrap gap-2 items-center mt-3">
                                     <p className="text-[#4F5052] text-sm">Skills:</p>
                                     {data.job_seeker.seeker_details.skills.map((data, index) => {
                                         

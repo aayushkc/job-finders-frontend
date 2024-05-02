@@ -18,7 +18,7 @@ export default function SignIn() {
 
   return (
     <main className="signin grid">
-      <section className="sm:place-self-center grid bg-white sm:rounded-xl  text-center sm:w-[35%] px-8 sm:px-2 sm:py-8 py-12 sm:my-10">
+      <section className="sm:place-self-center grid bg-[#F3F4F8] sm:bg-white sm:rounded-xl  text-center sm:w-[35%] px-8 sm:px-2 sm:py-8 py-12 sm:my-10">
         <h1 className="text-4xl font-bold">Sign In</h1>
 
         <LoginForm />

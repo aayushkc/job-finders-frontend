@@ -19,6 +19,7 @@ import PostFormWithToken from "@/app/api/postFormWithToken"
 import DialogBox from "@/app/components/sucessbox"
 import JobPanelData from "@/app/components/JobPanelData"
 import { useParams, useSearchParams, useRouter, usePathname } from "next/navigation"
+import Link from "next/link"
 
 
 
@@ -46,7 +47,7 @@ export default function JobDetail() {
     const [open, setOpen] = useState(true);
     const [success, setSuccess] = useState(false)
     const [falliure, setFaliure] = useState(false)
-  
+
     const handleClose = () => {
         setOpen(false);
         setIsApplied(false)
@@ -65,7 +66,7 @@ export default function JobDetail() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-           
+
             // The total count of data needs to be dividd by the number of data sent per page by backend
             const pages = Math.ceil(data.count / 4)
             setTotalJobMatch(data.count)
@@ -87,7 +88,7 @@ export default function JobDetail() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-           
+
             // The total count of data needs to be dividd by the number of data sent per page by backend
 
             setJobPanelData(data)
@@ -99,13 +100,13 @@ export default function JobDetail() {
     }
 
     const handlePageChange = (e, page) => {
-       
+
         setPageNum(page)
 
     }
 
     const handledApplied = async () => {
-        
+
 
         const formData = new FormData()
         formData.append("job", jobPanelData.id)
@@ -114,7 +115,7 @@ export default function JobDetail() {
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
-            
+
             getJobFromId(data.job)
             setIsApplied(false)
             setSuccess(true)
@@ -122,7 +123,7 @@ export default function JobDetail() {
 
         }
         catch (errors) {
-           
+
             setIsApplied(false)
             setFaliure(true)
         }
@@ -159,167 +160,328 @@ export default function JobDetail() {
     }, [])
 
     return (
-        <section className="max-w-[1440px] pt-6 pb-10">
+        <>
+            <section className="hidden sm:block sm:max-w-[1440px] pt-6 pb-10">
 
 
-            {
-                success && <DialogBox
-                    dialogHeading={"Success"}
-                    dialogText={"Your application has been sent successfully"}
-                    success={true}
-                    goToPageName={"Job Status"}
-                    url={"/job-status"}
-                />
-            }
+                {
+                    success && <DialogBox
+                        dialogHeading={"Success"}
+                        dialogText={"Your application has been sent successfully"}
+                        success={true}
+                        goToPageName={"Job Status"}
+                        url={"/job-status"}
+                    />
+                }
 
-            {
-                falliure && <DialogBox
-                    dialogHeading={"An Error occured during Submission"}
-                    dialogText={"Please try again"}
-                    error={true}
-                />
-            }
+                {
+                    falliure && <DialogBox
+                        dialogHeading={"An Error occured during Submission"}
+                        dialogText={"Please try again"}
+                        error={true}
+                    />
+                }
 
-            {
-                isAppliedClicked &&
-                <>
-                    <BootstrapDialog
-                        onClose={handleClose}
-                        aria-labelledby="customized-dialog-title"
-                        open={open}
-                    >
-                        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                            Apply for the Job
-                        </DialogTitle>
-                        <IconButton
-                            aria-label="close"
-                            onClick={handleClose}
-                            sx={{
-                                position: 'absolute',
-                                right: 8,
-                                top: 8,
-                                color: (theme) => theme.palette.grey[500],
-                            }}
+                {
+                    isAppliedClicked &&
+                    <>
+                        <BootstrapDialog
+                            onClose={handleClose}
+                            aria-labelledby="customized-dialog-title"
+                            open={open}
                         >
+                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                Apply for the Job
+                            </DialogTitle>
+                            <IconButton
+                                aria-label="close"
+                                onClick={handleClose}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
+                            >
 
-                        </IconButton>
-                        <DialogContent dividers>
+                            </IconButton>
+                            <DialogContent dividers>
 
-                            <Typography gutterBottom>
-                                When clicked "Apply", your profile information along with the resume will be sent to the job poster.
-                            </Typography>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handledApplied}>
-                                Apply
-                            </Button>
+                                <Typography gutterBottom>
+                                    When clicked "Apply", your profile information along with the resume will be sent to the job poster.
+                                </Typography>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handledApplied}>
+                                    Apply
+                                </Button>
 
-                            <Button className="bg-red-600 text-white hover:bg-red-400" onClick={handleClose}>
-                                Close
-                            </Button>
-                        </DialogActions>
-                    </BootstrapDialog>
-                </>
-            }
+                                <Button className="bg-red-600 text-white hover:bg-red-400" onClick={handleClose}>
+                                    Close
+                                </Button>
+                            </DialogActions>
+                        </BootstrapDialog>
+                    </>
+                }
 
-            {
-                recommendedJobs.length > 0 ?
-                    <div className="bg-white pb-6  mx-20 grid grid-cols-[450px_1fr]">
-                        <div>
-                            <div className="pl-6 py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
-                                <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
-                                    <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
+                {
+                    recommendedJobs.length > 0 ?
+                        <div className="bg-white pb-6  mx-20 grid grid-cols-[450px_1fr]">
+                            <div>
+                                <div className="pl-6 py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
+                                    <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
+                                        <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
+                                    </div>
+
+                                    {
+                                        recommendedJobs?.map(data => {
+                                            return (
+                                                <div key={data.id}>
+                                                    <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => { setJobPanelData(data); getJobFromId(data.id); }}>
+                                                        <div className="flex items-center gap-6">
+                                                            <div className="w-[55px] h-[55px]">
+                                                                <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
+                                                            </div>
+
+                                                            <div>
+                                                                <h2 className="font-bold text-lg capitalize">{data.title}</h2>
+                                                                <p className="text-[#79767C]"> {data.company}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-sm mt-8 mb-2 text-[#4F5052] capitalize mt-2">
+                                                            <p className="">Skills:
+                                                                <span className="text-black">
+                                                                    {
+                                                                        data.required_skills.length >= 2 ?
+                                                                            data.required_skills.map(
+                                                                                (data, index) => index < 2 &&
+                                                                                    <span key={index}>{index === 1 ? data.title + "..." : data.title + "/"}</span>
+
+
+
+                                                                            )
+                                                                            :
+                                                                            data.required_skills.map((data) => data.title)
+                                                                    }
+                                                                </span>
+                                                            </p>
+
+                                                        </div>
+
+                                                        <div className="flex gap-2 font-medium items-center mt-8">
+                                                            <p className="text-[#3C831B]"> {data.work_location_type} |</p>
+
+                                                            {
+                                                                data.salary && <p>{data.salary}$ <span className="text-[#828282] text-sm">/month</span></p>
+                                                            }
+                                                            {
+                                                                data.min_salary && <p>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282] text-sm">/month</span> </p>
+                                                            }
+
+                                                            {
+                                                                !data.min_salary && !data.salary && <p>Undisclosed </p>
+                                                            }
+                                                        </div>
+
+
+                                                    </div>
+                                                    <hr className=""></hr>
+                                                </div>
+                                            )
+                                        })
+                                    }
+
+                                </div>
+                                <div className="flex justify-center">
+                                    <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
                                 </div>
 
-                                {
-                                    recommendedJobs?.map(data => {
-                                        return (
-                                            <div key={data.id}>
-                                                <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => { setJobPanelData(data); getJobFromId(data.id); }}>
-                                                    <div className="flex items-center gap-6">
-                                                        <div className="w-[55px] h-[55px]">
-                                                            <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
-                                                        </div>
-
-                                                        <div>
-                                                            <h2 className="font-bold text-lg capitalize">{data.title}</h2>
-                                                            <p className="text-[#79767C]"> {data.company}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-sm mt-8 mb-2 text-[#4F5052] capitalize mt-2">
-                                                        <p className="">Skills:
-                                                            <span className="text-black">
-                                                                {
-                                                                    data.required_skills.length >= 2 ?
-                                                                        data.required_skills.map(
-                                                                            (data, index) => index < 2 &&
-                                                                                <span key={index}>{index === 1 ? data.title + "..." : data.title + "/"}</span>
-
-
-
-                                                                        )
-                                                                        :
-                                                                        data.required_skills.map((data) => data.title)
-                                                                }
-                                                            </span>
-                                                        </p>
-
-                                                    </div>
-
-                                                    <div className="flex gap-2 font-medium items-center mt-8">
-                                                        <p className="text-[#3C831B]"> {data.work_location_type} |</p>
-
-                                                        {
-                                                            data.salary && <p>{data.salary}$ <span className="text-[#828282] text-sm">/month</span></p>
-                                                        }
-                                                        {
-                                                            data.min_salary && <p>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282] text-sm">/month</span> </p>
-                                                        }
-
-                                                        {
-                                                            !data.min_salary && !data.salary && <p>Undisclosed </p>
-                                                        }
-                                                    </div>
-
-
-                                                </div>
-                                                <hr className=""></hr>
-                                            </div>
-                                        )
-                                    })
-                                }
-
                             </div>
-                            <div className="flex justify-center">
-                                <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
-                            </div>
+
+
+
+                            {
+                                jobPanelData?.id ?
+
+
+                                    <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick} isUserLoged={accessToken} />
+                                    :
+                                    <div className="flex justify-center items-center text-4xl font-bold">
+                                        <h2>Loading.........</h2>
+                                    </div>
+                            }
+
+
+
+
 
                         </div>
+                        :
+                        <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
+                            Could not Find Any Jobs!
+                        </div>
+                }
+
+            </section>
 
 
 
-                        {
-                            jobPanelData?.id ?
+            {/* Only for mobile View */}
+            <section className="block sm:hidden sm:max-w-[1440px]">
 
 
-                                <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick} isUserLoged={accessToken} />
-                                :
-                                <div className="flex justify-center items-center text-4xl font-bold">
-                                    <h2>Loading.........</h2>
+                {
+                    success && <DialogBox
+                        dialogHeading={"Success"}
+                        dialogText={"Your application has been sent successfully"}
+                        success={true}
+                        goToPageName={"Job Status"}
+                        url={"/job-status"}
+                    />
+                }
+
+                {
+                    falliure && <DialogBox
+                        dialogHeading={"An Error occured during Submission"}
+                        dialogText={"Please try again"}
+                        error={true}
+                    />
+                }
+
+                {
+                    isAppliedClicked &&
+                    <>
+                        <BootstrapDialog
+                            onClose={handleClose}
+                            aria-labelledby="customized-dialog-title"
+                            open={open}
+                        >
+                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                Apply for the Job
+                            </DialogTitle>
+                            <IconButton
+                                aria-label="close"
+                                onClick={handleClose}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
+                            >
+
+                            </IconButton>
+                            <DialogContent dividers>
+
+                                <Typography gutterBottom>
+                                    When clicked "Apply", your profile information along with the resume will be sent to the job poster.
+                                </Typography>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handledApplied}>
+                                    Apply
+                                </Button>
+
+                                <Button className="bg-red-600 text-white hover:bg-red-400" onClick={handleClose}>
+                                    Close
+                                </Button>
+                            </DialogActions>
+                        </BootstrapDialog>
+                    </>
+                }
+
+                {
+                    recommendedJobs.length > 0 ?
+                        <div className="bg-white pb-6  sm:mx-20">
+                            <div>
+                                <div className="py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
+                                    <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
+                                        <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
+                                    </div>
+
+                                    {
+                                        recommendedJobs?.map(data => {
+                                            return (
+                                                <Link href={`/jobs/${data.id}`} key={data.id}>
+                                                 <div key={data.id}>
+                                                    <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} key={data.id}>
+                                                        <div className="flex items-center gap-6">
+                                                            <div className="w-[55px] h-[55px]">
+                                                                <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
+                                                            </div>
+
+                                                            <div>
+                                                                <h2 className="font-bold text-lg capitalize">{data.title}</h2>
+                                                                <p className="text-[#79767C]"> {data.company}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-sm mt-8 mb-2 text-[#4F5052] capitalize mt-2">
+                                                            <p className="">Skills:
+                                                                <span className="text-black">
+                                                                    {
+                                                                        data.required_skills.length >= 2 ?
+                                                                            data.required_skills.map(
+                                                                                (data, index) => index < 2 &&
+                                                                                    <span key={index}>{index === 1 ? data.title + "..." : data.title + "/"}</span>
+
+
+
+                                                                            )
+                                                                            :
+                                                                            data.required_skills.map((data) => data.title)
+                                                                    }
+                                                                </span>
+                                                            </p>
+
+                                                        </div>
+
+                                                        <div className="flex gap-2 font-medium items-center mt-8">
+                                                            <p className="text-[#3C831B]"> {data.work_location_type} |</p>
+
+                                                            {
+                                                                data.salary && <p>{data.salary}$ <span className="text-[#828282] text-sm">/month</span></p>
+                                                            }
+                                                            {
+                                                                data.min_salary && <p>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282] text-sm">/month</span> </p>
+                                                            }
+
+                                                            {
+                                                                !data.min_salary && !data.salary && <p>Undisclosed </p>
+                                                            }
+                                                        </div>
+
+
+                                                    </div>
+                                                    <hr className=""></hr>
+                                                </div>
+                                                </Link>
+                                               
+                                            )
+                                        })
+                                    }
+
                                 </div>
-                        }
+                                <div className="flex justify-center">
+                                    <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
+                                </div>
+
+                            </div>
 
 
 
 
 
-                    </div>
-                    :
-                    <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
-                        Could not Find Any Jobs!
-                    </div>
-            }
 
-        </section>
+
+                        </div>
+                        :
+                        <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
+                            Could not Find Any Jobs!
+                        </div>
+                }
+
+            </section>
+        </>
+
     )
 }

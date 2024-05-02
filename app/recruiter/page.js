@@ -134,7 +134,7 @@ export default function Home() {
   // Handle Submission of All Fields Expcept for the logo(image) field
   const onSubmit = async (data) => {
     delete data.logo //Delete the logo from the object before submisssion
-    
+    console.log(data);
     try {
       const res = await PatchRequest(`/recruiter/view-recruiter-details/${profileDetail[0].id}`, data)
     
@@ -162,6 +162,7 @@ export default function Home() {
   // Handles the submission of the logo only
   const onFileSubmit = async (data) => {
     const formData = new FormData()
+    console.log(data);
     formData.append("logo", selectedFile)
     try {
       const res = await PatchRequest(`/recruiter/view-recruiter-details/${profileDetail[0].id}`, formData, true) //True need to be sent to indicate that the recieved data is a file
@@ -223,19 +224,19 @@ export default function Home() {
     <AdminDashBoardLayout>
   
       <div>
-        <h1 className="text-3xl font-semibold">Profile</h1>
-        <div className="flex justify-between">
+        <h1 className="text-3xl font-semibold text-center sm:text-left">Profile</h1>
+        <div className="flex flex-col sm:flex-row sm:justify-between">
 
           {/* Comapny Name Fields */}
-          <div className="w-[75%] mt-8">
+          <div className="sm:w-[75%] mt-8 order-last sm:order-first">
             <form className="" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="name" className="text-sm">Company Name</label>
-              <div className="flex gap-4 items-center mt-1">
+              <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
                 <input type="text" {...register("name", { required: "Name is Required" })} id="name" className={`w-full rounded-xl bg-white py-4 px-3 text-black`} disabled={editName ? false : true} placeholder="Enter Company Name" />
                 {
                   editName ?
                     <div className="flex gap-2 font-bold text-[#414C61]">
-                      <button type="submit" disabled={!isDirty || !isValid || isSubmitting} className="bg-[#99E8A5] py-2 px-6 rounded-2xl">Edit</button>
+                      <button type="submit" disabled={isSubmitting} className="bg-[#99E8A5] py-2 px-6 rounded-2xl">Edit</button>
                       <button onClick={() => setEditName(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                     </div>
                     :
@@ -249,12 +250,12 @@ export default function Home() {
             {/* Company Email Fields  */}
             <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="email" className="text-sm">Company Email</label>
-              <div className="flex gap-4 items-center mt-1">
+              <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
                 <input type="email" {...register("company_email", { required: "Email is required" })} id="email" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editEmail ? false : true} placeholder="Enter Company Email" />
                 {
                   editEmail ?
                     <div className="flex gap-2 font-bold text-[#414C61]">
-                      <button type="submit" disabled={!isDirty || !isValid || isSubmitting} className="bg-[#99E8A5] py-2 px-6 rounded-2xl">Edit</button>
+                      <button type="submit" disabled={isSubmitting} className="bg-[#99E8A5] py-2 px-6 rounded-2xl">Edit</button>
                       <button onClick={() => setEditEmail(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                     </div>
                     :
@@ -268,12 +269,12 @@ export default function Home() {
             {/* Phone Fields */}
             <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="phone" className="text-sm">Phone</label>
-              <div className="flex gap-4 items-center mt-1">
+              <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
                 <input type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editPhone ? false : true} placeholder="Enter Company Phone number" />
                 {
                   editPhone ?
                     <div className="flex gap-2 font-bold text-[#414C61]">
-                      <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Edit</button>
+                      <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
                       <button onClick={() => setEditPhone(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                     </div>
                     :
@@ -287,13 +288,13 @@ export default function Home() {
 
 
           {/* Comapany Logo Fields */}
-          <form onSubmit={handleSubmit(onFileSubmit)} encType="multipart/form-data" className="text-center">
+          <form onSubmit={handleSubmit(onFileSubmit)} encType="multipart/form-data" className="mt-6 sm:mt-0 text-center flex flex-col items-center">
 
             <div className="w-[155px] h-[155px] rounded-2xl bg-white/40 flex items-center p-2 justify-center">
               {
                 profilePic ?
                   <div className="flex flex-col gap-4">
-                    <div className='w-[101px] h-[71px] mb-3'>
+                    <div className='w-[101px] h-[71px] mb-3 felx'>
                       {
                         //Previews the image
                         selectedFile ? <img src={preview} className='w-full h-full object-contain' /> : ""
@@ -332,7 +333,7 @@ export default function Home() {
             {
               profilePic ?
                 <div className="flex gap-2 flex-col items-center font-bold text-[#414C61] mt-3">
-                  <button type="submit" className="bg-[#99E8A5] py-2 px-3 text-sm rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Upload Image</button>
+                  <button type="submit" className="bg-[#99E8A5] py-2 px-3 text-sm rounded-2xl" disabled={isSubmitting}>Upload Image</button>
                   <button onClick={() => setProfilePic(false)} className="bg-red-400 py-2 px-3 rounded-2xl">Cancel</button>
                 </div>
                 :
@@ -345,12 +346,12 @@ export default function Home() {
         {/* Company Location Fields */}
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="location" className="text-sm">Location</label>
-          <div className="flex gap-4 items-center mt-1">
+          <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
             <input type="text" {...register("location", { required: "Location is required" })} id="location" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editLocation ? false : true} placeholder="Location" />
             {
               editLocation ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
-                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Edit</button>
+                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
                   <button onClick={() => setEditLocation(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :
@@ -362,7 +363,7 @@ export default function Home() {
         {/* Comapny Url Fields */}
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="company_url" className="text-sm">Company Website URL</label>
-          <div className="flex gap-4 items-center mt-1">
+          <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
             <input 
                 type="text" 
                 {...register("company_url", { 
@@ -396,7 +397,7 @@ export default function Home() {
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
 
           <label htmlFor="industry" className="text-sm">Industry</label>
-          <div className="flex gap-4 items-center mt-1">
+          <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
             {
               editIndustry ?
                 <ReactHookFormSelect
@@ -422,7 +423,7 @@ export default function Home() {
             {
               editIndustry ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
-                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Edit</button>
+                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
                   <button onClick={() => setEditIndustry(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :
@@ -435,7 +436,7 @@ export default function Home() {
     
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="description" className="text-sm">Description</label>
-          <div className="flex gap-4 items-center mt-1">
+          <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
 
             {
               editDescription ?
@@ -470,7 +471,7 @@ export default function Home() {
             {
               editDescription ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
-                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={!isDirty || !isValid || isSubmitting}>Edit</button>
+                  <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
                   <button onClick={() => setEditDescription(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :

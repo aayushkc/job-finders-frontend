@@ -36,7 +36,7 @@ export default function Closed() {
                     appliedJobs.map(data => {
                         return (
                             <div key={data.id} className="bg-white mt-8 rounded-xl p-6">
-                                <div className="flex gap-8 items-center">
+                                <div className="flex flex-col sm:flex-row  gap-4 sm:gap-8 sm:items-center">
                                     <div className="text-xl font-semibold flex gap-2 items-center">
                                         <i className="bi bi-briefcase"></i>
                                         <h2>{data.job.title}</h2>
@@ -47,15 +47,15 @@ export default function Closed() {
                                     </div>
                                 </div>
 
-                                <div className="text-[#149236] text-sm flex gap-2 capitalize mt-1">
+                                <div className="text-[#149236] text-sm flex gap-2 capitalize mt-3 sm:mt-1">
                                     <p>{data.job.work_location_type}</p>
-                                    <p>{data.job.required_years_of_experience}</p>
-                                    <button className="text-[#0B69FF]">View Details</button>
+                                    <p>{data.job.required_years_of_experience} years of experience</p>
+                                    {/* <button className="text-[#0B69FF]">View Details</button> */}
                                 </div>
 
                                 <div className="flex flex-col gap-1 font-medium  mt-8">
                                     <p className=""> Salary/Month</p>
-                                    <p className="text-lg">
+                                    <p className="sm:text-lg">
                                          {
                                             data.salary && <p>{data.salary}$ <span className="text-[#828282]">/month</span></p>
                                         }
@@ -75,7 +75,7 @@ export default function Closed() {
                                     </div>
 
                                     <div className="text-white">
-                                        <p className="font-semibold text-lg">{data.status === 1 && "Your application has been rejected."}</p>
+                                        <p className="font-semibold sm:text-lg">{data.status === 1 && "Your application has been rejected."}</p>
                                     </div>
                                 </div>
 
