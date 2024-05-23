@@ -5,6 +5,7 @@ import "../globals.css";
 import Navbar from "../components/navbar"
 import { AuthProvider } from "../utils/checkIsLoggedIn";
 import { Suspense } from "react";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const sans = Open_Sans({ subsets: ["latin"] });
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={sans.className  + " relative"}>
+       
         <AuthProvider>
           <Navbar />
           <main className="mt-[80px]">
@@ -29,6 +31,7 @@ export default function RootLayout({ children }) {
         </AuthProvider>
 
       </body>
+      <GoogleAnalytics gaId="G-9JG53MHYCP" />
     </html>
   );
 }
