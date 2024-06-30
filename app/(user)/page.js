@@ -10,8 +10,11 @@ import PaginationComponent from "../components/paginationcomponent";
 import { APIENDPOINT } from "../api/APIENDPOINT";
 import AnonUserHomePage from "../components/anonymoususerhomepage";
 import Footer from "../components/footer";
+import jwt from 'jsonwebtoken';
+
 export default function Home() {
   const accessToken = Cookies.get('accessToken')
+  const isSeeker = Cookies.get('isSeeker') === 'true'
   const [recommendedJobs, setRecommendedJobs] = useState([])
   const [pageNum, setPageNum] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
@@ -79,22 +82,23 @@ export default function Home() {
 
   }
   useEffect(() => {
-    if (accessToken) {
+    if (accessToken  && isSeeker) {
       getRecommendedJobs()
     }
 
-  }, [pageNum])
+  }, [pageNum,accessToken])
 
   useEffect(() => {
-    if (accessToken) {
+    
+    if (accessToken && isSeeker) {
       checkSeekerDetails()
     }
 
-  }, [])
+  }, [accessToken,isSeeker])
 
 
   return (
-    accessToken ?
+    accessToken && isSeeker ?
 
 
       <>
@@ -291,7 +295,7 @@ export default function Home() {
       :
       <>
         <AnonUserHomePage pageNum={pageNum} totalPage={totalPage} />
-        <div className="flex justify-center mt-10">
+        <div className="flex justify-center my-8">
           <PaginationComponent onChange={handlePageChange} page={pageNum} totalPage={totalPage} />
         </div>
 

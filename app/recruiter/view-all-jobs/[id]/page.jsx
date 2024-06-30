@@ -47,6 +47,7 @@ export default function Page() {
 
     const [industries, setIndustries] = useState([]);
     const [skills, setSkills] = useState([]);
+    const [quizSet, setQuizSet] = useState([])
     const [jobcategory, setJobCategory] = useState([]);
     const [educationIfon, setEducationInfo] = useState([]);
     const [jobSuccess, setJobSuccess] = useState(false)
@@ -85,6 +86,20 @@ export default function Page() {
 
 
     }
+
+    const getQuizSet= async () => {
+        try {
+          const data = await getRequestWithToken(`/quiz/get-quiz-name`,accessToken)
+          if (data.detail) {
+            throw new Error("Cannot Fetch")
+          }
+          console.log(data);
+          setQuizSet(data)
+        }
+        catch (errors) {
+          setQuizSet([{ "id": "", "quiz_name": "" }])
+        }
+      }
 
     const getSkills = async () => {
         try {
@@ -295,7 +310,7 @@ export default function Page() {
         setValue("apply_before", dayjs(jobDetails.apply_before) || dayjs().startOf("D"));
         setValue("description", jobDetails.description || "");
         setValue("industry", industries.filter(indus => indus.title_name === jobDetails.industry)[0]?.id || '');
-
+        setValue("quiz", quizSet.filter(quiz => quiz.quiz_name === jobDetails.quiz.quiz_name)[0]?.id || '');
         if (selectedWorkLoc) {
             setValue("work_location_type", selectedWorkLoc.id || 0);
         }
@@ -335,6 +350,7 @@ export default function Page() {
         getJobCategory()
         getEducationInfo()
         getJob()
+        getQuizSet()
     }, [])
 
 
@@ -359,6 +375,8 @@ export default function Page() {
                     error={true}
                 />
             }
+
+            <button className="py-2 px-4 my-4 text-sm bg-gurkha-yellow text-white rounded-xl" onClick={() => navigate.back() }> <i className="mr-1 bi bi-arrow-left"></i> Go back</button>
             <h1 className="text-3xl font-semibold">Edit Your Job Vacancy</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -388,6 +406,7 @@ export default function Page() {
                             type="number"
                             name='number_of_vacancy'
                             id="number_of_vacancy"
+                            min={1}
                             className="w-full rounded-xl bg-white py-4 px-3 text-black"
                         />
                     </div>
@@ -600,7 +619,39 @@ export default function Page() {
 
 
                 </div>
+                
 
+                 {/* Choose QuizSet */}
+                 <div className="my-4">
+                    <Controller
+                        control={control}
+                        name="quiz"
+                        defaultValue={null}
+                        render={({ field }) => (
+                            <Autocomplete
+                                {...field}
+                                options={quizSet}
+                                getOptionLabel={(option) => { return option.quiz_name ? option.quiz_name : quizSet.filter(data => data.id === option)[0]?.quiz_name }}
+                                isOptionEqualToValue={(option, value) => { return typeof (value) === "number" ? option.id === value : option.id === value.id }}
+                                onChange={(event, values) => {
+                                    field.onChange(values?.id)
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Choose One Quiz Set"
+                                        placeholder={jobDetails[0]?.quiz || ""}
+                                        helperText={errors.quiz?.message}
+                                        error={!!errors.quiz}
+                                    />
+                                )}
+                            />
+                        )}
+                    />
+
+
+
+                </div>
 
 
                 {/* Choose Skills */}

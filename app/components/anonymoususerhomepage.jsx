@@ -25,7 +25,11 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
-
+import chooseUs1 from "../../public/images/chooseUs1.png"
+import chooseUs2 from "../../public/images/chooseUs2.png"
+import chooseUs3 from "../../public/images/chooseUs3.png"
+import chooseUs4 from "../../public/images/chooseUs4.png"
+import chooseUs5 from "../../public/images/chooseUs5.png"
 import EmblaCarousel from "./emblacarousel";
 import FAQCard from "./faq";
 
@@ -56,32 +60,25 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
   const OPTIONS = { align: 'start', dragFree: true, loop: true }
   const CLIENT_SLIDES = [
     {
-      'name': "Name",
-      'profilePic': "/images/client1.png",
+      'name': "Aakash Chaudhary",
+      'profilePic': "/images/aakash.jpeg",
       'company': "Company",
       'review': "Hiregurkha was instrumental in securing my position at Samsung; its  resources and guidance were invaluable throughout the recruitment  process",
-      'proficient': "Design"
+      'proficient': "Senior DotNet Developer"
     },
     {
-      'name': "Name",
-      'profilePic': "/images/client2.png",
-      'company': "Company",
-      'review': "Hiregurkha played a pivotal role in helping me secure my role at DHL.",
-      'proficient': "Product Management"
+      'name': "Prashant Pradhan",
+      'profilePic': "/images/prashant.jpeg",
+      'company': "NexSewa",
+      'review': "Hiregurkha played a pivotal role in helping me secure my role at NexSewa.",
+      'proficient': "Graphic Designer"
     },
     {
-      'name': "Name",
+      'name': "Ayush Duyadi",
       'company': "Company",
-      'profilePic': "/images/client3.png",
+      'profilePic': "/images/ayush.jpeg",
       'review': "My journey to AirAsia was made possible by Hiregurkh.",
-      'proficient': "Finance"
-    },
-    {
-      'name': "Name",
-      'company': "Company",
-      'profilePic': "/images/client3.png",
-      'review': "My journey to AirAsia was made possible by Hiregurkh.",
-      'proficient': "Finance"
+      'proficient': "Project Manager"
     }
   ]
 
@@ -160,23 +157,23 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
         <div className="py-2 sm:py-8 text-center relative sm:px-6 text-[#212529]">
           <h2 className="text-3xl sm:text-5xl font-bold sm:leading-[62px]">
-            Secure The <span className="text-[#FD810E]"> Job</span> You Desire  With Our
+            {/* Secure The <span className="text-[#FD810E]"> Job</span> You Desire  With Our
             <br></br>
             <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">
               AI Tailored Platform
-            </span>
-
+            </span> */}
+            Would You Like To <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">Work Abroad</span> While Residing In <span className="text-[#FD810E]">Nepal</span> With Your Family?
           </h2>
 
           <h4 className="text-lg sm:text-xl font-bold mt-8 sm:leading-[30px]">Pursue your ambitions and shape your ideal professional path with our support.</h4>
 
           <div className="flex mt-8 justify-center">
             <Link href="/jobs">
-            <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
-              Search Job
-            </button>
+              <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
+                Search Job
+              </button>
             </Link>
-         
+
 
           </div>
 
@@ -184,15 +181,15 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
             <div className="w-[286px] h-[8px] rounded-xl bg-gurkha-yellow "></div>
           </div>
 
-          <h2 className="text-5xl font-bold  mb-4 sm:leading-[62px]"><span className="text-[#FD810E]">Hire </span> Top Talents </h2>
+          <h2 className="text-5xl font-bold  mb-4 sm:leading-[62px]"><span className="text-[#FD810E]">Hire </span> From Nepal </h2>
           <h4 className="text-xl font-bold mt-8 leading-[30px]">With Our AI Powered Process</h4>
           <div className="flex mt-8 justify-center">
-           <Link href="/register-as-recruiter">
-           <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
-              Recruit Employees
-            </button>
+            <Link href="/register-as-recruiter">
+              <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
+                Recruit Employees
+              </button>
 
-            </Link> 
+            </Link>
           </div>
 
 
@@ -211,7 +208,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
       <section className=" sm:px-32 mt-12">
         <div className="px-4 sm:p-10">
-          <h2 className="text-3xl font-bold text-center sm:leading-[48px]">Trusted and has been used by <span className="text-[#FE810F]">leading companies</span> around the <span className="text-[#FE810F]">world</span></h2>
+          <h2 className="text-3xl font-bold text-center sm:leading-[48px]">Over <span className="text-[#FE810F]">100 NRN</span> businesses using our platform to hire <span className="text-[#FE810F]">from Nepal</span></h2>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-14 mt-12">
 
@@ -264,20 +261,20 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
         <div className="grid sm:grid-cols-3 mt-10 sm:mx-20 sm:border-b-2 border-[#D8D9DC] text-center sm:text-left">
           <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
-            <Image src="/images/codeCom.png" width={51} height={51} alt="computer"/>
+            <Image src="/images/codeCom.png" width={51} height={51} alt="computer" />
             <h3 className="text-lg mt-4">Software Development</h3>
             <p className="py-8">Experienced software engineers, coders, and architects proficient in a multitude of technologies</p>
           </div>
 
           <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
-            <Image src="/images/it.png" width={51} height={51} alt="Information Technology" style={{width:'51px', height:'51px'}}/>
+            <Image src="/images/it.png" width={51} height={51} alt="Information Technology" style={{ width: '51px', height: '51px' }} />
             <h3 className="text-lg mt-4">Information Technology</h3>
             <p className="py-8">Skilled IT professionals specializing in UI, UX, Visual, Interaction  design etc.</p>
           </div>
 
 
           <div className="px-10 pt-8 border-b-2 flex flex-col items-center sm:items-start">
-            <Image src="/images/finance.png" width={51} height={51} alt="finance" style={{width:'51px', height:'51px'}}/>
+            <Image src="/images/finance.png" width={51} height={51} alt="finance" style={{ width: '51px', height: '51px' }} />
             <h3 className="text-lg mt-4">Finance and Accounting</h3>
             <p className="py-8">Professionals proficient in financial modeling & valuation, startup funding, interim etc.</p>
           </div>
@@ -285,20 +282,20 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
         <div className="grid sm:grid-cols-3 text-center sm:text-left sm:mx-20">
           <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
-            <Image src="/images/cusSupppng.png" width={51} height={51} alt="Customer Support"/>
+            <Image src="/images/cusSupppng.png" width={51} height={51} alt="Customer Support" />
             <h3 className="text-lg mt-4">Customer support</h3>
             <p className="py-8">Professionals in customer support specialized in addressing various needs</p>
           </div>
 
           <div className="px-10 pt-8 border-b-2 sm:border-r-2 border-[#D8D9DC] flex flex-col items-center sm:items-start">
-            <Image src="/images/hr.png" width={51} height={51} alt="HR"/>
+            <Image src="/images/hr.png" width={51} height={51} alt="HR" />
             <h3 className="text-lg mt-4">Human Resource</h3>
             <p className="py-8">HR professionals often play a crucial role in fostering a positive  workplace culture and supporting the organization's overall strategic  goals.</p>
           </div>
 
 
           <div className="px-10 pt-8 border-b-2 flex flex-col items-center sm:items-start">
-            <Image src="/images/market.png" width={51} height={51} alt="marketing"/>
+            <Image src="/images/market.png" width={51} height={51} alt="marketing" />
             <h3 className="text-lg mt-4">Marketing</h3>
             <p className="py-8">Professionals in marketing are responsible for developing and  implementing strategies to promote products or services, attract  customers, and drive sales.</p>
           </div>
@@ -359,7 +356,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         </div>
 
       </section>
-      
+
       <section className="pt-12 bg-[#FCFCFC]">
         <h2 className="text-4xl text-center font-bold">Our <span className="text-[#FD810E]"> Hiring Strategies</span></h2>
         <p className="text-[#84888E] text-center mt-4">Quickly assemble the teams you need, exactly when you need them.</p>
@@ -367,12 +364,12 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <div className="flex justify-center  mt-6">
           <div className="flex gap-20 items-center">
             <div className="border-l-2 border-[#2F6AE3] pl-6">
-              <h2 className="text-3xl font-lightbold">1000+</h2>
+              <h2 className="text-3xl font-lightbold">100+</h2>
               <p className="text-lg">companies <br></br> accelerated</p>
             </div>
 
             <div className="border-l-2 border-[#2F6AE3] pl-6">
-              <h2 className="text-3xl font-lightbold">3M+</h2>
+              <h2 className="text-3xl font-lightbold">30000+</h2>
               <p className="text-lg">Talents <br></br>Ready</p>
             </div>
 
@@ -389,18 +386,18 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
             </div>
 
             <div className="flex flex-col items-center sm:items-start">
-              <Image src={bannnerIcon} alt="banner"/>
+              <Image src={bannnerIcon} alt="banner" />
               <h2 className="text-lg font-bold mt-2">The Top 3%</h2>
               <p> Just take <span className="text-gurkha-yellow">one or two </span>interviews of
-              only selected profiles</p>
+                only selected profiles</p>
             </div>
 
 
             <div className="flex flex-col items-center sm:items-start">
-              <Image src={bannnerIcon} alt="banner"/>
+              <Image src={bannnerIcon} alt="banner" />
               <h2 className="text-lg font-bold mt-2">100+ Skills</h2>
               <p>Ranging from 10+ Domains with each
-              curated skills list</p>
+                curated skills list</p>
             </div>
           </div>
         </div>
@@ -408,38 +405,67 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <div className="flex justify-center p-6 ">
           <div className="grid sm:grid-cols-2 gap-12 max-w-[1040px]">
             <div className="bg-white p-6 flex items-center flex-col sm:items-start text-center sm:text-left">
-              <Image src={monitorPlay} alt="monitor"/>
+              <Image src={monitorPlay} alt="monitor" />
               <h2 className="text-lg font-bold">2 Weeks Trial </h2>
               <p className="text-[#455065]">You can get used to our website with 2 weeks of trial available to get used to our hiring process</p>
             </div>
 
             <div>
-              <Image src={meeting} alt="meeting"/>
+              <Image src={meeting} alt="meeting" />
             </div>
           </div>
 
         </div>
       </section>
 
-      
-      <section className="mt-16 px-6 sm:px-40 py-20 bg-[#F7F9FC] relative">
-      <div className="absolute left-[12%] top-[25%] hidden sm:block">
-            <Image src={arrow} alt="cube"/>
-          </div>
-       
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-center text-[#FE810F]">Frequently Asked Questions</h2>
-          <div className="mt-10 flex justify-center">
-            <div className="max-w-[900px]">
-            <FAQCard question={'What sets Hiregurkha apart from other hiring platforms?'} answer={"With Hiregurkha' , clients can effortlessly hire talents. A week is all it takes to access the best  profiles, with an almost guaranteed remote joining rate. Customers also get a two-week trial period and excellent post-hiring services."}/>
-            <FAQCard question={'What is the process of hiring a talent at Hiregurkha?'} answer={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'}/>
-            <FAQCard question={'How does your screening process ensure quality candidates that meet our requirements?'} answer={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'}/>
+      {/* Why chose us */}
+      <section className="mt-12">
+        <h2 className="text-4xl text-center font-bold">Why Choose <span className="text-[#FD810E]">HireGurkha </span></h2>
+        <p className="text-[#84888E] text-center mt-4">Explore the myriad ways in which our clients have embraced the advantages offered by the Hiregurkha network.</p>
 
-            </div>
-           
+        <div className="grid grid-cols-3 mx-24 mt-12">
+          <div className="">
+            <Image src={chooseUs1} alt="choose" />
           </div>
-          <div className="absolute left-32 top-[70%] hidden sm:block">
-            <Image src={Cube} alt="cube" />
+
+          <div className="">
+            <Image src={chooseUs2} alt="choose" />
           </div>
+
+          <div className="">
+            <Image src={chooseUs3} alt="choose" />
+          </div>
+        </div>
+        <div className="flex justify-center mt-2">
+          <div className="">
+            <Image src={chooseUs4} alt="choose" />
+          </div>
+
+          <div className="">
+            <Image src={chooseUs5} alt="choose" />
+          </div>
+        </div>
+      </section>
+
+
+      <section className="mt-16 px-6 sm:px-40 py-20 bg-[#F7F9FC] relative">
+        <div className="absolute left-[12%] top-[25%] hidden sm:block">
+          <Image src={arrow} alt="cube" />
+        </div>
+
+        <h2 className="text-3xl sm:text-5xl font-extrabold text-center text-[#FE810F]">Frequently Asked Questions</h2>
+        <div className="mt-10 flex justify-center">
+          <div className="max-w-[900px]">
+            <FAQCard question={'What sets Hiregurkha apart from other hiring platforms?'} answer={"With Hiregurkha' , clients can effortlessly hire talents. A week is all it takes to access the best  profiles, with an almost guaranteed remote joining rate. Customers also get a two-week trial period and excellent post-hiring services."} />
+            <FAQCard question={'What is the process of hiring a talent at Hiregurkha?'} answer={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'} />
+            <FAQCard question={'How does your screening process ensure quality candidates that meet our requirements?'} answer={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'} />
+
+          </div>
+
+        </div>
+        <div className="absolute left-32 top-[70%] hidden sm:block">
+          <Image src={Cube} alt="cube" />
+        </div>
       </section>
 
 

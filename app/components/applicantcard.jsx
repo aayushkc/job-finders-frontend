@@ -24,6 +24,7 @@ const style = {
 };
 
 export default function ApplicantDisplayCard({ applicant }) {
+    const navigate = useRouter()
     const [open, setOpen] = useState(false);
     const [reqId, setReqId] = useState()
     const handleOpenStatusModal = (id) => {
@@ -39,6 +40,7 @@ export default function ApplicantDisplayCard({ applicant }) {
     return (
         <ProtectedAdminPage>
         {open && <ChangeStatusModal open={open} handleModalClose={handleCloseStatusModal} id={reqId}/>}
+        <button className="py-2 px-4 text-sm bg-gurkha-yellow text-white rounded-xl  mt-6" onClick={() => navigate.back() }> <i className="mr-1 bi bi-arrow-left"></i> Go back</button>
             {
                 applicant.map(data => {
                     return (
@@ -74,6 +76,11 @@ export default function ApplicantDisplayCard({ applicant }) {
                                     {data.status === 1 && <p className="text-red-500">Rejected</p>}
                                     {data.status === 2 && <p className="text-green-500">Shortlisted</p>}
 
+                                </div>
+
+                                <div className="flex gap-2 items-center mt-3">
+                                    <p className="text-[#4F5052] text-sm">Quiz Score:</p>
+                                    {data.quiz_score === 0 ? <p className="text-[#FFB636]">None</p> : <p className="text-[#FFB636]">{data.quiz_score}/{data.quiz_question}</p>}
                                 </div>
                                 
                                 <div>

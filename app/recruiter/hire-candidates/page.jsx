@@ -1,12 +1,14 @@
 "use client"
 
 import GetRequestNoToken from "@/app/api/getRequestNoToken";
+import getRequestWithToken from "@/app/api/getRequestWithToken";
 import PostWithTokien from "@/app/api/postWithToken";
 import DialogBox from "@/app/components/sucessbox";
 import ProtectedAdminPage from "@/app/utils/auth";
 import { Autocomplete, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Cookies from "js-cookie";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -30,6 +32,7 @@ export default function HireCandidates() {
   }
   const [industries, setIndustries] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [quizSet, setQuizSet] = useState([])
   const [jobcategory, setJobCategory] = useState([]);
   const [educationIfon, setEducationInfo] = useState([]);
   const [showCalendly, setShowCalendly] = useState(false);
@@ -37,7 +40,7 @@ export default function HireCandidates() {
   const [jobError, setJobError] = useState(false)
   const [showSalaryRange, setShowSalaryRange] = useState(false)
   const [showFixedSalary, setShowFixedSalary] = useState(false)
-
+  const accessToken = Cookies.get('accessToken');
   const {
     handleSubmit,
     register,
@@ -79,6 +82,20 @@ export default function HireCandidates() {
     }
     catch (errors) {
       setSkills([{ "id": "", "title": "" }])
+    }
+  }
+
+  const getQuizSet= async () => {
+    try {
+      const data = await getRequestWithToken(`/quiz/get-quiz-name`,accessToken)
+      if (data.detail) {
+        throw new Error("Cannot Fetch")
+      }
+      console.log(data);
+      setQuizSet(data)
+    }
+    catch (errors) {
+      setQuizSet([{ "id": "", "quiz_name": "" }])
     }
   }
 
@@ -195,6 +212,7 @@ export default function HireCandidates() {
     getIndustries()
     getJobCategory()
     getEducationInfo()
+    getQuizSet()
     setShowCalendly(false)
   }, [])
 
@@ -413,7 +431,35 @@ export default function HireCandidates() {
                       />
 
                     </div>
+                    
 
+                     {/* Choose Quiz Set */}
+                     <div className="my-4">
+                      <Controller
+                        control={control}
+                        name="quiz"
+                        // rules={{ required: "Quiz  is Required" }}
+                        render={({ field: { onChange } }) => (
+                          <Autocomplete
+                            defaultValue={null}
+                            options={quizSet}
+                            getOptionLabel={(option) => option.quiz_name}
+                            onChange={(event, values) => {
+                              onChange(values?.id)
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Choose One Quiz Set"
+                                placeholder="Choose One Quiz Set"
+                                helperText={errors.quiz?.message}
+                                error={!!errors.quiz}
+                              />
+                            )}
+                          />)}
+                      />
+
+                    </div>
 
                     {/* Choose Skills */}
 

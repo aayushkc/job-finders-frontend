@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "../utils/checkIsLoggedIn";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -36,7 +37,8 @@ const SuperAdminNavItems = [
 export default function AdminNav({ isSuperAdmin, isRecruiter }) {
     const router = useRouter();
     const currentRoute = usePathname();
-
+    
+    const { isLoggedIn, setIsLoggedIn } = useAuth()
     const [hamburg, setHamBurg] = useState(false)
 
 
@@ -48,6 +50,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
     const handleLogOut = () => {
         Cookies.remove('accessToken')
         Cookies.remove('userId')
+        setIsLoggedIn(false)
         router.push('/signin')
     }
     return (

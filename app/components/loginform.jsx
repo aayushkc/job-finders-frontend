@@ -51,6 +51,7 @@ export default function LoginForm(){
           const isSuperAdmin = decodedToken.isSuperAdmin
           Cookies.set('accessToken', data.access, { expires: 1 });
           Cookies.set('userId', userId); 
+          Cookies.set('isSeeker', isSeeker)
           Cookies.set("isLoggedIn", true)
           if(isRecruiter){
             router.push('/recruiter');

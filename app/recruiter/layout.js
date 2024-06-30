@@ -5,6 +5,7 @@ import "../globals.css";
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import AdminNav from "../components/adminnav";
+import { AuthProvider } from "../utils/checkIsLoggedIn";
 const sans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -12,15 +13,18 @@ export const metadata = {
   description: "Hire gurkha",
 };
 
-export default function RecruiterLayout({children}){
+export default function RecruiterLayout({ children }) {
   return (
     <html lang="en">
       <body className={sans.className + "relative"}>
-        <AdminNav isRecruiter={true}></AdminNav>
-        <main className="mt-[80px]">
-          
-        {children}
-        </main>
+        <AuthProvider>
+          <AdminNav isRecruiter={true}></AdminNav>
+          <main className="mt-[80px]">
+
+            {children}
+          </main>
+        </AuthProvider>
+
       </body>
     </html>
   );

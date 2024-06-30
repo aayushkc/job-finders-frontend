@@ -5,13 +5,13 @@ import AdminDashBoardLayout from "@/app/components/DashBoardLayout"
 import ApplicantDisplayCard from "@/app/components/applicantcard"
 import PaginationComponent from "@/app/components/paginationcomponent"
 import Cookies from "js-cookie"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function ApplicantList(){
     const accessToken = Cookies.get('accessToken')
     const router = useParams()
-
+    const navigate = useRouter()
     const [jobsRequests,setJobsRequests] = useState([])
     const [pageNum, setPageNum] = useState(1)
     const [totalPage, setTotalPage] = useState(1)
@@ -42,12 +42,19 @@ export default function ApplicantList(){
     }
     return(
        <AdminDashBoardLayout>
-        
+            
             <section>
                 {
                     jobsRequests.length > 0 ? <ApplicantDisplayCard applicant = {jobsRequests}/> :(
-                        <div className="bg-white w-full h-[400px] grid">
-                            <h1 className="place-self-center font-bold text-4xl">No one has Applied yet!</h1>
+                        <div className="bg-white w-full h-[400px] flex justify-center items-center flex-col">
+                           
+                            <h1 className="font-bold text-4xl">No one has Applied yet!</h1>
+                            <div>
+
+                            
+                            <button className="py-2 px-4 text-sm bg-gurkha-yellow text-white rounded-xl  mt-6" onClick={() => navigate.back() }> <i className="mr-1 bi bi-arrow-left"></i> Go back</button>
+                            </div>
+                           
                         </div>
                     )
                 }

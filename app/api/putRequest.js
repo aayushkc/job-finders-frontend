@@ -16,7 +16,8 @@ export default async function PutWithTokien(endpoint, data){
         const response = await fetch(`${APIENDPOINT}${endpoint}`, requestOptions);
         if (!response.ok) {
           // Handle non-successful responses
-         
+          const data = await response.json()
+          console.log(data);
           throw new Error('Network response was not ok.');
         }
         return await response.json();

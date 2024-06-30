@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../utils/checkIsLoggedIn";
 
 
+
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
 
 const NavItems = [
@@ -28,6 +29,7 @@ const NavItems = [
         "item": "My profile",
         "link": "/my-profile"
     },
+   
 
 ]
 
@@ -48,16 +50,26 @@ const NavAnonItems = [
         "item": "Blogs",
         "link": "/blogs"
     },
+    {
+        "item": "About Us",
+        "link": "/about-us"
+    },
+    {
+        "item": "Events",
+        "link": "/events"
+    },
 
 
 ]
 export default function NavBar() {
     const { isLoggedIn, setIsLoggedIn } = useAuth()
     const [hamburg, setHamBurg] = useState(false)
+    const isSeeker = Cookies.get('isSeeker') === 'true'
     const router = useRouter();
     const currentRoute = usePathname();
-
-
+    const accessToken = Cookies.get('accessToken')
+    const [isClient, setIsClient] = useState(false)
+    
     const handleClick = () => {
 
         setHamBurg(!hamburg)
@@ -65,17 +77,22 @@ export default function NavBar() {
 
     const handleLogOut = () => {
         Cookies.remove('accessToken')
+        setIsLoggedIn(false)
         router.push('/signin')
     }
 
     useEffect(() => {
-        if (Cookies.get('accessToken')) {
+        if (accessToken) {
             setIsLoggedIn(true)
         } else {
             setIsLoggedIn(false)
         }
 
     }, [handleLogOut])
+
+    useEffect(() =>{
+        setIsClient(true)
+    },[])
     return (
 
         <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
@@ -91,7 +108,7 @@ export default function NavBar() {
 
                 <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit border-2 " : "hidden "} bottom-0 border-[#D8D9DC] sm:border-none  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-12`}>
                     {
-                        isLoggedIn ? NavItems.map((data, index) => {
+                        isLoggedIn && isSeeker ? NavItems.map((data, index) => {
                             return <Link href={data.link} onClick={handleClick} key={index}>
                                 <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                             </Link>
@@ -104,7 +121,7 @@ export default function NavBar() {
                                 </Link>
                             })
                     }
-
+                    {isClient && accessToken && !isSeeker && <Link href={'/recruiter'} onClick={handleClick}><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link>}
                     {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
                 </ul>
 

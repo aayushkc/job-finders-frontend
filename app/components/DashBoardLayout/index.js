@@ -39,7 +39,23 @@ export default function AdminDashBoardLayout({ children }) {
       title: "Listed Jobs",
       path: "/recruiter/view-all-jobs",
       icon: <HiPencilSquare className=" text-[#71839B] text-2xl" />,
-    }
+    },
+    {
+      title: "Create Question Set",
+      path: "/recruiter/create-question-set",
+      icon: <HiPencilSquare className=" text-[#71839B] text-2xl" />,
+    },
+    {
+      title: "Edit Quiz Set",
+      path: "/recruiter/edit-quiz-set",
+      icon: <HiPencilSquare className=" text-[#71839B] text-2xl" />,
+    },
+
+    // {
+    //   title: "Edit Page Meta",
+    //   path: "/recruiter/edit-page-meta",
+    //   icon: <HiPencilSquare className=" text-[#71839B] text-2xl" />,
+    // }
 
   ];
   return (

@@ -62,7 +62,7 @@ export default function Home() {
   const [profilePic, setProfilePic] = useState(false);
   const [selectedFile, setSelectedFile] = useState()
   const [preview, setPreview] = useState()
-
+  const accessToken = Cookies.get('accessToken');
 
   //Set the image files that need to be uploaded
   const handleChange = (e) => {
@@ -71,7 +71,7 @@ export default function Home() {
 
   // Gets all the profileDetail of the request user
   const getProfile = async () => {
-    const accessToken = Cookies.get('accessToken');
+    
 
 
     const requestOptions = {
@@ -183,9 +183,14 @@ export default function Home() {
 
 
   useEffect(() => {
-    getProfile()
-    getIndustries()
-
+    if(accessToken){
+      getProfile()
+      getIndustries()
+  
+    }else{
+      return;
+    }
+    
   }, [])
 
 

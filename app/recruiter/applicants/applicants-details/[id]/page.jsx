@@ -80,14 +80,13 @@ export default function UpdateProfile() {
     const onShortListSubmit = async (e) =>{
         e.preventDefault();
         try {
-            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, {"status":"0"})
+            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, {"status":"2"})
             
             if (res.detail) {
                 
                 throw new Error("Cannot Fetch")
             }
            
-
             router.back()
             
         }
@@ -149,6 +148,7 @@ export default function UpdateProfile() {
             <AdminDashBoardLayout>
 
                 <section className="">
+                <button className="py-2 px-4 text-sm bg-gurkha-yellow text-white rounded-xl  my-6" onClick={() => router.back() }> <i className="mr-1 bi bi-arrow-left"></i> Go back</button>
                     <div className="">
                         <h2 className="font-bold text-3xl text-[#414C61] bg-[#FFF7E2] px-4 py-2 rounded-2xl max-w-max">Applicant Details</h2>
 

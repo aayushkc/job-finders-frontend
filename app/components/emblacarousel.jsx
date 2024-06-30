@@ -32,9 +32,9 @@ const EmblaCarousel = (props) => {
                             {/* <div className="embla__slide__number">{index + 1}</div> */}
                             <div className='embla__slide__number'>
                                 <div className='flex gap-2 items-center'>
-                                    <Image src={data.profilePic} width={64} height={64} alt='profilePic' style={{width:"64px", height:"64px"}}/>
+                                    <Image src={data.profilePic} width={64} height={64} alt='profilePic' style={{width:"64px", height:"64px"}} className='object-cover rounded-full'/>
                                     <div>
-                                        <h2 className='text-xl'>{data.name}</h2>
+                                        <h2 className='text-lg'>{data.name}</h2>
                                         <p className='text-[#1D2434B8]'>{data.company}</p>
                                         {data.position && <p className='text-[#1D2434B8]'>{data.position}</p>}
                                     </div>

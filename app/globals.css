@@ -103,6 +103,13 @@ main{
   top: 0;
 }
 
+.aboutus{
+  background-image: url("../public/images/about-us-bg.png");
+  background-position: right;
+  background-repeat: no-repeat;
+  /* height: 512px; */
+}
+
 @media (max-width:600px) {
   body{
     overflow-x: hidden;
