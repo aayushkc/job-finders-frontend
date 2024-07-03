@@ -79,7 +79,6 @@ export default function JobDetail() {
                 throw new Error("Cannot Fetch")
             }
 
-            // The total count of data needs to be dividd by the number of data sent per page by backend
 
             setJobPanelData(data)
 

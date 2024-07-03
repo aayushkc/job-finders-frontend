@@ -310,7 +310,7 @@ export default function Page() {
         setValue("apply_before", dayjs(jobDetails.apply_before) || dayjs().startOf("D"));
         setValue("description", jobDetails.description || "");
         setValue("industry", industries.filter(indus => indus.title_name === jobDetails.industry)[0]?.id || '');
-        setValue("quiz", quizSet.filter(quiz => quiz.quiz_name === jobDetails.quiz.quiz_name)[0]?.id || '');
+        setValue("quiz", quizSet?.filter(quiz => quiz.quiz_name === jobDetails.quiz?.quiz_name)[0]?.id || null);
         if (selectedWorkLoc) {
             setValue("work_location_type", selectedWorkLoc.id || 0);
         }

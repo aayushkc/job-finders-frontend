@@ -289,6 +289,7 @@ export default function HireCandidates() {
                           type="number"
                           name='number_of_vacancy'
                           id="number_of_vacancy"
+                          min={1}
                           className="w-full rounded-xl bg-white py-4 px-3 text-black"
                           placeholder="Enter Number of Vacancy" />
                       </div>

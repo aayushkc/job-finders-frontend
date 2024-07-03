@@ -45,7 +45,7 @@ export default function ApplicantList(){
             
             <section>
                 {
-                    jobsRequests.length > 0 ? <ApplicantDisplayCard applicant = {jobsRequests}/> :(
+                    jobsRequests?.length > 0 ? <ApplicantDisplayCard applicant = {jobsRequests}/> :(
                         <div className="bg-white w-full h-[400px] flex justify-center items-center flex-col">
                            
                             <h1 className="font-bold text-4xl">No one has Applied yet!</h1>

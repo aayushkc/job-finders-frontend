@@ -6,6 +6,7 @@ import 'froala-editor/css/froala_style.min.css';
 
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import AdminNav from "../components/adminnav";
+import { AuthProvider } from "../utils/checkIsLoggedIn";
 const sans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata = {
@@ -17,11 +18,13 @@ export default function SuperAdminLayout({children}){
   return (
     <html lang="en">
       <body className={sans.className}>
+      <AuthProvider>
         <AdminNav isSuperAdmin={true}></AdminNav>
         <main className="">
           
         {children}
         </main>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -38,7 +38,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
     const router = useRouter();
     const currentRoute = usePathname();
     
-    const { isLoggedIn, setIsLoggedIn } = useAuth()
+    const { setIsLoggedIn } = useAuth()
     const [hamburg, setHamBurg] = useState(false)
 
 
