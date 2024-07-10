@@ -8,6 +8,7 @@ import ourStory4 from "../../../public/images/our-story-4.png"
 import bhudu from "../../../public/images/ceo.png"
 import EmblaCarousel from "@/app/components/emblacarousel"
 import Footer from "@/app/components/footer"
+import Link from "next/link"
 
 
 const OPTIONS = { align: 'start', dragFree: true, loop: true }
@@ -68,14 +69,23 @@ export default function AboutUs() {
             </div>
 
             <section className="px-8 sm:px-40">
-                <h2 className="text-center text-3xl font-semibold bg-gradient-to-r from-[#FD810E] to-[#DA4C98] text-transparent bg-clip-text">Our Story</h2>
+                <h2 className="text-center text-3xl font-semibold bg-gradient-to-r from-[#FD810E] to-[#DA4C98] text-transparent bg-clip-text">Our Story: The Visionary Inception of HireGurkha</h2>
                 <p className="mt-6 text-justify sm:text-left">
                     HireGurkha was born out of a vision to transform the job market by harnessing the power of artificial intelligence. Our founders, inspired by their own challenges in job hunting and recruitment, set out to create a platform that simplifies and enhances these processes for everyone. With a team of dedicated experts in technology and human resources, we have developed an AI-driven solution that matches job seekers with their ideal roles and helps employers find the perfect candidates.
                 </p>
-                <p className="text-justify sm:text-left">
-                    From our humble beginnings to becoming a trusted partner in the professional journey of many, we remain committed to innovation, excellence, and the success of our users. Our story is one of passion, perseverance, and a relentless pursuit of making the job market more accessible and efficient for all. Join us on this journey as we continue to shape the future of recruitment and career development.
+
+                <p className="text-justify sm:text-left mt-4">
+                Faced with the complexities of the traditional hiring landscape, our founders sought to create a solution that would streamline the job search and recruitment experience. Their goal was to eliminate the inefficiencies and frustrations that many encounter, making the process more accessible and effective.
+                With a team of dedicated experts in technology and human resources, HireGurkha was meticulously crafted. Our AI-driven solution was developed to intuitively match job seekers with their ideal roles and help employers find the perfect candidates with precision and ease.
                 </p>
 
+                <p className="text-justify sm:text-left mt-4">
+                From our humble beginnings, HireGurkha has grown to become a trusted partner in the professional journeys of countless individuals. Our story is one of passion, perseverance, and a relentless pursuit of excellence. We are proud to have made a significant impact on the job market, simplifying the path to employment and empowering professionals and businesses alike.
+                </p>
+
+                <p className="text-justify sm:text-left mt-4">
+                Join us at <Link href={'/'} className="text-gurkha-yellow underline font-bold"> HireGurkha</Link>, where our story intertwines with yours, creating a narrative of success and innovation in the world of recruitment.
+                </p>
                 <div className="grid sm:grid-cols-3 gap-4 sm:items-end mt-12">
                     <div>
                         <Image src={ourStory1} alt="Our Story" className="object-contain w-full" />
@@ -122,7 +132,7 @@ export default function AboutUs() {
                             <i className="bi bi-linkedin"></i>
                         </div>
                         <p className="text-lg mt-6 text-left sm:text-justify">
-                            Dipendra Neupane, the visionary founder of HireGurkha, combines a deep understanding of technology with a passion for transforming the job market. With a background in computer and extensive experience in recruitment, he has dedicated his career to creating innovative solutions.
+                        Dipendra Neupane, the visionary founder and CEO of HireGurkha, embodies the spirit of our mission. With a rich background in computer science and extensive experience in recruitment, he has dedicated his career to bridging the gap between technology and talent, creating innovative solutions that transform the job market.
                         </p>
                     </div>
                 </div>

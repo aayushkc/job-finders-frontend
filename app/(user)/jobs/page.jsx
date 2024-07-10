@@ -51,7 +51,7 @@ export default function JobDetail() {
     }
     const getRecommendedJobs = async (pageChange) => {
         try {
-
+            
             const data = accessToken && isSeeker ? await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}`, accessToken) : await GetRequestNoToken(`/job-seeker/get-all-job/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}`)
             if (data.detail) {
                 throw new Error("Cannot Fetch")
@@ -66,6 +66,7 @@ export default function JobDetail() {
                 setJobPanelData(data.results[0])
 
             }
+           
         }
         catch (errors) {
             setRecommendedJobs([])

@@ -13,8 +13,8 @@ import Link from "next/link";
 
 export default function Blogs() {
     const arr = [1, 2, 3, 4, 5]
-    const [topblog, setTopBlog] = useState()
-    const [otherBlogs, setOtherBlogs] = useState([])
+    const [topblog, setTopBlog] = useState(null)
+    const [otherBlogs, setOtherBlogs] = useState(null)
     const getBlogPosts = async () => {
         try {
             const data = await GetRequestNoToken('/api/v2/pages/?type=blog.BlogPage&fields=intro,body,thumbnail')
@@ -26,8 +26,7 @@ export default function Blogs() {
             setOtherBlogs(data.items.slice(1))
         }
         catch (errors) {
-            setTopBlog([])
-            setOtherBlogs([])
+            console.log(errors);
         }
     }
 
@@ -81,7 +80,7 @@ export default function Blogs() {
 
                     <section className="grid sm:grid-cols-3 mt-12 gap-10 px-6 sm:px-0">
                         {
-                            otherBlogs.map(data => (
+                            otherBlogs && otherBlogs.map(data => (
                                 <Card sx={{ maxWidth: 375 }} key={data.id}>
                                     <CardActionArea>
                                         <CardMedia

@@ -156,7 +156,7 @@ export default function Home() {
 
                         </div>
 
-                        <p className="mt-4">
+                        <div className="mt-4">
 
                         {
                             data.salary && <p className="text-[#01B46A]">{data.salary} $/month </p>
@@ -168,7 +168,7 @@ export default function Home() {
                           {
                             !data.min_salary && !data.salary && <p className="text-[#01B46A]">Undisclosed </p>
                           }
-                        </p>
+                        </div>
                         <hr className="my-3"></hr>
 
                         <div className="flex flex-col sm:flex-row sm:justify-between">

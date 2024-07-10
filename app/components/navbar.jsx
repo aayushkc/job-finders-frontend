@@ -38,7 +38,7 @@ const NavItems = [
 const NavAnonItems = [
     {
         "item": "Home",
-        "link": "/"
+        "link": "/",
     },
 
     {
@@ -61,6 +61,7 @@ const NavAnonItems = [
 
 
 ]
+
 export default function NavBar() {
     const { isLoggedIn, setIsLoggedIn } = useAuth()
     const [hamburg, setHamBurg] = useState(false)
@@ -77,6 +78,8 @@ export default function NavBar() {
 
     const handleLogOut = () => {
         Cookies.remove('accessToken')
+        Cookies.remove('isSeeker')
+        Cookies.remove('userId')
         setIsLoggedIn(false)
         router.push('/signin')
     }
@@ -110,14 +113,14 @@ export default function NavBar() {
                     {
                         isLoggedIn && isSeeker ? NavItems.map((data, index) => {
                             return <Link href={data.link} onClick={handleClick} key={index}>
-                                <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
+                                <li className={` ${currentRoute.split('/')[1] === data.link.slice(1) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                             </Link>
                         })
 
                             :
                             NavAnonItems.map((data, index) => {
                                 return <Link href={data.link} onClick={handleClick} key={index}>
-                                    <li className={` ${currentRoute.startsWith(data.link) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
+                                    <li className={` ${currentRoute === data.link && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                                 </Link>
                             })
                     }

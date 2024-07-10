@@ -88,7 +88,7 @@ export default function ApplicantDisplayCard({ applicant }) {
                                 </div>
                                 
 
-                                <button className="bg-gurkha-yellow py-2 px-3 text-sm rounded-xl mt-4 text-white"><a href={data.job_seeker.seeker_details.resume}>Download Resume</a></button>
+                                <button className="bg-gurkha-yellow py-2 px-3 text-sm rounded-xl mt-4 text-white"><a href={data.job_seeker.seeker_details.resume} target="_blank">Download Resume</a></button>
                                 <div className=" mt-4 text-blue-600 flex items-center gap-3"><Link href={`applicants-details/${data.job_seeker.seeker_details.id}?job_req=${data.id}`}>View Profile Details</Link> <i className="bi bi-arrow-up-right"></i></div>
 
 

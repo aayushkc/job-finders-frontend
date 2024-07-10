@@ -592,6 +592,7 @@ export default function Page() {
                     <Controller
                         control={control}
                         name="industry"
+                        rules={{ required: "Industry is Required" }}
                         defaultValue={null}
                         render={({ field }) => (
                             <Autocomplete

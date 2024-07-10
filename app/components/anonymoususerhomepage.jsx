@@ -38,22 +38,22 @@ const timeLineData = [
   {
     'step_no': "1",
     'title': "Candidate Evaluation",
-    'desc': "Our AI thoroughly reviews each profile within our talent pool, selecting only the most qualified talent based on their resumes and past experiences."
+    'desc': "Our AI doesn’t just review profiles; it delves deep into each candidate’s professional narrative, analyzing resumes and past experiences with an astute eye. This initial step filters through our talent pool, surfacing only those who meet the high standards expected by global employers."
   },
   {
     'step_no': "2",
     'title': "Skill and Aptitude Assessment",
-    'desc': "We Assess communication skills, analyze problem-solving abilities, and evaluate personal strengths of the developers."
+    'desc': "Communication is key in remote work, and our AI assesses each candidate’s ability to articulate and solve problems effectively. This step ensures that our talents are not just technically proficient but also possess the soft skills crucial for remote collaboration."
   },
   {
     'step_no': "3",
     'title': "Competency Analysis",
-    'desc': "Our thorough technical assessments scrutinize talents for their  capabilities, guaranteeing that only the highest caliber candidates progress further."
+    'desc': "Technical prowess is non-negotiable. Our rigorous assessments challenge candidates to demonstrate their capabilities, ensuring that only those with the highest caliber move forward in the hiring process."
   },
   {
     'step_no': "4",
     'title': "Expert Review",
-    'desc': "To ensure the hiring of top talent, our skilled TA team makes an effort to understand the goals, degree of competition, and learning capacity of each candidate."
+    'desc': "Our skilled Talent Acquisition team takes a personal approach, understanding each candidate’s ambitions, competitive spirit, and capacity for learning. It’s this human touch that complements our AI’s precision, culminating in a hiring strategy that’s both quick and discerning."
   }
 ]
 export default function AnonUserHomePage({ pageNum, totalPage }) {
@@ -304,7 +304,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
       {/* Timeline of Steps */}
       <section className="mt-12">
-        <h2 className="text-3xl text-center font-bold">Our <span className="text-[#FD810E]"> Hiring Process</span></h2>
+        <h2 className="text-3xl text-center font-bold">Innovating Recruitment: <span className="text-[#FD810E]">{`HireGurkha’s`} AI-Driven</span> Hiring Process</h2>
         <p className="text-[#84888E] text-center mt-4">We will ensure that you hire software developers who are the best fit for your company</p>
 
         <div className="sm:max-w-[1090px] mt-10">
@@ -377,27 +377,27 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
         </div>
 
-        <div className="bg-white mt-8 flex justify-center text-center p-6 mx-12 sm:text-left sm:mx-40 ">
-          <div className="grid sm:grid-cols-3 gap-8 ">
-            <div>
+        <div className="bg-white mt-8 flex justify-center text-center p-6 mx-12  sm:mx-36 ">
+          <div className="grid sm:grid-cols-3 gap-10 ">
+            <div className="flex flex-col items-center">
               <i className="bi bi-speedometer2 text-gurkha-yellow text-6xl"></i>
-              <h2 className="text-lg font-bold mt-2">Hire Quickly</h2>
-              Get  <span className="text-gurkha-yellow">Top 3% </span>matching profiles within 24-48 hours
+              <h2 className="text-lg font-bold mt-2">Speed</h2>
+              <p className="mt-2">With <span className="text-gurkha-yellow"> HireGurkha, </span>the search for exceptional talent is swift. We provide the top 3% of matching profiles within 24-48 hours, streamlining the hiring process like never before.</p>
+              
             </div>
 
-            <div className="flex flex-col items-center sm:items-start">
+            <div className="flex flex-col items-center">
               <Image src={bannnerIcon} alt="banner" />
-              <h2 className="text-lg font-bold mt-2">The Top 3%</h2>
-              <p> Just take <span className="text-gurkha-yellow">one or two </span>interviews of
-                only selected profiles</p>
+              <h2 className="text-lg font-bold mt-2">Quality</h2>
+              <p className="mt-2"> Our rigorous 
+              <span className="text-gurkha-yellow"> AI-driven </span>selection ensures that only the most adept and capable professionals are presented, aligning with the specific needs of your company.</p>
             </div>
 
 
-            <div className="flex flex-col items-center sm:items-start">
+            <div className="flex flex-col items-center">
               <Image src={bannnerIcon} alt="banner" />
-              <h2 className="text-lg font-bold mt-2">100+ Skills</h2>
-              <p>Ranging from 10+ Domains with each
-                curated skills list</p>
+              <h2 className="text-lg font-bold mt-2">Diversity</h2>
+              <p className="mt-2">Embrace a global perspective by connecting with our diverse talent pool, rich with skilled professionals from various domains and expertise.              </p>
             </div>
           </div>
         </div>
@@ -421,7 +421,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
       {/* Why chose us */}
       <section className="mt-12">
         <h2 className="text-4xl text-center font-bold">Why Choose <span className="text-[#FD810E]">HireGurkha </span></h2>
-        <p className="text-[#84888E] text-center mt-4">Explore the myriad ways in which our clients have embraced the advantages offered by the Hiregurkha network.</p>
+        <p className="text-[#84888E] text-center mt-4">In the realm of Remote Work Opportunities in Nepal, HireGurkha stands out as a paragon of excellence.<br></br> Our platform is not just a conduit for job matching; it’s a comprehensive ecosystem designed to elevate the remote hiring <br></br>experience for both talents and employers.</p>
 
         <div className="grid grid-cols-3 mx-24 mt-12">
           <div className="">
@@ -456,10 +456,63 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <h2 className="text-3xl sm:text-5xl font-extrabold text-center text-[#FE810F]">Frequently Asked Questions</h2>
         <div className="mt-10 flex justify-center">
           <div className="max-w-[900px]">
-            <FAQCard question={'What sets Hiregurkha apart from other hiring platforms?'} answer={"With Hiregurkha' , clients can effortlessly hire talents. A week is all it takes to access the best  profiles, with an almost guaranteed remote joining rate. Customers also get a two-week trial period and excellent post-hiring services."} />
-            <FAQCard question={'What is the process of hiring a talent at Hiregurkha?'} answer={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'} />
-            <FAQCard question={'How does your screening process ensure quality candidates that meet our requirements?'} answer={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'} />
+            <FAQCard
+              question={'What is HireGurkha?'}
+              answer={"HireGurkha is a platform that connects South Asian talent, especially from Nepal, with top remote work opportunities worldwide. We use AI-driven processes to ensure the best matches between job seekers and employers."}
+            />
 
+            <FAQCard
+              question={'How does the AI-driven hiring process work?'}
+              answer={' Our AI evaluates candidate profiles based on resumes and past experiences, assesses skills and aptitudes, conducts competency analysis, and is complemented by an expert review from our TA team to ensure only the top talent is selected.'}
+            />
+            <FAQCard
+              question={'What kind of remote jobs can I find on HireGurkha? '}
+              answer={'HireGurkha offers a wide range of remote jobs across various industries and domains, catering to different skill sets and professional levels.'}
+            />
+
+            <FAQCard
+              question={'How quickly can I find a job through HireGurkha? '}
+              answer={'Qualified candidates can receive matching job profiles within 24-48 hours, thanks to our efficient AI-driven system.'}
+            />
+
+            <FAQCard
+              question={'What makes HireGurkha different from other job platforms?'}
+              answer={'HireGurkha specializes in remote work and focuses on South Asian talent, providing personalized support, AI-driven matching, and a commitment to the professional growth of both candidates and employers.'}
+            />
+
+            <FAQCard
+              question={'Is there a trial period for employers using HireGurkha? '}
+              answer={'Yes, employers can benefit from a two-week trial to familiarize themselves with our hiring process and experience the quality of our talent pool.'}
+            />
+
+
+            <FAQCard
+              question={'How quickly can I find a job through HireGurkha? '}
+              answer={'Qualified candidates can receive matching job profiles within 24-48 hours, thanks to our efficient AI-driven system.'}
+            />
+
+
+            <FAQCard
+              question={'Can I apply for jobs on HireGurkha if I’m not from Nepal?'}
+              answer={'While our focus is on South Asian talent, particularly from Nepal, we welcome qualified professionals from all over the region to apply for remote opportunities.'}
+            />
+
+
+            <FAQCard
+              question={'What support does HireGurkha offer to job seekers? '}
+              answer={'We provide resources for professional development, guidance through the application process, and continuous support to ensure a smooth transition into remote work.'}
+            />
+
+
+            <FAQCard
+              question={'How does HireGurkha ensure the quality of candidates?'}
+              answer={'Our AI-driven process, combined with expert human review, ensures that only candidates who meet the highest standards are presented to employers.'}
+            />
+
+            <FAQCard
+              question={'How can I get started with HireGurkha? '}
+              answer={'Visit our website, sign up, and create your profile to start accessing remote work opportunities. For employers, post your job requirements to connect with top talent.'}
+            />
           </div>
 
         </div>

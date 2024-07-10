@@ -5,19 +5,85 @@ import Link from 'next/link';
 
 //Read-only Editor
 import 'react-quill/dist/quill.snow.css';
+import DialogBox from './sucessbox';
+import ApplyJob from './applyjob';
+import PostFormWithToken from '../api/postFormWithToken';
+import { useState } from 'react';
 
 
 const ReactQuillEditable = dynamic(
     () => import('react-quill'),
     { ssr: false }
 );
-export default function JobPanelData({ jobPanelData, handleApplyClick, isUserLoged, accessToken }) {
+export default function JobPanelData({ jobPanelData, isUserLoged, accessToken }) {
     const modules = {
         toolbar: false
 
     }
+    const [isAppliedClicked, setIsApplied] = useState(false)
+    const [open, setOpen] = useState(true);
+    const [success, setSuccess] = useState(false)
+    const [falliure, setFaliure] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false);
+        setIsApplied(false)
+    };
+
+    const handleApplyClick = () => {
+        setOpen(true)
+        setSuccess(false)
+        setFaliure(false)
+        setIsApplied(true)
+    }
+
+    const handledApplied = async () => {
+
+
+        const formData = new FormData()
+        formData.append("job", jobPanelData.id)
+        try {
+            const data = await PostFormWithToken(`/job-seeker/create-job-request/`, formData)
+            if (data.detail) {
+                throw new Error("Cannot Fetch")
+            }
+            setIsApplied(false)
+            setSuccess(true)
+
+
+        }
+        catch (errors) {
+
+            setIsApplied(false)
+            setFaliure(true)
+        }
+    }
+
+
     return (
         <>
+        
+        {
+                    success && <DialogBox
+                        dialogHeading={"Success"}
+                        dialogText={"Your application has been sent successfully"}
+                        success={true}
+                        goToPageName={"Job Status"}
+                        url={"/job-status"}
+                    />
+                }
+
+                {
+                    falliure && <DialogBox
+                        dialogHeading={"An Error occured during Submission"}
+                        dialogText={"Please try again"}
+                        error={true}
+                    />
+                }
+            {
+                isAppliedClicked &&
+                <ApplyJob open={open} quizData={jobPanelData.quiz} jobId={jobPanelData.id} handleClose={handleClose} handledApplied={handledApplied} />
+            }
             <Link href="/jobs" className='sm:hidden'>
                 <div className='p-5 flex gap-4 items-center'>
                     <i className='bi bi-arrow-left'></i>
@@ -36,14 +102,14 @@ export default function JobPanelData({ jobPanelData, handleApplyClick, isUserLog
                                 </button>
                             </Link>
                             : !isUserLoged ?
-                               ""
+                                ""
                                 :
                                 jobPanelData.hasApplied ?
                                     <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
                                         Already Applied
                                     </button>
                                     :
-                                    <button onClick={() => handleApplyClick()} className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                                    <button onClick={handleApplyClick} className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
                                         Apply Now
                                     </button>
 
@@ -135,39 +201,39 @@ export default function JobPanelData({ jobPanelData, handleApplyClick, isUserLog
 
 
                             {
-                                jobPanelData.salary && <p>{jobPanelData.salary} $/month </p>
+                                jobPanelData.salary && <span>{jobPanelData.salary} $/month </span>
                             }
                             {
-                                jobPanelData.min_salary && <p>{jobPanelData.min_salary} - {jobPanelData.max_salary} $/month </p>
+                                jobPanelData.min_salary && <span>{jobPanelData.min_salary} - {jobPanelData.max_salary} $/month </span>
                             }
 
                             {
-                                !jobPanelData.min_salary && !jobPanelData.salary && <p>Undisclosed </p>
+                                !jobPanelData.min_salary && !jobPanelData.salary && <span>Undisclosed </span>
                             }
                         </p>
                     </div>
                 </div>
                 {
-                        !accessToken ?
-                            <Link href="/signin">
-                                <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
-                                    Login to Apply
+                    !accessToken ?
+                        <Link href="/signin">
+                            <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                                Login to Apply
+                            </button>
+                        </Link>
+                        : !isUserLoged ?
+                            ""
+                            :
+                            jobPanelData.hasApplied ?
+                                <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
+                                    Already Applied
                                 </button>
-                            </Link>
-                            : !isUserLoged ?
-                               ""
                                 :
-                                jobPanelData.hasApplied ?
-                                    <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
-                                        Already Applied
-                                    </button>
-                                    :
-                                    <button onClick={() => handleApplyClick()} className="bg-[#FFB000] rounded-3xl py-2 px-6 mt-4 text-white">
-                                        Apply Now
-                                    </button>
+                                <button onClick={handleApplyClick} className="bg-[#FFB000] rounded-3xl py-2 px-6 mt-4 text-white">
+                                    Apply Now
+                                </button>
 
 
-                    }
+                }
 
 
 

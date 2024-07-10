@@ -11,7 +11,11 @@ const nextConfig = {
             {
                 protocol:"https",
                 hostname:"media.hiregurkha.com"
-            }
+            },
+            {
+              protocol:"https",
+              hostname:"api.hiregurkha.com"
+          }
           ],
         },
       

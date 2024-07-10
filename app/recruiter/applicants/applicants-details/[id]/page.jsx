@@ -155,7 +155,7 @@ export default function UpdateProfile() {
 
                         <button className="bg-[#FAFAFA] py-5 px-3 font-bold text-lg flex gap-3 items-center rounded-xl my-6">
                             <i className="bi bi-download text-[#FFC033]"></i>
-                            <a href={profileDetail.resume} className="text-[#4F5052]">Download Resume</a>
+                            <a href={profileDetail.resume} className="text-[#4F5052]" target="_blank">Download Resume</a>
                         </button>
 
                         <div className="mt-6">

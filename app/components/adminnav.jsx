@@ -50,6 +50,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
     const handleLogOut = () => {
         Cookies.remove('accessToken')
         Cookies.remove('userId')
+        Cookies.remove('isSeeker')
         setIsLoggedIn(false)
         router.push('/signin')
     }

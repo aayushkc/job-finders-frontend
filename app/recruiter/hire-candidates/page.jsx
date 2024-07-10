@@ -1,5 +1,6 @@
 "use client"
 
+import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import GetRequestNoToken from "@/app/api/getRequestNoToken";
 import getRequestWithToken from "@/app/api/getRequestWithToken";
 import PostWithTokien from "@/app/api/postWithToken";
@@ -146,6 +147,38 @@ export default function HireCandidates() {
     }
   }
 
+  const getProfile = async () => {
+    
+
+
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    try {
+      const response = await fetch(`${APIENDPOINT}/recruiter/get-recruiter-profile/`, requestOptions);
+      if (!response.ok) {
+        const data = await response.json();
+        
+        // Handle non-successful responses
+        
+        router.push("/recruiter/create-profile-details")
+
+      }
+      const data = await response.json();
+      return;
+    } catch (error) {
+      console.error('There was a problem with the fetch request:', error);
+      // Handle error
+      return { error: error.message };
+    }
+  }
+
   useCalendlyEventListener({
 
     onEventScheduled: (e) => handleSubmit(async (data) => {
@@ -220,6 +253,10 @@ export default function HireCandidates() {
     getSkills()
 
   }, [formData.industry])
+
+  useEffect(() =>{
+    getProfile()
+  },[])
 
   return (
     <ProtectedAdminPage>
