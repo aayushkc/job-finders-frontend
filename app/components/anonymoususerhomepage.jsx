@@ -423,26 +423,26 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <h2 className="text-4xl text-center font-bold">Why Choose <span className="text-[#FD810E]">HireGurkha </span></h2>
         <p className="text-[#84888E] text-center mt-4">In the realm of Remote Work Opportunities in Nepal, HireGurkha stands out as a paragon of excellence.<br></br> Our platform is not just a conduit for job matching; it’s a comprehensive ecosystem designed to elevate the remote hiring <br></br>experience for both talents and employers.</p>
 
-        <div className="grid grid-cols-3 mx-24 mt-12">
-          <div className="">
-            <Image src={chooseUs1} alt="choose" />
+        <div className="grid sm:grid-cols-3 gap-4 sm:gap-0 px-6 sm:px-0 sm:mx-24 mt-12">
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+            <Image src={chooseUs1} alt="choose" className="w-full h-full"/>
           </div>
 
-          <div className="">
-            <Image src={chooseUs2} alt="choose" />
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+            <Image src={chooseUs2} alt="choose" className="w-full h-full"/>
           </div>
 
-          <div className="">
-            <Image src={chooseUs3} alt="choose" />
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+            <Image src={chooseUs3} alt="choose" className="w-full h-full"/>
           </div>
         </div>
-        <div className="flex justify-center mt-2">
-          <div className="">
-            <Image src={chooseUs4} alt="choose" />
+        <div className="flex flex-col sm:flex-row justify-center mt-2 gap-4 px-6 sm:gap-0 sm:px-0">
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+            <Image src={chooseUs4} alt="choose" className="w-full h-full"/>
           </div>
 
-          <div className="">
-            <Image src={chooseUs5} alt="choose" />
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+            <Image src={chooseUs5} alt="choose" className="w-full h-full"/>
           </div>
         </div>
       </section>

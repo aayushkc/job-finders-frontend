@@ -101,7 +101,7 @@ export default function NavBar() {
         <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
-                    <Link href="/">
+                    <Link href="/" prefetch={false}>
                         <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" />
                     </Link>
                 </div>
@@ -109,27 +109,27 @@ export default function NavBar() {
                     {hamburg ? <i className="bi bi-x font-bold text-2xl"></i> : <i className="bi bi-list font-bold text-2xl"></i>}
                 </button>
 
-                <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit border-2 " : "hidden "} bottom-0 border-[#D8D9DC] sm:border-none  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-12`}>
+                <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit border-2 " : "hidden "} sm:p-0 bottom-0 border-[#D8D9DC] sm:border-none  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-12`}>
                     {
                         isLoggedIn && isSeeker ? NavItems.map((data, index) => {
-                            return <Link href={data.link} onClick={handleClick} key={index}>
+                            return <Link href={data.link} onClick={handleClick} key={index} prefetch={false}>
                                 <li className={` ${currentRoute.split('/')[1] === data.link.slice(1) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                             </Link>
                         })
 
                             :
                             NavAnonItems.map((data, index) => {
-                                return <Link href={data.link} onClick={handleClick} key={index}>
+                                return <Link href={data.link} onClick={handleClick} key={index} prefetch={false}>
                                     <li className={` ${currentRoute === data.link && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                                 </Link>
                             })
                     }
                     {isClient && accessToken && !isSeeker && <Link href={'/recruiter'} onClick={handleClick}><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link>}
-                    {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
+                    {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" prefetch={false} className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
                 </ul>
 
 
-                {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block" onClick={handleLogOut}>Log Out</button> : <Link href="/signin" className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
+                {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block" onClick={handleLogOut}>Log Out</button> : <Link href="/signin" prefetch={false} className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
 
             </nav>
         </header>

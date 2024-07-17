@@ -12,14 +12,20 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PatchRequest from "@/app/api/patchRequest";
+import { ClipLoader } from "react-spinners";
 
 export default function UpdateProfile() {
     const param = useParams()
     const router = useRouter()
     const searchParam = useSearchParams()
     const reqId = searchParam.get("job_req")
+    const job_title = searchParam?.get('job-title') || null
+    const company = searchParam?.get('company') || null
+    const userId = searchParam?.get('userId') || null
     const [profileDetail, setProfileDetails] = useState([])
     const [industries, setIndustries] = useState([]);
+    const [isShortlistSubmitting, setIsShortListSubmitting] = useState(false)
+    const [isRejectSubmitting, setIsRejectSubmitting] = useState(false)
     const {
         register,
         handleSubmit,
@@ -79,18 +85,27 @@ export default function UpdateProfile() {
 
     const onShortListSubmit = async (e) =>{
         e.preventDefault();
+        setIsRejectSubmitting(false)
+        setIsShortListSubmitting(true)
         try {
-            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, {"status":"2"})
+            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, 
+                {
+                "status":"2", 
+                "job_title":job_title,
+                "company":company,
+                "user":userId
+            })
             
             if (res.detail) {
                 
                 throw new Error("Cannot Fetch")
             }
-           
+            setIsShortListSubmitting(false)
             router.back()
             
         }
         catch (errors) {
+            setIsShortListSubmitting(false)
             toast.error( 'An error Occured. Try again Later.', {
                 position: "bottom-right",
                 autoClose: 800,
@@ -107,19 +122,27 @@ export default function UpdateProfile() {
 
     const onRejectSubmit = async (e) =>{
         e.preventDefault();
+        setIsShortListSubmitting(false)
+        setIsRejectSubmitting(true)
         try {
-            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, {"status":"1"})
+            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${reqId}`, {
+                "status":"1", 
+                "job_title":job_title,
+                "company":company,
+                "user":userId
+            })
             
             if (res.detail) {
                
                 throw new Error("Cannot Fetch")
             }
             
-
+            setIsRejectSubmitting(false)
             router.back()
             
         }
         catch (errors) {
+            setIsRejectSubmitting(false)
             toast.error( 'An error Occured. Try again Later.', {
                 position: "bottom-right",
                 autoClose: 800,
@@ -232,12 +255,34 @@ export default function UpdateProfile() {
                         <hr className="my-8"></hr>
                         <div className="flex flex-col sm:flex-row w-full items-center gap-4 justify-end">
                         <form className="" onSubmit={onShortListSubmit}>
-                            <button className="text-white font-bold bg-gurkha-yellow py-2 px-12 rounded-2xl" type="submit" disabled={isSubmitting}>Shortlist</button>
+                            <button className="text-white flex items-center gap-4 font-bold bg-gurkha-yellow py-2 px-12 rounded-2xl" type="submit" disabled={isShortlistSubmitting}>
+                            {
+                                    isShortlistSubmitting &&   <ClipLoader
+                                    color={"#FFFFFF"}
+                                    loading={true}
+                                    size={15}
+                                    aria-label="Loading Spinner"
+                                    data-testid="loader"
+                                  />
+                                }
+                                Shortlist
+                                </button>
 
                         </form>
 
                         <form className="" onSubmit={onRejectSubmit}>
-                            <button className="text-white font-bold bg-red-500 py-2 px-12 rounded-2xl" type="submit" disabled={isSubmitting}>Reject</button>
+                            <button className="text-white flex items-center gap-4 font-bold bg-red-500 py-2 px-12 rounded-2xl" type="submit" disabled={isRejectSubmitting}>
+                            {
+                                    isRejectSubmitting &&   <ClipLoader
+                                    color={"#FFFFFF"}
+                                    loading={true}
+                                    size={15}
+                                    aria-label="Loading Spinner"
+                                    data-testid="loader"
+                                  />
+                                }
+                                Reject
+                            </button>
 
                         </form>
 

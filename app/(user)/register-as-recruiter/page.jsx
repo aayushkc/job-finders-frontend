@@ -214,7 +214,7 @@ export default function SignInUser() {
                                 </div>
 
                                 <div className="flex flex-col gap-2 items-start">
-                                    <label>Phone Nubmer*</label>
+                                    <label>Phone Number*</label>
                                     <input type="text" name="phone" defaultValue={formData.phone} onChange={handleChange} required className={`rounded-xl py-2 px-6 w-full ${phoneError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`}/>
                                     {phoneError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{phoneError}</p> : ""}
                                 </div>

@@ -393,7 +393,7 @@ export default function JobDetail() {
 
                         </div>
                         :
-                        <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
+                        <div className="bg-white pb-6   h-screen flex justify-center text-center items-center font-extrabold text-4xl">
                             Could not Find Any Jobs!
                         </div>
                 }

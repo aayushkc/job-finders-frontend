@@ -16,6 +16,7 @@ import PatchRequest from "@/app/api/patchRequest";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import { addYears } from 'date-fns';
 import Link from "next/link";
+import { ClipLoader } from "react-spinners";
 
 export default function UpdateProfile() {
     const router = useRouter()
@@ -37,6 +38,8 @@ export default function UpdateProfile() {
         control,
         setValue,
         watch,
+        setError,
+        setFocus,
         formState: { errors, isSubmitting, isDirty, isValid },
     } = useForm({
 
@@ -76,7 +79,7 @@ export default function UpdateProfile() {
                         "prefferd_job": []
                     }
                 )
-                router.push("/create-profile")
+                router.push("/create-profile?create-profile=true")
 
             }
             const data = await response.json();
@@ -179,10 +182,28 @@ export default function UpdateProfile() {
         let da = { ...data, "dob": data.dob.format("YYYY-MM-DD") }
 
         if (selectedFile) {
+            if(selectedFile.size > 500000){
+                setError("resume", {
+                    type:"manual",
+                    message:"Must be less than 500 KB"
+                },{
+                    shouldFocus:true
+                })
+                return;
+            }
             da = { ...da, "resume": selectedFile }
         }
 
         if (selecteProfilePhoto) {
+            if(selecteProfilePhoto.size > 500000){
+                setError("profilePic", {
+                    type:"manual",
+                    message:"Must be less than 500 KB"
+                },{
+                    shouldFocus:true
+                })
+                return;
+            }
             da = { ...da, "profilePic": selecteProfilePhoto }
         }
 
@@ -265,8 +286,6 @@ export default function UpdateProfile() {
         getJobCategory()
         getProfile()
     }, [])
-
-
     return (
         <>
            
@@ -293,12 +312,14 @@ export default function UpdateProfile() {
                                     <Controller
                                         control={control}
                                         name="resume"
-                                        render={({ field: { onChange } }) =>
+                                        rules={{required:"Resume is required"}}
+                                        render={({ field: { onChange,ref } }) =>
                                             <Button component="label" variant="contained" sx={{ backgroundColor: '#FAFAFA', color: 'black', textTransform: "capitalize", border: "1px solid #CFD1D4", width: "max-content" }}>
                                                 Upload CV
-                                                <VisuallyHiddenInput type="file" accept=".pdf,.docx" onChange={handleChange} />
+                                                <VisuallyHiddenInput type="file" accept=".pdf,.docx" onChange={handleChange} ref={ref}/>
                                             </Button>}
                                     ></Controller>
+                                    {errors.resume && <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.resume.message}</p>}
 
 
                                 </div>
@@ -328,13 +349,19 @@ export default function UpdateProfile() {
                                             <Controller
                                                 control={control}
                                                 name="profilePic"
-                                                render={({ field: { onChange } }) =>
+                                                rules={{required:"Profile Picture is Required", validate:(file) =>{
+                                                    if(file?.size > 500000){
+                                                        return "Max Size Allowed 500kb";
+                                                    }
+                                                    return true;
+                                                }}}
+                                                render={({ field: { onChange,ref } }) =>
                                                     <Button component="label" variant="contained" sx={{ backgroundColor: '#FFB000', color: 'white', textTransform: "capitalize", borderRadius: "17px", width: "max-content" }}>
                                                         Upload Profile Picture
-                                                        <VisuallyHiddenInput type="file" accept=".jpg, .jpeg, .png" onChange={handleProfilePicChange} />
+                                                        <VisuallyHiddenInput type="file" accept=".jpg, .jpeg, .png" onChange={handleProfilePicChange} ref={ref}/>
                                                     </Button>}
                                             ></Controller>
-
+                                        {errors.profilePic && <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.profilePic.message}</p>}
 
                                         </div>
 
@@ -437,6 +464,7 @@ export default function UpdateProfile() {
                                 control={control}
                                 name="industry"
                                 defaultValue={null}
+                                rules={{required:"Indsutry is Required"}}
                                 render={({ field }) => (
                                     <Autocomplete
                                         {...field}
@@ -555,7 +583,19 @@ export default function UpdateProfile() {
                         <hr className="my-8"></hr>
 
                         <div className="flex w-full justify-center sm:justify-end">
-                            <button className="text-white bg-gurkha-yellow py-2 px-12 rounded-2xl" type="submit">Submit</button>
+                            
+                            <button className={`text-white bg-gurkha-yellow py-2 px-12 rounded-2xl flex items-center gap-4 ${isSubmitting && 'opacity-75'}`} type="submit" disabled={isSubmitting}>
+                                {
+                                    isSubmitting &&   <ClipLoader
+                                    color={"#FFFFFF"}
+                                    loading={true}
+                                    size={15}
+                                    aria-label="Loading Spinner"
+                                    data-testid="loader"
+                                  />
+                                }
+                                Submit
+                            </button>
 
                         </div>
                     </form>

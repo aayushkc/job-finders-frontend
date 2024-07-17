@@ -59,7 +59,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
         <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
-                    <Link href="/recruiter">
+                    <Link href="/">
                         <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" />
                     </Link>
                 </div>
@@ -67,7 +67,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
                     {hamburg ? <i className="bi bi-x font-bold text-2xl"></i> : <i className="bi bi-list font-bold text-2xl"></i>}
                 </button>
 
-                <ul className={`bottom-0 z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4 ${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" : "hidden "}`}>
+                <ul className={`bottom-0 z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4 sm:p-0 ${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" : "hidden"}`}>
 
                     {/* Navitems for Recruiter Page */}
                     {

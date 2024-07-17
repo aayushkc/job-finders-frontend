@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
 import PatchRequest from "../api/patchRequest";
 import ProtectedAdminPage from "../utils/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,10 +25,16 @@ const style = {
 
 export default function ApplicantDisplayCard({ applicant }) {
     const navigate = useRouter()
+    const params = useSearchParams()
+    const job_title = params?.get('job-title') || null
+    const company = params?.get('company') || null
     const [open, setOpen] = useState(false);
     const [reqId, setReqId] = useState()
-    const handleOpenStatusModal = (id) => {
+    const [seekerId, setSeekerId] = useState()
+    const handleOpenStatusModal = (id, seekId) => {
         setReqId(id)
+        console.log("seeeker id", seekId);
+        setSeekerId(seekId)
         setOpen(true)
     }
 
@@ -36,10 +42,10 @@ export default function ApplicantDisplayCard({ applicant }) {
         setOpen(false)
     }
 
-
+console.log(applicant);
     return (
         <ProtectedAdminPage>
-        {open && <ChangeStatusModal open={open} handleModalClose={handleCloseStatusModal} id={reqId}/>}
+        {open && <ChangeStatusModal open={open} handleModalClose={handleCloseStatusModal} id={reqId} seekId={seekerId} jobTitle= {job_title} company={company}/>}
         <button className="py-2 px-4 text-sm bg-gurkha-yellow text-white rounded-xl  mt-6" onClick={() => navigate.back() }> <i className="mr-1 bi bi-arrow-left"></i> Go back</button>
             {
                 applicant.map(data => {
@@ -77,19 +83,19 @@ export default function ApplicantDisplayCard({ applicant }) {
                                     {data.status === 2 && <p className="text-green-500">Shortlisted</p>}
 
                                 </div>
-
+                                        
                                 <div className="flex gap-2 items-center mt-3">
                                     <p className="text-[#4F5052] text-sm">Quiz Score:</p>
                                     {data.quiz_score === 0 ? <p className="text-[#FFB636]">None</p> : <p className="text-[#FFB636]">{data.quiz_score}/{data.quiz_question}</p>}
                                 </div>
                                 
                                 <div>
-                                <button className="bg-gurkha-yellow py-2 px-3 text-sm rounded-xl mt-4 text-white" onClick={() =>handleOpenStatusModal(data.id)}>Change Status</button>
+                                <button className="bg-gurkha-yellow py-2 px-3 text-sm rounded-xl mt-4 text-white" onClick={() =>handleOpenStatusModal(data.id,data.job_seeker.id)}>Change Status</button>
                                 </div>
                                 
 
                                 <button className="bg-gurkha-yellow py-2 px-3 text-sm rounded-xl mt-4 text-white"><a href={data.job_seeker.seeker_details.resume} target="_blank">Download Resume</a></button>
-                                <div className=" mt-4 text-blue-600 flex items-center gap-3"><Link href={`applicants-details/${data.job_seeker.seeker_details.id}?job_req=${data.id}`}>View Profile Details</Link> <i className="bi bi-arrow-up-right"></i></div>
+                                <div className=" mt-4 text-blue-600 flex items-center gap-3"><Link href={`applicants-details/${data.job_seeker.seeker_details.id}?job_req=${data.id}&job-title=${job_title}&company=${company}&userId=${data.job_seeker.id}`}>View Profile Details</Link> <i className="bi bi-arrow-up-right"></i></div>
 
 
 
@@ -108,7 +114,7 @@ export default function ApplicantDisplayCard({ applicant }) {
 
 }
 
-const ChangeStatusModal = ({ open, handleModalClose, id }) => {
+const ChangeStatusModal = ({ open, handleModalClose, id, seekId, jobTitle, company }) => {
     const theme = useTheme();
     const router = useRouter()
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -119,9 +125,10 @@ const ChangeStatusModal = ({ open, handleModalClose, id }) => {
     } = useForm()
 
     const onSubmit = async (data) => {
-        
+        console.log(seekId);
+        const d = {'user':seekId,'job_title':jobTitle, 'company':company,...data}
         try {
-            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${id}`, data)
+            const res = await PatchRequest(`/recruiter/edit-recruiter-job-requests/${id}`, d)
          
             if (res.detail) {
                 
@@ -176,7 +183,7 @@ const ChangeStatusModal = ({ open, handleModalClose, id }) => {
                                             onChange={field.onChange}
 
                                         >
-                                            <option value={0}>Pending</option>
+                                            <option value={0} disabled>Pending</option>
                                             <option value={1}>Reject</option>
                                             <option value={2}>Shortlist</option>
                                         </Select>

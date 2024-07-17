@@ -9,7 +9,6 @@ export default function ProtectedAdminPage({children}) {
     useEffect(() => {
       const accessToken = Cookies.get('accessToken');
       const isSeeker = Cookies.get('isSeeker') === 'true'
-      console.log("ACessssssssssssssssssssss", accessToken);
       if (!accessToken) {
         // Redirect to login page if access token is not present
         router.push('/signin');

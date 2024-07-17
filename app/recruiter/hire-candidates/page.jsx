@@ -293,7 +293,7 @@ export default function HireCandidates() {
 
           {
             showCalendly ? <div className="">
-              <InlineWidget url="https://calendly.com/aayush-nexsewa/job-request" />
+              <InlineWidget url="https://calendly.com/hiregurkhaofficial/30min" />
             </div>
               :
               (

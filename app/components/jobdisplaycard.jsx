@@ -67,7 +67,7 @@ export default function JobDisplayCard({ jobs, isApplicantCard }) {
                 {
                     isApplicantCard ? 
                     (
-                        <Link href={`/recruiter/applicants/${data.id}`}>
+                        <Link href={`/recruiter/applicants/${data.id}?job-title=${data.title}&company=${data.company}`}>
                         <div className="flex mt-4 sm:mt-0 sm:justify-end items-center text-[#0B69FF] gap-2">
     
                             <p>View Applicants</p>

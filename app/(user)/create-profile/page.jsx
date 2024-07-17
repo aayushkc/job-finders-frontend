@@ -1,7 +1,7 @@
 "use client"
 
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, styled, Autocomplete, TextField } from "@mui/material"
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
 import defaultProfile from "../../../public/images/defaultProfile.png"
@@ -13,6 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
 import { addYears } from "date-fns";
+import { ClipLoader } from "react-spinners";
 
 export default function CreateProfile() {
     const router = useRouter()
@@ -176,8 +177,9 @@ export default function CreateProfile() {
     }
 
     useEffect(() => {
-        getIndustries()
-        getJobCategory()
+            getIndustries()
+            getJobCategory()
+        
     }, [])
 
     useEffect(() => {
@@ -210,8 +212,13 @@ export default function CreateProfile() {
                                     <Controller
                                         control={control}
                                         name="resume"
-                                        rules={{ required: "A CV in either .pdf or .docx format must be uploaded" }}
-                                        render={({ field: { onChange } }) =>
+                                        rules={{ required: "A CV in either .pdf or .docx format must be uploaded", validate:(file) =>{
+                                            if(file?.size > 500000){
+                                                return "Max Sized Allowed 500kb"
+                                            }
+                                            return true
+                                        } }}
+                                        render={({ field: { onChange,ref } }) =>
                                             <Button
                                                 component="label"
                                                 variant="contained"
@@ -234,7 +241,7 @@ export default function CreateProfile() {
                                                     //Previews the file name
                                                     selectedFile ? <p className="text-sm overflow-clip">{selectedFile.name}</p> : "Upload CV"
                                                 }
-                                                <VisuallyHiddenInput type="file" accept=".pdf,.docx" onChange={handleChange} />
+                                                <VisuallyHiddenInput ref={ref} type="file" accept=".pdf,.docx" autoFocus={errors.resume} onChange={handleChange} />
                                             </Button>}
                                     />
                                  {errors.resume ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.resume.message}</p> : ""}
@@ -262,11 +269,16 @@ export default function CreateProfile() {
                                             <Controller
                                                 control={control}
                                                 name="profilePic"
-                                                rules={{ required: "Profile Picture is required" }}
-                                                render={({ field: { onChange } }) =>
+                                                rules={{ required: "Profile Picture is required", validate:(file) =>{
+                                                    if(file.size > 500000){
+                                                        return "Max Size Allowed 500Kb"
+                                                    }
+                                                    return true
+                                                } }}
+                                                render={({ field: { onChange,ref } }) =>
                                                     <Button component="label" variant="contained" sx={{ backgroundColor: '#FFB000', color: 'white', textTransform: "capitalize", borderRadius: "17px", width: "max-content" }}>
                                                         Upload Profile Picture
-                                                        <VisuallyHiddenInput type="file" accept=".jpg, .jpeg, .png" onChange={handleProfilePicChange} />
+                                                        <VisuallyHiddenInput type="file" ref={ref} autoFocus={errors.profilePic} accept=".jpg, .jpeg, .png" onChange={handleProfilePicChange} />
                                                     </Button>}
                                             ></Controller>
 
@@ -496,7 +508,18 @@ export default function CreateProfile() {
                         <hr className="my-8"></hr>
 
                         <div className="flex w-full justify-end">
-                            <button className="text-white bg-gurkha-yellow py-2 px-12 rounded-2xl" type="submit">Submit</button>
+                        <button className={`text-white bg-gurkha-yellow py-2 px-12 rounded-2xl flex items-center gap-4 ${isSubmitting && 'opacity-75'}`} type="submit" disabled={isSubmitting}>
+                                {
+                                    isSubmitting &&   <ClipLoader
+                                    color={"#FFFFFF"}
+                                    loading={true}
+                                    size={15}
+                                    aria-label="Loading Spinner"
+                                    data-testid="loader"
+                                  />
+                                }
+                                Submit
+                            </button>
 
                         </div>
                     </form>
