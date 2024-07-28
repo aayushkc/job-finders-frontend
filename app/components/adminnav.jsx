@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../utils/checkIsLoggedIn";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"], display:'swap' });
 
 const RecruiterNavItems = [
     {
@@ -60,7 +60,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
                     <Link href="/">
-                        <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" />
+                        <Image src="/images/logo.png" alt="logo" priority={true} className="max-w-full max-h-full" width="175" height="95" />
                     </Link>
                 </div>
                 <button className="pr-4 sm:hidden" onClick={handleClick}>

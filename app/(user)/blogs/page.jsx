@@ -1,5 +1,3 @@
-'use client'
-import Image from "next/image"
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -7,32 +5,18 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import Footer from "@/app/components/footer";
 import GetRequestNoToken from "@/app/api/getRequestNoToken";
-import { useEffect, useState } from "react";
-import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import Link from "next/link";
 
-export default function Blogs() {
-    const arr = [1, 2, 3, 4, 5]
-    const [topblog, setTopBlog] = useState(null)
-    const [otherBlogs, setOtherBlogs] = useState(null)
-    const getBlogPosts = async () => {
-        try {
-            const data = await GetRequestNoToken('/api/v2/pages/?type=blog.BlogPage&fields=intro,body,thumbnail')
-            if (data.detail) {
-                throw new Error("Cannot Fetch")
-            }
-            console.log("Dataaaa", data);
-            setTopBlog(data.items[0])
-            setOtherBlogs(data.items.slice(1))
-        }
-        catch (errors) {
-            console.log(errors);
-        }
-    }
-
-    useEffect(() => {
-        getBlogPosts()
-    }, [])
+async function GetBlogPosts(){
+    const data = await GetRequestNoToken('/api/v2/pages/?type=blog.BlogPage&fields=intro,body,thumbnail')
+    return data
+}
+export default async function Blogs() {
+    const blogs = await GetBlogPosts().catch((err) =>  null)
+    const topblog = blogs?.items[0] || undefined
+    const otherBlogs = blogs?.items.slice(1) || undefined
+ 
+  
     return (
         <>
             <section className="bg-white sm:px-36 py-16">
@@ -95,7 +79,7 @@ export default function Blogs() {
                                                 {data.title}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
-                                                <p dangerouslySetInnerHTML={{ __html: data.intro }}></p>
+                                                <span dangerouslySetInnerHTML={{ __html: data.intro }}></span>
                                             </Typography>
                                         </CardContent>
                                     </CardActionArea>

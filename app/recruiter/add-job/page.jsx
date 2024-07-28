@@ -11,14 +11,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import dynamic from 'next/dynamic';
 import PostWithTokien from "@/app/api/postWithToken";
 
 import DialogBox from "@/app/components/sucessbox";
-const FroalaEditor = dynamic(
-    () => import('react-froala-wysiwyg'),
-    { ssr: false }
-);
+
 export default function Page() {
 
     const {
@@ -461,7 +457,7 @@ export default function Page() {
 
                 {/* Job Description */}
 
-                <div className="mt-6">
+                {/* <div className="mt-6">
                     <label htmlFor="description" className="text-sm">Job Description</label>
                     <div className="flex gap-4 items-center mt-1">
                         <Controller
@@ -483,7 +479,7 @@ export default function Page() {
 
 
                     </div>
-                </div>
+                </div> */}
                 <button
                     type="submit"
                     disabled={!isDirty || !isValid || isSubmitting}

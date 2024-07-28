@@ -1,109 +1,21 @@
-"use client"
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import GetRequestNoToken from "../api/getRequestNoToken";
-// const skills = [
-//     {
-//         "iconPath":"/images/codeCom.png",
-//         "title":"Jobs in Python Developer",
-//         "alt":"Jobs in Python Developer"
-//     },
-//     {
-//         "iconPath":"/images/codeCom.png",
-//         "title":"Jobs in Java",
-//         "alt":"Jobs in Java"
-//     },
-//     {
-//         "iconPath":"/images/codeCom.png",
-//         "title":"Jobs in UI/UX",
-//         "alt":"Jobs in UI/UX"
-//     }, 
-//     {
-//         "iconPath":"/images/codeCom.png",
-//         "title":"Jobs in Graphics Designing",
-//         "alt":"Jobs in Graphics Designing"
-//     },
-//     {
-//         "iconPath":"/images/codeCom.png",
-//         "title":"Jobs in Skill",
-//         "alt":"Jobs in Skill"
-//     },
-//     {
-//         "iconPath":"/images/codeCom.png",
-//         "title":"Jobs in Jira Project Management",
-//         "alt":"Jobs in Jira Project Management"
-//     }
-// ]
 
-const countries = [
-    {
-        "iconPath":"/images/bahrain.png",
-        "title":"Jobs in Bahrain",
-        "alt":"Jobs in Bahrain"
-    },
-    {
-        "iconPath":"/images/kuwait.png",
-        "title":"Jobs in Kuwait",
-        "alt":"Jobs in Kuwait"
-    },
-    {
-        "iconPath":"/images/oman.png",
-        "title":"Jobs in Oman",
-        "alt":"Jobs in Oman"
-    }, 
-    {
-        "iconPath":"/images/qatar.png",
-        "title":"Jobs in Qatar",
-        "alt":"Jobs in Qatar"
-    },
-    {
-        "iconPath":"/images/saudi-arabia.png",
-        "title":"Jobs in Saudi Arabia",
-        "alt":"Jobs in Saudi Arabia"
-    },
-    {
-        "iconPath":"/images/united-arab-emirates.png",
-        "title":"Jobs in UAE",
-        "alt":"Jobs in UAE"
-    }
-]
-const Footer = () => {
+async function getSkills(){
+  const data = await GetRequestNoToken(`/get-skills/?industry=null`)
+  return data
+}
 
-    const [skills,setSkills] = useState()
-    const [jobCategory,setJobCategory] = useState()
-    const getSkills = async () => {
-        try {
-          const data = await GetRequestNoToken(`/get-skills/?industry=null`)
-          if (data.detail) {
-            throw new Error("Cannot Fetch")
-          }
-          setSkills(data)
-        }
-        catch (errors) {
-          setSkills([{ "id": "", "title": "" }])
-        }
-      }
+async function getJobCategory(){
+  const data =  await GetRequestNoToken('/job-preference/')
+  return data
+}
 
+export default async function Footer(){
 
-      const getJobCategory = async () => {
-        try {
-          const data = await GetRequestNoToken('/job-preference/')
-          if (data.detail) {
-            throw new Error("Cannot Fetch")
-          }
-          setJobCategory(data)
-        }
-        catch (errors) {
-          setJobCategory([{ "id": "", "title": "" }])
-        }
-      }
-
-
-      useEffect(()=>{
-        getSkills()
-        getJobCategory()
-      },[])
+    const skills = await getSkills().catch((err) =>{return []})
+    const jobCategory = await getJobCategory().catch((err) =>{return []})
 
     return (
         <footer className="bg-[#F5F9FC] py-16 px-4 sm:px-32">
@@ -171,20 +83,7 @@ const Footer = () => {
                 </ul>
                 </div>
 
-                {/* Countries */}
-                {/* <div>
-                <h2 className="text-3xl font-semibold bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block sm:text-left text-transparent bg-clip-text">Countries</h2>
-                <ul>
-                    {
-                        countries.map((data,index) =>(
-                            <Link href={"#"} key={index}>
-                            <li className="mt-5 flex gap-3 items-center">  <Image src={data.iconPath} width={18} height={18} alt={data.alt}/> {data.title}</li>
-                            </Link> 
-                        ))
-                    }
-                </ul>
-               
-                </div> */}
+        
 
                 {/* Skills */}
                 <div>
@@ -206,5 +105,3 @@ const Footer = () => {
         </footer>
     )
 }
-
-export default Footer;

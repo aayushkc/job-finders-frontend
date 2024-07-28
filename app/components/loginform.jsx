@@ -49,7 +49,7 @@ export default function LoginForm(){
           const isRecruiter = decodedToken.isRecruiter; 
           const isSeeker = decodedToken.isSeeker; 
           const isSuperAdmin = decodedToken.isSuperAdmin
-          Cookies.set('accessToken', data.access, { expires: 1 });
+          Cookies.set('accessToken', data.access, { expires: 1});
           Cookies.set('userId', userId); 
           Cookies.set('isSeeker', isSeeker)
           Cookies.set("isLoggedIn", true)
@@ -58,6 +58,7 @@ export default function LoginForm(){
           }
           if(isSeeker){
             router.push('/');
+            router.refresh();
           }
           if(isSuperAdmin){
             router.push('/view-all-pending-jobs')

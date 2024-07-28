@@ -1,11 +1,7 @@
-"use client"
-import React from "react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import GetRequestNoToken from "../api/getRequestNoToken";
 import Image from "next/image";
-import hero from "../../public/images/hero-img.png"
+import buildingGif from "../../public/images/BuildingAnim.webp"
+import arrowGif from "../../public/images/ArrowAnim.webp"
 import mobileHero from "../../public/images/mobileHero.png"
 import Bolb from "../../public/images/blob.png"
 import Cube from "../../public/images/cube.png"
@@ -18,7 +14,6 @@ import arrow from "../../public/images/arrow.png"
 import meeting from "../../public/images/meeting.png"
 import monitorPlay from "../../public/images/monitorPlay.png"
 import bannnerIcon from "../../public/images/bannnerIcon.png"
-import { Open_Sans } from "next/font/google";
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -32,6 +27,7 @@ import chooseUs4 from "../../public/images/chooseUs4.png"
 import chooseUs5 from "../../public/images/chooseUs5.png"
 import EmblaCarousel from "./emblacarousel";
 import FAQCard from "./faq";
+import HomePageJobDisplayComponent from "./homePageJobDisplayComponent";
 
 
 const timeLineData = [
@@ -57,7 +53,7 @@ const timeLineData = [
   }
 ]
 export default function AnonUserHomePage({ pageNum, totalPage }) {
-  const OPTIONS = { align: 'start', dragFree: true, loop: true }
+  const OPTIONS = { align: 'center', dragFree: true, loop: true }
   const CLIENT_SLIDES = [
     {
       'name': "Aakash Chaudhary",
@@ -74,6 +70,13 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
       'proficient': "Graphic Designer"
     },
     {
+      'name': "Ayush Duyadi",
+      'company': "Company",
+      'profilePic': "/images/ayush.jpeg",
+      'review': "My journey to AirAsia was made possible by Hiregurkh.",
+      'proficient': "Project Manager"
+    },
+     {
       'name': "Ayush Duyadi",
       'company': "Company",
       'profilePic': "/images/ayush.jpeg",
@@ -118,56 +121,39 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
     }
   ]
 
-  const [recommendedJobs, setRecommendedJobs] = useState([])
-  const router = useRouter()
-  const getRecommendedJobs = async () => {
-    try {
-      const data = await GetRequestNoToken(`/job-seeker/get-all-job/?page=${pageNum}`)
-      if (data.detail) {
-        throw new Error("Cannot Fetch")
-      }
-
-      // The total count of data needs to be dividd by the number of data sent per page by backend
-      const pages = Math.ceil(data.count / 4)
-      totalPage = pages
-      setRecommendedJobs(data.results)
-    }
-    catch (errors) {
-      setRecommendedJobs([])
-    }
-  }
-
-
-  useEffect(() => {
-    getRecommendedJobs()
-  }, [pageNum])
-
-  useEffect(() => {
-    getRecommendedJobs()
-  }, [])
-
+  
 
   return (
     <div className="bg-white">
-      <section className="flex flex-col sm:flex-row gap-10 pt-16 relative px-8 sm:px-24">
-        <div className="order-last sm:order-first block">
-          <Image src={hero} alt="hero" className="max-h-[690px] max-w-[557px] hidden sm:block" />
+      <section className="flex flex-col sm:flex-row gap-10 pt-16 relative px-8 sm:px-20">
+        <div className="order-last sm:order-first relative">
+          <Image 
+                src={buildingGif} 
+                priority={true} 
+                alt="hero"
+                unoptimized  
+                className="max-h-[690px] max-w-[557px] hidden sm:block" 
+          />
+          <div className="hidden sm:block absolute bottom-[32%] xl:-right-[35%] 2xl:-right-[48%]">
+                <Image 
+                      src={arrowGif}
+                      alt="arrow" 
+                      priority 
+                      unoptimized
+                      className="xl:max-w-[180px] 2xl:max-w-[224px] max-h-[128px] object-contain hidden sm:block" 
+                />
+          </div>
           <Image src={mobileHero} alt="hero" className="max-h-[300px] max-w-[300px] block sm:hidden" />
         </div>
 
         <div className="py-2 sm:py-8 text-center relative sm:px-6 text-[#212529]">
           <h2 className="text-3xl sm:text-5xl font-bold sm:leading-[62px]">
-            {/* Secure The <span className="text-[#FD810E]"> Job</span> You Desire  With Our
-            <br></br>
-            <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">
-              AI Tailored Platform
-            </span> */}
             Would You Like To <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">Work Abroad</span> While Residing In <span className="text-[#FD810E]">Nepal</span> With Your Family?
           </h2>
 
           <h4 className="text-lg sm:text-xl font-bold mt-8 sm:leading-[30px]">Pursue your ambitions and shape your ideal professional path with our support.</h4>
 
-          <div className="flex mt-8 justify-center">
+          <div className="flex mt-8 justify-center mb-6">
             <Link href="/jobs">
               <button className="bg-[#FFB000] rounded-3xl py-2 px-8 text-xl font-bold text-white">
                 Search Job
@@ -177,7 +163,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
           </div>
 
-          <div className="flex justify-center my-8">
+          <div className="flex justify-center my-10">
             <div className="w-[286px] h-[8px] rounded-xl bg-gurkha-yellow "></div>
           </div>
 
@@ -229,7 +215,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <h2 className="text-2xl text-center font-bold px-4">We help <span className="text-[#FD810E]"> talents</span> find their perfect spots</h2>
         <div className="mt-10 flex justify-center">
 
-          <EmblaCarousel slides={CLIENT_SLIDES} options={OPTIONS} delay={2500} />
+          <EmblaCarousel slides={CLIENT_SLIDES} options={OPTIONS} delay={3500} />
         </div>
 
 
@@ -246,7 +232,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <h2 className="text-2xl text-center font-bold px-4">We accelerate <span className="text-[#FD810E]"> businesses</span> towards their goals</h2>
         <div className="mt-10 flex justify-center">
 
-          <EmblaCarousel slides={BUSINESS_SLIDES} options={OPTIONS} delay={2000} />
+          <EmblaCarousel slides={BUSINESS_SLIDES} options={OPTIONS} delay={3000} />
         </div>
 
 
@@ -424,25 +410,40 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <p className="text-[#84888E] text-center mt-4">In the realm of Remote Work Opportunities in Nepal, HireGurkha stands out as a paragon of excellence.<br></br> Our platform is not just a conduit for job matching; it’s a comprehensive ecosystem designed to elevate the remote hiring <br></br>experience for both talents and employers.</p>
 
         <div className="grid sm:grid-cols-3 gap-4 sm:gap-0 px-6 sm:px-0 sm:mx-24 mt-12">
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs1} alt="choose" className="w-full h-full"/>
+            <div className="chooseUsDivText">
+                <p>Support</p>
+            </div>
           </div>
 
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs2} alt="choose" className="w-full h-full"/>
+             <div className="chooseUsDivText">
+                <p>Pre- Test Tool</p>
+            </div>
           </div>
 
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs3} alt="choose" className="w-full h-full"/>
+             <div className="chooseUsDivText">
+                <p>Specialized Hiring</p>
+            </div>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row justify-center mt-2 gap-4 px-6 sm:gap-0 sm:px-0">
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs4} alt="choose" className="w-full h-full"/>
+             <div className="chooseUsDivText">
+                <p>AI Driven Platform</p>
+            </div>
           </div>
 
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px]">
+          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs5} alt="choose" className="w-full h-full"/>
+             <div className="chooseUsDivText">
+                <p>AI Driven Platform</p>
+            </div>
           </div>
         </div>
       </section>
@@ -527,81 +528,8 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <div className="sm:px-16">
           <h2 className="text-xl">Available Jobs</h2>
 
-          <div className="grid sm:grid-cols-3 gap-4 text-left mt-6">
-            {
-              recommendedJobs?.map(data => {
-                return (
-                  <Link href={`/jobs?id=${data.id}&pageNum=${pageNum}`} key={data.id}>
-                    <div className="px-6 py-4 rounded-2xl border-[1px] border-[#065F46]">
-                      <div className="flex justify-between items-start">
-                        <h2 className="text-xl font-bold">{data.title}</h2>
-                        <i className="bi bi-bookmark text-lg text-[#475569]"></i>
-                      </div>
-                      <p className="">{data.job_category[0]?.title}</p>
-                      <h2 className="text-[#4F5052] text-lg mt-1">{data.company}</h2>
-
-                      <div className="text-sm my-2">
-                        <p className="">Skills: <span className="text-black">
-                          {
-                            data.required_skills.length >= 2 ?
-                              data.required_skills.map(
-                                (data, index) => index < 2 &&
-                                  <span key={index}>{index === 1 ? data.title + "..." : data.title + "/"}</span>
-
-
-
-                              )
-                              :
-                              data.required_skills.map((data) => data.title)
-                          }
-
-                        </span></p>
-
-
-                      </div>
-
-                      <div className="flex flex-col gap-2 mt-3">
-                        <div className="flex gap-2 items-center text-sm bg-[#FEF4DF] px-4 py-2 rounded-2xl max-w-max">
-                          <p className="">Location:</p>
-                          <p className="text-[#4F5052] font-light">{data.job_location}</p>
-                        </div>
-
-                        <div className="flex gap-2 items-center text-sm bg-[#FEF4DF] px-4 py-2 rounded-2xl max-w-max">
-                          <p className="">Experience Required:</p>
-                          <p className="text-[#4F5052] font-light capitalize">{data.required_years_of_experience}</p>
-                        </div>
-
-
-
-
-                      </div>
-                      <div className="flex gap-2 items-center mt-4">
-                        <i className="bi bi-coin text-[#FFB000] text-xl"></i>
-                        {
-                          data.salary && <p className="text-[#01B46A]">{data.salary} $/month </p>
-                        }
-                        {
-                          data.min_salary && <p className="text-[#01B46A]">{data.min_salary} - {data.max_salary} $/month </p>
-                        }
-
-                        {
-                          !data.min_salary && !data.salary && <p className="text-[#01B46A]">Undisclosed </p>
-                        }
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row sm:justify-between mt-4 sm:items-center">
-                        <div className="flex gap-2 items-center">
-                          <i className="bi bi-people text-xl"></i>
-                          <p className="text-[#01B46A]">{data.applied} Applied</p>
-                        </div>
-
-                        <p className="text-sm mt-4 sm:mt-0">Apply Before: {data.apply_before}</p>
-                      </div>
-
-                    </div>
-                  </Link>
-                )
-              })}
+          <div className="mt-6">
+           <HomePageJobDisplayComponent />
 
           </div>
 

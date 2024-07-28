@@ -33,7 +33,14 @@ const OPTIONS = { align: 'start', dragFree: true, loop: true }
       'profilePic': "/images/ayush.jpeg",
       'review': "My journey to AirAsia was made possible by Hiregurkh.",
       'proficient': "Project Manager"
-    }
+    },
+    {
+        'name': "Ayush Duyadi",
+        'company': "Company",
+        'profilePic': "/images/ayush.jpeg",
+        'review': "My journey to AirAsia was made possible by Hiregurkh.",
+        'proficient': "Project Manager"
+      }
   ]
 
 

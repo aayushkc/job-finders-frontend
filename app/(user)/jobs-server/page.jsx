@@ -50,7 +50,7 @@ export default async function Jobs({ searchParams }) {
     } else {
         const totalJobMatch = jobsData.count
         const jobs = jobsData.results
-        const totalPage = Math.ceil(totalJobMatch / 4)
+        const totalPage = Math.ceil(totalJobMatch / 9)
         currentJobIndex = searchParams?.currentJobIndex || jobs[0]?.id
         let jobPanelData = await getJobFromIndex(currentJobIndex).catch((err) => console.log(err))
         return (

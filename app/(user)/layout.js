@@ -7,7 +7,7 @@ import { AuthProvider } from "../utils/checkIsLoggedIn";
 import { Suspense } from "react";
 import { GoogleAnalytics } from '@next/third-parties/google'
 
-const sans = Open_Sans({ subsets: ["latin"] });
+const sans = Open_Sans({ subsets: ["latin"], display:'swap' });
 
 export const metadata = {
   title: "Hire Gurkha",

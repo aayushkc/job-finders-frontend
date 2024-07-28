@@ -6,10 +6,11 @@ import { useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../utils/checkIsLoggedIn";
+import { revalidatePath } from "next/cache";
 
 
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"], display:'swap' });
 
 const NavItems = [
     {
@@ -82,6 +83,7 @@ export default function NavBar() {
         Cookies.remove('userId')
         setIsLoggedIn(false)
         router.push('/signin')
+        router.refresh()
     }
 
     useEffect(() => {
@@ -102,7 +104,7 @@ export default function NavBar() {
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
                     <Link href="/" prefetch={false}>
-                        <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" />
+                        <Image src="/images/logo.png" alt="logo" className="max-w-full max-h-full" width="175" height="95" priority={true}/>
                     </Link>
                 </div>
                 <button className="pr-4 sm:hidden" onClick={handleClick}>
