@@ -4,11 +4,7 @@ import GetRequestNoToken from "@/app/api/getRequestNoToken"
 import getRequestWithToken from "@/app/api/getRequestWithToken"
 import PaginationComponent from "@/app/components/paginationcomponent"
 import Cookies from "js-cookie"
-import dynamic from "next/dynamic"
-import { Suspense, useEffect, useState } from "react"
-
-
-import PostWithTokien from "@/app/api/postWithToken"
+import { useEffect, useState } from "react"
 import PostFormWithToken from "@/app/api/postFormWithToken"
 import DialogBox from "@/app/components/sucessbox"
 import JobPanelData from "@/app/components/JobPanelData"

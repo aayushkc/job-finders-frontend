@@ -2,12 +2,14 @@
 
 import GetRequestNoToken from "@/app/api/getRequestNoToken"
 import PaginationComponent from "@/app/components/paginationcomponent"
+import { Skeleton } from "@mui/material"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function CompletedEvets(){
     const [completedEvents, setCompletedEvents] = useState()
-   
+    const [isLoading, setIsLoading] = useState(true)
+    const [fetchError, setFetchError] = useState(false)
     const [pageNumCompleted, setPageNumCompleted] = useState(1)
     const [totalPageCompleted, setTotalPageCompleted] = useState()
     
@@ -21,8 +23,10 @@ export default function CompletedEvets(){
             const pages = Math.ceil(data.count / 3)
             setTotalPageCompleted(pages)
             setCompletedEvents(data.results)
+            setIsLoading(false)
         } catch (errors) {
             console.log(errors);
+            setFetchError(true)
         }
     }
 
@@ -44,7 +48,7 @@ export default function CompletedEvets(){
     return(
         <>
         {
-            completedEvents?.length > 0 ? completedEvents.map((data, index) => (
+           !fetchError ? completedEvents?.length > 0 ? completedEvents.map((data, index) => (
                 <div className="bg-white rounded-xl p-6 mt-10 flex flex-col sm:flex-row gap-10 items-center" key={index}>
                     <div>
                         <h3 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-[#FD810E] to-[#DA4C98] text-center sm:text-left text-transparent bg-clip-text">{data.title} </h3>
@@ -55,9 +59,15 @@ export default function CompletedEvets(){
                 </div>
             ))
                 :
+                !isLoading ?
                 (
                     <div className="bg-white rounded-xl text-3xl font-bold text-center p-6 mt-10 flex justify-center items-center h-[200px]">No Events To Display</div>
-                )
+                ):
+                <div>
+                    <Skeleton height={150}/>
+                </div>
+                 :
+                 <div className="bg-white rounded-xl text-3xl font-bold text-center p-6 mt-10 flex justify-center items-center h-[200px]">No Events To Display</div>
         }
 
         <div className="flex justify-center mt-6">

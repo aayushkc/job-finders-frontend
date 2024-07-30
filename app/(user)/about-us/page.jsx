@@ -9,41 +9,10 @@ import bhudu from "../../../public/images/ceo.png"
 import EmblaCarousel from "@/app/components/emblacarousel"
 import Footer from "@/app/components/footer"
 import Link from "next/link"
+import { CLIENT_SLIDES } from "@/app/components/anonymoususerhomepage"
 
 
 const OPTIONS = { align: 'start', dragFree: true, loop: true }
-  const CLIENT_SLIDES = [
-    {
-      'name': "Aakash Chaudhary",
-      'profilePic': "/images/aakash.jpeg",
-      'company': "Company",
-      'review': "Hiregurkha was instrumental in securing my position at Samsung; its  resources and guidance were invaluable throughout the recruitment  process",
-      'proficient': "Senior DotNet Developer"
-    },
-    {
-      'name': "Prashant Pradhan",
-      'profilePic': "/images/prashant.jpeg",
-      'company': "NexSewa",
-      'review': "Hiregurkha played a pivotal role in helping me secure my role at NexSewa.",
-      'proficient': "Graphic Designer"
-    },
-    {
-      'name': "Ayush Duyadi",
-      'company': "Company",
-      'profilePic': "/images/ayush.jpeg",
-      'review': "My journey to AirAsia was made possible by Hiregurkh.",
-      'proficient': "Project Manager"
-    },
-    {
-        'name': "Ayush Duyadi",
-        'company': "Company",
-        'profilePic': "/images/ayush.jpeg",
-        'review': "My journey to AirAsia was made possible by Hiregurkh.",
-        'proficient': "Project Manager"
-      }
-  ]
-
-
 
 export default function AboutUs() {
     return (

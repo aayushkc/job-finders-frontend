@@ -2,7 +2,6 @@ import GetRequestNoToken from "@/app/api/getRequestNoToken";
 import getRequestWithToken from "@/app/api/getRequestWithToken";
 import JobPanelData from "@/app/components/JobPanelData";
 import ServerPagination from "@/app/components/serverpagination";
-import { data } from "autoprefixer";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { Suspense } from "react";

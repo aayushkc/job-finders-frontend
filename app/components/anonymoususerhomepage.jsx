@@ -29,7 +29,87 @@ import EmblaCarousel from "./emblacarousel";
 import FAQCard from "./faq";
 import HomePageJobDisplayComponent from "./homePageJobDisplayComponent";
 
+export const CLIENT_SLIDES = [
+  {
+    'name': "Aakash Chaudhary",
+    'profilePic': "/images/aakash.webp",
+    'company': "Samsung",
+    'review': "Hiregurkha was instrumental in securing my position at Samsung; its  resources and guidance were invaluable throughout the recruitment  process",
+    'proficient': "Senior DotNet Developer"
+  },
+  {
+    'name': "Prashant Pradhan",
+    'profilePic': "/images/prashant.webp",
+    'company': "NexSewa",
+    'review': "Hiregurkha played a pivotal role in helping me secure my role at NexSewa.",
+    'proficient': "Graphic Designer"
+  },
+  {
+    'name': "Ayush Duyadi",
+    'company': "AirAsia",
+    'profilePic': "/images/ayush.webp",
+    'review': "My journey to AirAsia was made possible by Hiregurkha.",
+    'proficient': "Project Manager"
+  },
+   {
+    'name': "Amir Kanal",
+    'company': "NSU Autoparts",
+    'profilePic': "/images/amirKhanal.webp",
+    'review': "Hiregurkha helped me find to secure my job at NSU Autoparts.",
+    'proficient': "Project Lead"
+  }
+]
 
+export  const BUSINESS_SLIDES = [
+  {
+    'name': "Sandeep Bhusal",
+    'profilePic': "/images/sandeepBushal.webp",
+    'position': "Accountant",
+    'company': "The Kandel Group",
+    'review': "Working with Hiregurkha has been a game-changer for our recruitment needs. Their ability to source high-quality talent efficiently has saved  us time and resources, allowing us to focus on our core business  objectives",
+    'proficient': null
+  },
+  {
+    'name': "Harish",
+    'profilePic': "/images/harish.webp",
+    'position': "BDO",
+    'company': "Excelsoft Tech",
+    'review': "Thanks to Hiregurkha, our company's talent acquisition process has been transformed. Their expertise in recruiting top-tier talent has been  instrumental in shaping our success.",
+    'proficient': null
+  },
+  {
+    'name': "Suman Subedi",
+    'company': "KEN PO KAI Australia",
+    'position': "CEO",
+    'profilePic': "/images/sumanSubedi.webp",
+    'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
+    'proficient': null
+  },
+  {
+    'name': "Saroj Thapa",
+    'company': "Kangaroo Group",
+    'position': "MD",
+    'profilePic': "/images/sarojThapa.webp",
+    'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
+    'proficient': null
+  },
+  {
+    'name': "Bijay Thapa",
+    'company': "Senept",
+    'position': "COO",
+    'profilePic': "/images/bijayThapa.webp",
+    'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
+    'proficient': null
+  },
+  {
+    'name': "Subas Basnet",
+    'company': "Canbera Accountants",
+    'position': "MD",
+    'profilePic': "/images/subasBasnet.webp",
+    'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
+    'proficient': null
+  }
+]
 const timeLineData = [
   {
     'step_no': "1",
@@ -54,75 +134,6 @@ const timeLineData = [
 ]
 export default function AnonUserHomePage({ pageNum, totalPage }) {
   const OPTIONS = { align: 'center', dragFree: true, loop: true }
-  const CLIENT_SLIDES = [
-    {
-      'name': "Aakash Chaudhary",
-      'profilePic': "/images/aakash.jpeg",
-      'company': "Company",
-      'review': "Hiregurkha was instrumental in securing my position at Samsung; its  resources and guidance were invaluable throughout the recruitment  process",
-      'proficient': "Senior DotNet Developer"
-    },
-    {
-      'name': "Prashant Pradhan",
-      'profilePic': "/images/prashant.jpeg",
-      'company': "NexSewa",
-      'review': "Hiregurkha played a pivotal role in helping me secure my role at NexSewa.",
-      'proficient': "Graphic Designer"
-    },
-    {
-      'name': "Ayush Duyadi",
-      'company': "Company",
-      'profilePic': "/images/ayush.jpeg",
-      'review': "My journey to AirAsia was made possible by Hiregurkh.",
-      'proficient': "Project Manager"
-    },
-     {
-      'name': "Ayush Duyadi",
-      'company': "Company",
-      'profilePic': "/images/ayush.jpeg",
-      'review': "My journey to AirAsia was made possible by Hiregurkh.",
-      'proficient': "Project Manager"
-    }
-  ]
-
-
-  const BUSINESS_SLIDES = [
-    {
-      'name': "Name",
-      'profilePic': "/images/business1.png",
-      'position': "POSITION",
-      'company': "Company",
-      'review': "Working with Hiregurkha has been a game-changer for our recruitment needs. Their ability to source high-quality talent efficiently has saved  us time and resources, allowing us to focus on our core business  objectives",
-      'proficient': null
-    },
-    {
-      'name': "Name",
-      'profilePic': "/images/business1.png",
-      'position': "POSITION",
-      'company': "Company",
-      'review': "Thanks to Hiregurkha, our company's talent acquisition process has been transformed. Their expertise in recruiting top-tier talent has been  instrumental in shaping our success.",
-      'proficient': null
-    },
-    {
-      'name': "Name",
-      'company': "Company",
-      'position': "POSITION",
-      'profilePic': "/images/business1.png",
-      'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
-      'proficient': null
-    },
-    {
-      'name': "Name",
-      'company': "Company",
-      'position': "POSITION",
-      'profilePic': "/images/business1.png",
-      'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
-      'proficient': null
-    }
-  ]
-
-  
-
   return (
     <div className="bg-white">
       <section className="flex flex-col sm:flex-row gap-10 pt-16 relative px-8 sm:px-20">
