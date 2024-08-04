@@ -4,18 +4,26 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import Footer from "@/app/components/footer";
-import GetRequestNoToken from "@/app/api/getRequestNoToken";
 import Link from "next/link";
+import { APIENDPOINT } from '@/app/api/APIENDPOINT';
+
 
 async function GetBlogPosts(){
-    const data = await GetRequestNoToken('/api/v2/pages/?type=blog.BlogPage&fields=intro,body,thumbnail')
-    return data
+    
+    const data = await fetch(`${APIENDPOINT}/api/v2/pages/?type=blog.BlogPage&fields=intro,body,thumbnail`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+          },
+       cache:'no-store'
+    })
+    const res = data.json()
+    return res
 }
 export default async function Blogs() {
     const blogs = await GetBlogPosts().catch((err) =>  null)
     const topblog = blogs?.items[0] || undefined
     const otherBlogs = blogs?.items.slice(1) || undefined
- 
   
     return (
         <>

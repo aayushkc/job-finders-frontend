@@ -33,7 +33,7 @@ export const CLIENT_SLIDES = [
   {
     'name': "Aakash Chaudhary",
     'profilePic': "/images/aakash.webp",
-    'company': "Samsung",
+    'company': "Senept",
     'review': "Hiregurkha was instrumental in securing my position at Samsung; its  resources and guidance were invaluable throughout the recruitment  process",
     'proficient': "Senior DotNet Developer"
   },
@@ -53,9 +53,9 @@ export const CLIENT_SLIDES = [
   },
    {
     'name': "Amir Kanal",
-    'company': "NSU Autoparts",
+    'company': "Mahindra Mahindra",
     'profilePic': "/images/amirKhanal.webp",
-    'review': "Hiregurkha helped me find to secure my job at NSU Autoparts.",
+    'review': "Hiregurkha helped me find to secure my job at Mahindra Mahindra.",
     'proficient': "Project Lead"
   }
 ]
@@ -65,7 +65,7 @@ export  const BUSINESS_SLIDES = [
     'name': "Sandeep Bhusal",
     'profilePic': "/images/sandeepBushal.webp",
     'position': "Accountant",
-    'company': "The Kandel Group",
+    'company': "The Neupane  Group",
     'review': "Working with Hiregurkha has been a game-changer for our recruitment needs. Their ability to source high-quality talent efficiently has saved  us time and resources, allowing us to focus on our core business  objectives",
     'proficient': null
   },
@@ -421,28 +421,28 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <p className="text-[#84888E] text-center mt-4">In the realm of Remote Work Opportunities in Nepal, HireGurkha stands out as a paragon of excellence.<br></br> Our platform is not just a conduit for job matching; it’s a comprehensive ecosystem designed to elevate the remote hiring <br></br>experience for both talents and employers.</p>
 
         <div className="grid sm:grid-cols-3 gap-4 sm:gap-0 px-6 sm:px-0 sm:mx-24 mt-12">
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
+          <div className="w-[290px] h-[240px] place-self-center sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs1} alt="choose" className="w-full h-full"/>
             <div className="chooseUsDivText">
                 <p>Support</p>
             </div>
           </div>
 
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
+          <div className="w-[290px] h-[240px] place-self-center sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs2} alt="choose" className="w-full h-full"/>
              <div className="chooseUsDivText">
                 <p>Pre- Test Tool</p>
             </div>
           </div>
 
-          <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
+          <div className="w-[290px] h-[240px] place-self-center sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs3} alt="choose" className="w-full h-full"/>
              <div className="chooseUsDivText">
                 <p>Specialized Hiring</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row justify-center mt-2 gap-4 px-6 sm:gap-0 sm:px-0">
+        <div className="flex flex-col sm:flex-row justify-center items-center mt-2 gap-4 px-6 sm:gap-0 sm:px-0">
           <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs4} alt="choose" className="w-full h-full"/>
              <div className="chooseUsDivText">

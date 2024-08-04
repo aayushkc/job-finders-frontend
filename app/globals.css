@@ -10,7 +10,9 @@
   --detail-medium-contrast: rgb(234, 234, 234);
   --detail-low-contrast: rgb(240, 240, 242);
 }
-
+body{
+  overflow-x: hidden;
+}
 .signin {
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -143,10 +145,20 @@ main {
 .chooseUsDiv:hover .chooseUsDivText{
   display: flex;
   justify-content: center;
+  align-content: center;
   align-items: center;
 }
-
-
+.slide-in{
+  animation: slide .6s linear;
+}
+@keyframes slide {
+  0%{
+    right: -200px;
+  }
+  100% {
+    right: 0px;
+  }
+}
 @keyframes animate {
   0% {
     opacity: 0;

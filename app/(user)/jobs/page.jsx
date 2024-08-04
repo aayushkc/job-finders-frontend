@@ -150,6 +150,7 @@ export default function JobDetail() {
 
 
     }, [])
+    const today = new Date()
 
     return (
         <section className="">
@@ -195,9 +196,12 @@ export default function JobDetail() {
 
                                 {
                                     recommendedJobs?.map(data => {
+                                        const dat = new Date(data.apply_before)
+                                        let Difference_In_Time = dat.getTime() - today.getTime() 
+                                        let Difference_In_Days =Math.round(Difference_In_Time / (1000 * 3600 * 24));
                                         return (
                                             <div key={data.id}>
-                                                <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => { setJobPanelData(data); getJobFromId(data.id); }}>
+                                                <div className={`py-6 cursor-pointer pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => { setJobPanelData(data); getJobFromId(data.id); }}>
                                                     <div className="flex items-center gap-6">
                                                         <div className="w-[55px] h-[55px]">
                                                             <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
@@ -208,7 +212,7 @@ export default function JobDetail() {
                                                             <p className="text-[#79767C]"> {data.company}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="text-sm mt-8 mb-2 text-[#4F5052] capitalize mt-2">
+                                                    <div className="text-sm text-[#4F5052] capitalize mt-3">
                                                         <p className="">Skills:
                                                             <span className="text-black">
                                                                 {
@@ -228,7 +232,7 @@ export default function JobDetail() {
 
                                                     </div>
 
-                                                    <div className="flex justify-between font-medium items-center mt-8">
+                                                    <div className="flex justify-between font-medium items-center mt-3">
                                                         <div className="flex gap-2 items-center">
                                                             <p className="text-[#3C831B]"> {data.work_location_type} |</p>
 
@@ -243,9 +247,9 @@ export default function JobDetail() {
                                                                 !data.min_salary && !data.salary && <p>Undisclosed </p>
                                                             }
                                                         </div>
-                                                        <p className="mr-2 text-[#B40C01]">
+                                                        <p className="mr-2 text-[#B40C01] text-xs">
                                                             {
-                                                                data.has_expried && 'Expried'
+                                                                data.has_expried ? 'Expried' : `Expries on ${Difference_In_Days} days`
                                                             }
                                                         </p>
                                                         
@@ -330,12 +334,21 @@ export default function JobDetail() {
                     <div className="bg-white pb-6  sm:mx-20">
                         <div>
                             <div className="py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
-                                <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
-                                    <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
-                                </div>
+                            {
+                                    isSeeker && (
+                                        <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
+                                            <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
+                                        </div>
+                                    )
+                                }
 
                                 {
                                     recommendedJobs?.map(data => {
+                                        const dat = new Date(data.apply_before)
+                            
+                                        
+                                        let Difference_In_Time = dat.getTime() - today.getTime() 
+                                        let Difference_In_Days =Math.round(Difference_In_Time / (1000 * 3600 * 24));
                                         return (
                                             <Link href={`/jobs/${data.id}`} key={data.id}>
                                                 <div key={data.id}>
@@ -350,7 +363,7 @@ export default function JobDetail() {
                                                                 <p className="text-[#79767C]"> {data.company}</p>
                                                             </div>
                                                         </div>
-                                                        <div className="text-sm mt-8 mb-2 text-[#4F5052] capitalize mt-2">
+                                                        <div className="text-sm text-[#4F5052] capitalize mt-3">
                                                             <p className="">Skills:
                                                                 <span className="text-black">
                                                                     {
@@ -370,7 +383,7 @@ export default function JobDetail() {
 
                                                         </div>
 
-                                                        <div className="flex gap-2 font-medium items-center mt-8">
+                                                        <div className="flex gap-2 font-medium items-center mt-3">
                                                             <p className="text-[#3C831B]"> {data.work_location_type} |</p>
 
                                                             {
@@ -384,7 +397,11 @@ export default function JobDetail() {
                                                                 !data.min_salary && !data.salary && <p>Undisclosed </p>
                                                             }
                                                         </div>
-
+                                                        <p className="mr-2 text-[#B40C01] text-xs mt-2">
+                                                                {
+                                                                    data.has_expried ? 'Expried' : `Expries on ${Difference_In_Days} days`
+                                                                }
+                                                            </p>
 
                                                     </div>
                                                     <hr className=""></hr>

@@ -99,8 +99,11 @@ export default function NavBar() {
         setIsClient(true)
     },[])
     return (
+        <>
+          <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
+            <div>
 
-        <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
+            </div>
             <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
                 <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
                     <Link href="/" prefetch={false}>
@@ -111,7 +114,7 @@ export default function NavBar() {
                     {hamburg ? <i className="bi bi-x font-bold text-2xl"></i> : <i className="bi bi-list font-bold text-2xl"></i>}
                 </button>
 
-                <ul className={`${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit border-2 " : "hidden "} sm:p-0 bottom-0 border-[#D8D9DC] sm:border-none  z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-12`}>
+                <ul className={`${hamburg ? "flex flex-col  items-center gap-4 top-16 slide-in pt-14 -mx-4 text-center bg-white w-[110%] h-[100vh] border-2 " : "hidden "} text-xl sm:text-base sm:p-0 bottom-0 border-[#D8D9DC] sm:flex sm:border-none  z-99 bg-white absolute sm:flex-row sm:static sm:w-fit sm:h-fit sm:top-0 sm:gap-12`}>
                     {
                         isLoggedIn && isSeeker ? NavItems.map((data, index) => {
                             return <Link href={data.link} onClick={handleClick} key={index} prefetch={false}>
@@ -135,5 +138,8 @@ export default function NavBar() {
 
             </nav>
         </header>
+        </>
+
+      
     )
 }
