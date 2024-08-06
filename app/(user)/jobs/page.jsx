@@ -127,6 +127,8 @@ export default function JobDetail() {
         const nextSearchParams = new URLSearchParams(serachParam.toString())
         nextSearchParams.delete('id')
         nextSearchParams.delete('pageNum')
+        nextSearchParams.delete('skills')
+        nextSearchParams.delete('industry')
 
         router.replace(`${pathname}?${nextSearchParams}`)
         if (!serachParam.get("id")) {
@@ -197,13 +199,13 @@ export default function JobDetail() {
                                 {
                                     recommendedJobs?.map(data => {
                                         const dat = new Date(data.apply_before)
-                                        let Difference_In_Time = dat.getTime() - today.getTime() 
-                                        let Difference_In_Days =Math.round(Difference_In_Time / (1000 * 3600 * 24));
+                                        let Difference_In_Time = dat.getTime() - today.getTime()
+                                        let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
                                         return (
-                                            <div key={data.id}>
+                                            <div key={data.id} id={data.id}>
                                                 <div className={`py-6 cursor-pointer pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => { setJobPanelData(data); getJobFromId(data.id); }}>
                                                     <div className="flex items-center gap-6">
-                                                        <div className="w-[55px] h-[55px]">
+                                                        <div className="w-[25px] h-[25px]">
                                                             <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
                                                         </div>
 
@@ -233,7 +235,7 @@ export default function JobDetail() {
                                                     </div>
 
                                                     <div className="flex justify-between font-medium items-center mt-3">
-                                                        <div className="flex gap-2 items-center">
+                                                        <div className="flex gap-2 items-center text-sm">
                                                             <p className="text-[#3C831B]"> {data.work_location_type} |</p>
 
                                                             {
@@ -247,12 +249,12 @@ export default function JobDetail() {
                                                                 !data.min_salary && !data.salary && <p>Undisclosed </p>
                                                             }
                                                         </div>
-                                                        <p className="mr-2 text-[#B40C01] text-xs">
+                                                        <p className="mr-2 text-xs">
                                                             {
-                                                                data.has_expried ? 'Expried' : `Expries on ${Difference_In_Days} days`
+                                                                data.has_expried ? <span className="text-[#B40C01]">Expried</span> : <span className="text-[#3C831B]">Expries in {Difference_In_Days} days</span>
                                                             }
                                                         </p>
-                                                        
+
 
                                                     </div>
 
@@ -277,7 +279,7 @@ export default function JobDetail() {
                             jobPanelData?.id ?
 
 
-                                <JobPanelData jobPanelData={jobPanelData} handleApplyClick={handleApplyClick} accessToken={accessToken} isUserLoged={isSeeker} />
+                                <JobPanelData jobPanelData={jobPanelData} pageNum={pageNum} handleApplyClick={handleApplyClick} accessToken={accessToken} isUserLoged={isSeeker} />
                                 :
                                 <div className="flex justify-center items-center text-4xl font-bold">
                                     <h2>Loading.........</h2>
@@ -334,7 +336,7 @@ export default function JobDetail() {
                     <div className="bg-white pb-6  sm:mx-20">
                         <div>
                             <div className="py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
-                            {
+                                {
                                     isSeeker && (
                                         <div className="bg-gurkha-yellow h-[55px] text-white py-4 pl-3">
                                             <span className="font-bold">{totalJobMatch} Jobs</span> Match Your Skills
@@ -345,10 +347,10 @@ export default function JobDetail() {
                                 {
                                     recommendedJobs?.map(data => {
                                         const dat = new Date(data.apply_before)
-                            
-                                        
-                                        let Difference_In_Time = dat.getTime() - today.getTime() 
-                                        let Difference_In_Days =Math.round(Difference_In_Time / (1000 * 3600 * 24));
+
+
+                                        let Difference_In_Time = dat.getTime() - today.getTime()
+                                        let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
                                         return (
                                             <Link href={`/jobs/${data.id}`} key={data.id}>
                                                 <div key={data.id}>
@@ -397,11 +399,11 @@ export default function JobDetail() {
                                                                 !data.min_salary && !data.salary && <p>Undisclosed </p>
                                                             }
                                                         </div>
-                                                        <p className="mr-2 text-[#B40C01] text-xs mt-2">
-                                                                {
-                                                                    data.has_expried ? 'Expried' : `Expries on ${Difference_In_Days} days`
-                                                                }
-                                                            </p>
+                                                        <p className="mr-2 text-xs mt-2">
+                                                            {
+                                                                data.has_expried ? <span className="text-[#B40C01]">Expried</span> : <span className="text-[#3C831B]">Expries in {Difference_In_Days} days</span>
+                                                            }
+                                                        </p>
 
                                                     </div>
                                                     <hr className=""></hr>

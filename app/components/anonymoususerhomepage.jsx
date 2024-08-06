@@ -34,7 +34,7 @@ export const CLIENT_SLIDES = [
     'name': "Aakash Chaudhary",
     'profilePic': "/images/aakash.webp",
     'company': "Senept",
-    'review': "Hiregurkha was instrumental in securing my position at Samsung; its  resources and guidance were invaluable throughout the recruitment  process",
+    'review': "Hiregurkha was instrumental in securing my position at Senept; its  resources and guidance were invaluable throughout the recruitment  process",
     'proficient': "Senior DotNet Developer"
   },
   {

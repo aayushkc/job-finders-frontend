@@ -197,3 +197,15 @@ main {
 .css-jgls56-MuiButtonBase-root-MuiPickersDay-root:not(.Mui-selected) {
   border: transparent;
 }
+.blogs-content h1, .blogs-content h2, .blogs-content h3{
+  font-weight: bold;
+}
+
+.blogs-content h3{
+  font-size: 1.25rem;
+}
+
+.blogs-content ul li{
+  list-style: disc;
+  margin-left: 10px;
+}

@@ -49,8 +49,8 @@ export default function CompletedEvets(){
         <>
         {
            !fetchError ? completedEvents?.length > 0 ? completedEvents.map((data, index) => (
-                <div className="bg-white rounded-xl p-6 mt-10 flex flex-col sm:flex-row gap-10 items-center" key={index}>
-                    <div>
+                <div className="bg-white rounded-xl p-6 mt-10 flex flex-col sm:flex-row gap-10" key={index}>
+                    <div className="basis-[70%]">
                         <h3 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-[#FD810E] to-[#DA4C98] text-center sm:text-left text-transparent bg-clip-text">{data.title} </h3>
                         <p className="text-sm sm:text-normal text-[#213343] mt-2">{data.description} </p>
                     </div>

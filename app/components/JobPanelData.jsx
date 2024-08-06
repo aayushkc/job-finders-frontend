@@ -9,13 +9,14 @@ import DialogBox from './sucessbox';
 import ApplyJob from './applyjob';
 import PostFormWithToken from '../api/postFormWithToken';
 import { useState } from 'react';
+import ShareButton from './Sharebutton';
 
 
 const ReactQuillEditable = dynamic(
     () => import('react-quill'),
     { ssr: false }
 );
-export default function JobPanelData({ jobPanelData, isUserLoged, accessToken }) {
+export default function JobPanelData({ jobPanelData, isUserLoged, accessToken, pageNum }) {
     const modules = {
         toolbar: false
 
@@ -235,7 +236,7 @@ export default function JobPanelData({ jobPanelData, isUserLoged, accessToken })
 
                 }
 
-
+                <ShareButton shareableUrl={`https://hiregurkha.com/jobs?id=${jobPanelData.id}&pageNum=${pageNum}&skills=null&industry=null`} />
 
             </div>
         </>

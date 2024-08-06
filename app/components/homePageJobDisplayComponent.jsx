@@ -40,7 +40,7 @@ export default function HomePageJobDisplayComponent() {
                 {
                     recommendedJobs?.map(data => {
                         return (
-                            <Link href={`/jobs?id=${data.id}&pageNum=${pageNum}`} key={data.id}>
+                            <Link href={`/jobs?id=${data.id}&pageNum=${pageNum}&skills=null&industry=null#${data.id}`} key={data.id}>
                                 <div className={`px-6 py-4 rounded-2xl border-[1px] ${data.has_expried ? 'border-[#B40C01]' : 'border-[#065F46]'}`}>
                                     <div className="flex justify-between items-start">
                                         <h2 className="text-xl font-bold">{data.title}</h2>
