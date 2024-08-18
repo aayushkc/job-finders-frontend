@@ -57,14 +57,14 @@ export default function ShortlListed() {
                                     <p className=""> Salary/Month</p>
                                     <p className="sm:text-lg">
                                          {
-                                            data.salary && <p>{data.salary}$ <span className="text-[#828282]">/month</span></p>
+                                            data.salary && <span>{data.salary}$ <span className="text-[#828282]">/month</span></span>
                                         }
                                         {
-                                            data.min_salary && <p>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282]">/month</span> </p>
+                                            data.min_salary && <span>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282]">/month</span> </span>
                                         }
 
                                         {
-                                            !data.min_salary && !data.salary && <p>Undisclosed </p>
+                                            !data.min_salary && !data.salary && <span>Undisclosed </span>
                                         }
                                         </p>
                                 </div>

@@ -28,13 +28,12 @@ export default function SignInUser() {
     const [registrationSuccess, setRegistrationSuccess] = useState(false)
     const [emailError, setEmailError] = useState(null)
     const [nameError, setNameError] = useState(null)
-    const [phoneError, setPhoneError] = useState(null)
+    // const [phoneError, setPhoneError] = useState(null)
     const [formError, setFormError] = useState(false)
     const [formData, setFormData] = useState(
         {
             "email": "",
             "name": "",
-            "phone": "",
             "meeting_date": "",
             "meeting_time": ""
         }
@@ -54,17 +53,15 @@ export default function SignInUser() {
         setFormError(false)
         setEmailError(null)
         setNameError(null)
-        setPhoneError(null)
+        // setPhoneError(null)
         
-        if(formData.email && formData.name && formData.phone){
+        if(formData.email && formData.name){
             setIsNextClicked(true)
         }else if(!formData.email){
             setEmailError("Invalid Email Address")
         }else if(!formData.name){
             setNameError("Invalid Name")
-        }else if(!formData.phone){
-            setPhoneError("Invalid Phone Number")
-        }else if(!formData.email && !formData.name && !formData.phone){
+        }else if(!formData.email && !formData.name){
             setFormError(true)
         }else{
             return;
@@ -212,12 +209,12 @@ export default function SignInUser() {
                                     <input type="text" name="name" defaultValue={formData.name} onChange={handleChange} required className={`rounded-xl py-2 px-6 w-full ${nameError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`}/>
                                     {nameError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{nameError}</p> : ""}
                                 </div>
-
+{/* 
                                 <div className="flex flex-col gap-2 items-start">
                                     <label>Phone Number*</label>
                                     <input type="text" name="phone" defaultValue={formData.phone} onChange={handleChange} required className={`rounded-xl py-2 px-6 w-full ${phoneError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`}/>
                                     {phoneError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{phoneError}</p> : ""}
-                                </div>
+                                </div> */}
                             </>
                     }
 

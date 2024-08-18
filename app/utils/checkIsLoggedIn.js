@@ -10,6 +10,8 @@ export const AuthProvider = ({ children }) => {
   // Check cookie on mount
   useEffect(() => {
     const loggedInCookie = Cookies.get('accessToken');
+    console.log(loggedInCookie);
+    
     if (loggedInCookie) {
       setIsLoggedIn(true);
     }else{
@@ -19,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   // Update cookie when isLoggedIn changes
   useEffect(() => {
-    Cookies.set('isLoggedIn', isLoggedIn, { expires: 7 }); // Expires in 7 days
+    Cookies.set('isLoggedIn', isLoggedIn); // Expires in 7 days
   }, [isLoggedIn]);
 
   return (

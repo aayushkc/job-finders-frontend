@@ -63,24 +63,24 @@ export default function JobPanelData({ jobPanelData, isUserLoged, accessToken, p
 
     return (
         <>
-        
-        {
-                    success && <DialogBox
-                        dialogHeading={"Success"}
-                        dialogText={"Your application has been sent successfully"}
-                        success={true}
-                        goToPageName={"Job Status"}
-                        url={"/job-status"}
-                    />
-                }
 
-                {
-                    falliure && <DialogBox
-                        dialogHeading={"An Error occured during Submission"}
-                        dialogText={"Please try again"}
-                        error={true}
-                    />
-                }
+            {
+                success && <DialogBox
+                    dialogHeading={"Success"}
+                    dialogText={"Your application has been sent successfully"}
+                    success={true}
+                    goToPageName={"Job Status"}
+                    url={"/job-status"}
+                />
+            }
+
+            {
+                falliure && <DialogBox
+                    dialogHeading={"An Error occured during Submission"}
+                    dialogText={"Please try again"}
+                    error={true}
+                />
+            }
             {
                 isAppliedClicked &&
                 <ApplyJob open={open} quizData={jobPanelData.quiz} jobId={jobPanelData.id} handleClose={handleClose} handledApplied={handledApplied} />
@@ -92,32 +92,42 @@ export default function JobPanelData({ jobPanelData, isUserLoged, accessToken, p
                 </div>
             </Link>
 
-            <div className="p-6 sm:h-screen sm:overflow-y-scroll sm:px-16 bg-white">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                    <h2 className="font-bold text-xl sm:text-2xl mb-5">{jobPanelData.title}</h2>
-                    {
-                        !accessToken ?
-                            <Link href="/signin">
-                                <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
-                                    Login to Apply
-                                </button>
-                            </Link>
-                            : !isUserLoged ?
-                                ""
-                                :
-                                jobPanelData.hasApplied ?
-                                    <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
-                                        Already Applied
+            <div className="sm:h-screen sm:overflow-y-scroll bg-white relative px-4 sm:px-16">
+                <header className="sticky bg-white w-full z-[999] top-[90px] flex flex-col py-4 sm:top-0 sm:min-h-[80px] sm:flex-row sm:justify-between sm:items-center sm:border-b sm:border-b-neutral-500">
+                    <div className='flex gap-3 items-center mb-2 sm:mb-0 sm:basis-[60%]'>
+                        <h2 className="font-bold text-xl sm:text-2xl">{jobPanelData.title}</h2>
+                    </div>
+
+                    <div className=''>
+                        {
+                            !accessToken ?
+                                <Link href="/signin">
+                                    <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                                        Login to Apply
                                     </button>
+                                </Link>
+                                : !isUserLoged ?
+                                    ""
                                     :
-                                    <button onClick={handleApplyClick} className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
-                                        Apply Now
-                                    </button>
+                                    jobPanelData.hasApplied ?
+                                        <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
+                                            Already Applied
+                                        </button>
+                                        :
+                                        <button onClick={handleApplyClick} className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
+                                            Apply Now
+                                        </button>
 
 
-                    }
+                        }
 
-
+                    </div>
+                </header>
+                
+                <div className='flex gap-3 items-center mt-4'>
+                    <p className='text-sm'>Share Job</p>
+                    <ShareButton shareableUrl={`https://hiregurkha.com/jobs/${jobPanelData.id}`} className={['sm:hidden']} />
+                    <ShareButton shareableUrl={`https://hiregurkha.com/jobs?id=${jobPanelData.id}&pageNum=${pageNum}&skills=null&industry=null#${jobPanelData.id}`} className={['hidden sm:flex']} />
                 </div>
 
                 <div className="mt-8">
@@ -214,29 +224,7 @@ export default function JobPanelData({ jobPanelData, isUserLoged, accessToken, p
                         </p>
                     </div>
                 </div>
-                {
-                    !accessToken ?
-                        <Link href="/signin">
-                            <button className="bg-[#FFB000] rounded-3xl py-2 px-6 text-white">
-                                Login to Apply
-                            </button>
-                        </Link>
-                        : !isUserLoged ?
-                            ""
-                            :
-                            jobPanelData.hasApplied ?
-                                <button disabled className="bg-green-300 rounded-3xl py-2 px-6 text-white">
-                                    Already Applied
-                                </button>
-                                :
-                                <button onClick={handleApplyClick} className="bg-[#FFB000] rounded-3xl py-2 px-6 mt-4 text-white">
-                                    Apply Now
-                                </button>
 
-
-                }
-
-                <ShareButton shareableUrl={`https://hiregurkha.com/jobs?id=${jobPanelData.id}&pageNum=${pageNum}&skills=null&industry=null`} />
 
             </div>
         </>

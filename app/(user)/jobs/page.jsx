@@ -5,49 +5,33 @@ import getRequestWithToken from "@/app/api/getRequestWithToken"
 import PaginationComponent from "@/app/components/paginationcomponent"
 import Cookies from "js-cookie"
 import { useEffect, useState } from "react"
-import PostFormWithToken from "@/app/api/postFormWithToken"
-import DialogBox from "@/app/components/sucessbox"
 import JobPanelData from "@/app/components/JobPanelData"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import ApplyJob from "@/app/components/applyjob"
-
-
-
-
 
 export default function JobDetail() {
+
     const serachParam = useSearchParams()
     const router = useRouter()
     const pathname = usePathname()
+
+    const today = new Date()
+    let indsutryParam = serachParam.get("industry") || null
+    let skillsParam = serachParam.get("skills") || null
     const accessToken = Cookies.get('accessToken')
     const isSeeker = Cookies.get('isSeeker') === 'true'
+
     const [recommendedJobs, setRecommendedJobs] = useState([])
-    const [jobPanelData, setJobPanelData] = useState()
+    const [jobPanelData, setJobPanelData] = useState(null)
     const [totalPage, setTotalPage] = useState(1)
     const [totalJobMatch, setTotalJobMatch] = useState(0)
     const [pageNum, setPageNum] = useState(serachParam.get("pageNum") || 1)
-    const [indsutryParam, setIndustryParam] = useState(serachParam.get("industry") || null)
-    const [skillsParam, setSkillsParam] = useState(serachParam.get("skills") || null)
-    const [isAppliedClicked, setIsApplied] = useState(false)
-    const [open, setOpen] = useState(true);
-    const [success, setSuccess] = useState(false)
-    const [falliure, setFaliure] = useState(false)
     const [jobError, setJobError] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
-    const handleClose = () => {
-        setOpen(false);
-        setIsApplied(false)
-    };
 
-    const handleApplyClick = () => {
-        setOpen(true)
-        setSuccess(false)
-        setFaliure(false)
-        setIsApplied(true)
-    }
     const getRecommendedJobs = async (pageChange) => {
-        setJobError(false)
+
         try {
 
             const data = accessToken && isSeeker ? await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}`, accessToken) : await GetRequestNoToken(`/job-seeker/get-all-job/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}`)
@@ -69,7 +53,9 @@ export default function JobDetail() {
         }
         catch (errors) {
             setJobError(true)
-            setRecommendedJobs([])
+            setRecommendedJobs(null)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -95,33 +81,12 @@ export default function JobDetail() {
 
     }
 
-    const handledApplied = async () => {
-
-
-        const formData = new FormData()
-        formData.append("job", jobPanelData.id)
-        try {
-            const data = await PostFormWithToken(`/job-seeker/create-job-request/`, formData)
-            if (data.detail) {
-                throw new Error("Cannot Fetch")
-            }
-
-            getJobFromId(data.job)
-            setIsApplied(false)
-            setSuccess(true)
-
-
-        }
-        catch (errors) {
-
-            setIsApplied(false)
-            setFaliure(true)
-        }
-    }
 
     useEffect(() => {
 
         if (serachParam.get("id") && serachParam.get("pageNum")) {
+            getJobFromId(serachParam.get("id"))
+            setPageNum(pageNum)
             getRecommendedJobs()
         }
         const nextSearchParams = new URLSearchParams(serachParam.toString())
@@ -135,55 +100,24 @@ export default function JobDetail() {
             getRecommendedJobs(true)
         }
 
+        return () => { }
     }, [pageNum])
 
 
-    useEffect(() => {
-        if (serachParam.get("id") && serachParam.get("pageNum") && serachParam.get("industry") && serachParam.get("skills")) {
-            getJobFromId(serachParam.get("id"))
-            setPageNum(serachParam.get("pageNum"))
-            setIndustryParam(serachParam.get("industry"))
-            setSkillsParam(serachParam.get("skills"))
-        }
-        else {
-            getRecommendedJobs(true)
-        }
+    if (jobError || !isLoading && recommendedJobs?.length === 0) {
+        return (
+            <div className="bg-white pb-6 px-6  sm:mx-20 h-screen flex justify-center items-center font-extrabold text-2xl sm:text-4xl">
+                Could not Find Any Jobs!
+            </div>
+        )
+    }
 
-
-
-    }, [])
-    const today = new Date()
-
+   
     return (
         <section className="">
-            <section className="hidden sm:block sm:max-w-[1440px] pt-6 pb-10">
-
-
+            <section className="hidden sm:block  pt-6 pb-10">
                 {
-                    success && <DialogBox
-                        dialogHeading={"Success"}
-                        dialogText={"Your application has been sent successfully"}
-                        success={true}
-                        goToPageName={"Job Status"}
-                        url={"/job-status"}
-                    />
-                }
-
-                {
-                    falliure && <DialogBox
-                        dialogHeading={"An Error occured during Submission"}
-                        dialogText={"Please try again"}
-                        error={true}
-                    />
-                }
-
-                {
-                    isAppliedClicked &&
-                    <ApplyJob open={open} quizData={jobPanelData.quiz} jobId={jobPanelData.id} handleClose={handleClose} handledApplied={handledApplied} />
-                }
-
-                {
-                    recommendedJobs.length > 0 &&
+                    !isLoading && recommendedJobs?.length > 0 &&
                     <div className="bg-white pb-6  mx-20 grid grid-cols-[450px_1fr]">
                         <div>
                             <div className="pl-6 py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
@@ -202,8 +136,8 @@ export default function JobDetail() {
                                         let Difference_In_Time = dat.getTime() - today.getTime()
                                         let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
                                         return (
-                                            <div key={data.id} id={data.id}>
-                                                <div className={`py-6 cursor-pointer pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} autoFocus={data.id === jobPanelData?.id} key={data.id} onClick={(e) => { setJobPanelData(data); getJobFromId(data.id); }}>
+                                            <div key={data.id}>
+                                                <div className={`py-6 cursor-pointer pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} key={data.id} onClick={(e) => { setJobPanelData(data); }}>
                                                     <div className="flex items-center gap-6">
                                                         <div className="w-[25px] h-[25px]">
                                                             <img src={data.logo} className="w-full h-full object-contain" alt="logo" />
@@ -279,7 +213,7 @@ export default function JobDetail() {
                             jobPanelData?.id ?
 
 
-                                <JobPanelData jobPanelData={jobPanelData} pageNum={pageNum} handleApplyClick={handleApplyClick} accessToken={accessToken} isUserLoged={isSeeker} />
+                                <JobPanelData jobPanelData={jobPanelData} pageNum={pageNum} accessToken={accessToken} isUserLoged={isSeeker} />
                                 :
                                 <div className="flex justify-center items-center text-4xl font-bold">
                                     <h2>Loading.........</h2>
@@ -294,45 +228,14 @@ export default function JobDetail() {
 
 
                 }
-                {
-                    jobError && <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
-                        Could not Find Any Jobs!
-                    </div>
-                }
-
             </section>
 
 
 
             {/* Only for mobile View */}
             <section className="block sm:hidden sm:max-w-[1440px]">
-
-
                 {
-                    success && <DialogBox
-                        dialogHeading={"Success"}
-                        dialogText={"Your application has been sent successfully"}
-                        success={true}
-                        goToPageName={"Job Status"}
-                        url={"/job-status"}
-                    />
-                }
-
-                {
-                    falliure && <DialogBox
-                        dialogHeading={"An Error occured during Submission"}
-                        dialogText={"Please try again"}
-                        error={true}
-                    />
-                }
-
-                {
-                    isAppliedClicked &&
-                    <ApplyJob open={open} quizData={jobPanelData.quiz} handleClose={handleClose} handledApplied={handledApplied} jobId={jobPanelData.id} />
-                }
-
-                {
-                    recommendedJobs.length > 0 &&
+                    !isLoading && recommendedJobs?.length > 0 &&
                     <div className="bg-white pb-6  sm:mx-20">
                         <div>
                             <div className="py-4 border-r-[1px] border-r-[#DEE2E6] h-screen overflow-y-scroll">
@@ -352,7 +255,7 @@ export default function JobDetail() {
                                         let Difference_In_Time = dat.getTime() - today.getTime()
                                         let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
                                         return (
-                                            <Link href={`/jobs/${data.id}`} key={data.id}>
+                                            <Link href={`/jobs/${data.id}?pageNum=${pageNum}`} key={data.id}>
                                                 <div key={data.id}>
                                                     <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} key={data.id}>
                                                         <div className="flex items-center gap-6">
@@ -421,20 +324,10 @@ export default function JobDetail() {
 
                         </div>
 
-
-
-
-
-
-
                     </div>
 
                 }
-                {
-                    jobError && <div className="bg-white pb-6  mx-20 h-screen flex justify-center items-center font-extrabold text-4xl">
-                        Could not Find Any Jobs!
-                    </div>
-                }
+
             </section>
         </section>
 

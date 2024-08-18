@@ -18,6 +18,7 @@ export default async function PostFormWithToken(endpoint, data){
           // Handle non-successful responses
           
           const data = await response.json()
+          console.log(data);
           
           throw new Error("Cannot Fetch")
         //   throw new Error('Network response was not ok.');

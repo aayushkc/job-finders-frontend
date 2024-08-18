@@ -8,10 +8,9 @@ import { useForm } from "react-hook-form";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import { ClipLoader } from "react-spinners";
 import DialogBox from "@/app/components/sucessbox";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup"
+import { toast } from "react-toastify";
 
 export default function SignIn() {
     const { isLoggedIn } = useAuth();

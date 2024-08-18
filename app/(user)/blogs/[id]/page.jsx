@@ -15,8 +15,8 @@ async function GetBlogDetails(id){
     const res = data.json() 
     return res 
 }
-export async function generateMetadata({ params }, parent) {
-    // read route params
+export async function generateMetadata({ params }) {
+
     // fetch data
     const product = await GetBlogDetails(params.id)
   
@@ -42,7 +42,11 @@ export default async function BlogPage({params}) {
                 data.id &&  <section className={lexend.className + " bg-white sm:px-40 py-16 px-8"} key={data?.id}>
 
                 <h2 className="text-2xl sm:text-4xl text-[#213343] sm:leading-[60px]">{data?.title}</h2>
-               <ShareButton  shareableUrl={`https://hiregurkha.com/blogs/${data.id}/`}/> 
+                <div className="flex gap-2 items-center mt-3">
+                    <p>Share</p>
+                    <ShareButton  shareableUrl={`https://hiregurkha.com/blogs/${data.id}/`}/> 
+                </div>
+              
                 
                 <hr className="mt-6"></hr>
                 <div className="flex flex-col sm:flex-row justify-between items-center my-4 px-4">

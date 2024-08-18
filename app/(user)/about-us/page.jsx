@@ -6,6 +6,9 @@ import ourStory2 from "../../../public/images/our-story-2.png"
 import ourStory3 from "../../../public/images/our-story-3.png"
 import ourStory4 from "../../../public/images/our-story-4.png"
 import bhudu from "../../../public/images/ceo.png"
+import susil from "../../../public/images/susil.jpeg"
+import sandeep from "../../../public/images/sandeepBushal.webp"
+import aayush from "../../../public/images/aayush.jpg"
 import EmblaCarousel from "@/app/components/emblacarousel"
 import Footer from "@/app/components/footer"
 import Link from "next/link"
@@ -96,23 +99,54 @@ export default function AboutUs() {
             <section className="px-4 sm:px-40">
                 <h2 className="text-center text-3xl font-semibold bg-gradient-to-r from-[#FD810E] to-[#DA4C98] text-transparent bg-clip-text">Our Team</h2>
 
-                <div className="border border-[#EDF2F7] flex flex-col  sm:flex-row py-6 px-4 sm:px-10 m-4 sm:m-12 rounded-2xl">
-                    <div className="sm:basis-[25%]">
+                <div className="border border-[#EDF2F7] flex flex-col items-center sm:items-start  sm:flex-row py-6 px-4 sm:px-10 m-4 sm:m-12 rounded-2xl">
+                    <div className="sm:basis-[25%] ml-7 sm:ml-0">
                         <Image src={bhudu} alt="Dipendra" />
                     </div>
-                    <div className="sm:basis-[75%]">
+                    <div className="sm:basis-[75%] text-center sm:text-left">
                         <h2 className="text-xl sm:text-3xl font-semibold">Dipendra Neupane</h2>
                         <p className="text-lg sm:text-2xl font-semibold text-[#544444] mt-1">Founder, CEO</p>
-                        <div className="flex gap-2 items-center mt-2 text-lg">
+                        <div className="flex gap-2 items-center justify-center sm:justify-start mt-2 text-lg">
                             <i className="bi bi-facebook"></i>
                             <i className="bi bi-linkedin"></i>
                         </div>
-                        <p className="text-lg mt-6 text-left sm:text-justify">
+                        <p className="text-lg mt-6 sm:text-justify">
                         Dipendra Neupane, the visionary founder and CEO of HireGurkha, embodies the spirit of our mission. With a rich background in computer science and extensive experience in recruitment, he has dedicated his career to bridging the gap between technology and talent, creating innovative solutions that transform the job market.
                         </p>
                     </div>
                 </div>
+
+                <div className="grid sm:grid-cols-3 gap-10">
+
+                <div className="text-center place-self-center">
+                    <div className="w-[200px] h-[200px] rounded-full">
+                            <Image src={aayush}  className="w-full h-full rounded-full object-cover"/>
+                        </div>
+                        <h4 className="text-xl font-semibold mt-3">Aayush KC</h4>
+                        <p className="text-[#666666] text-lg">CTO</p>
+                    </div>
+                    <div className="text-center place-self-center">
+                        <div className="w-[200px] h-[200px] rounded-full">
+                            <Image src={susil}  className="w-full h-full rounded-full object-cover"/>
+                        </div>
+                        <h4 className="text-xl font-semibold mt-3">Susil Khatri</h4>
+                        <p className="text-[#666666] text-lg">US Team Lead</p>
+                    </div>
+
+                    <div className="text-center place-self-center">
+                    <div className="w-[200px] h-[200px] rounded-full">
+                            <Image src={sandeep}  className="w-full h-full rounded-full object-cover"/>
+                        </div>
+                        <h4 className="text-xl font-semibold mt-3">Sandeep Bushal</h4>
+                        <p className="text-[#666666] text-lg">UK Team Lead</p>
+                    </div>
+
+                </div>
             </section>
+
+            <div className="flex justify-center my-14">
+                <div className="w-[286px] h-[8px] rounded-xl bg-gurkha-yellow "></div>
+            </div>
 
             <section className="mt-12 ">
                 <h2 className="text-3xl text-center font-semibold text-center px-8 sm:px-0">What Our Clients Say</h2>

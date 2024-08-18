@@ -9,6 +9,7 @@ import { useState } from "react";
 export default function CreateQuestionSet() {
     const [formField, setFormField] = useState([{ question: "", options: [{ option: "", is_correct: false }, { option: "", is_correct: false }, { option: "", is_correct: false }, { option: "", is_correct: false }] }]);
     const [quizname, setQuizName] = useState('');
+    const [quizDuration, setQuizDuration] = useState('00:00:00')
     const [questoinUploadSuccess, setQuestionUploadSuccess] = useState(false)
     const [questoinUploadError, setQuestionUploadError] = useState(false)
 
@@ -51,6 +52,7 @@ export default function CreateQuestionSet() {
         setQuestionUploadError(false)
         const formData = {
             quiz_name: quizname,
+            total_quiz_time: quizDuration,
             questions: formField.map(({ question, options }) => ({
                 question,
                 answers: options
@@ -103,16 +105,36 @@ export default function CreateQuestionSet() {
                             className="w-1/2 rounded-lg py-1 px-3 border-2 text-[#79767C] border-[#23232180]"
                         />
                     </div>
+
+                    <div className="flex flex-col gap-2 text-lg mt-8">
+                        <label className="font-semibold">Quiz Duration</label>
+                        <em className="text-sm">Enter time in minutes.The maximum time allowed is 45 minutes.</em>
+                        <div className="flex gap-2 items-center">
+                            <input
+                                type="number"
+                                min={1}
+                                max={45}
+                                required
+                                placeholder="Enter time in minutes"
+                                name="total_quiz_time"
+                                onChange={(e) => setQuizDuration(`00:${e.target.value}:00`)}
+                                className="w-[200px] rounded-lg py-1 px-3 border-2 text-sm text-[#79767C] border-[#23232180]"
+                            />
+                            <p className="text-sm">minutes</p>
+                        </div>
+
+                    </div>
+
                     {formField.map((data, questionIndex) => (
                         <div key={questionIndex} className="border w-1/2 text-[#79767C] border-[#23232180] mt-10 rounded p-3 flex flex-col">
                             {
                                 formField.length > 1 && (
                                     <div className="flex justify-end">
-                                    <i className="bi bi-trash text-[#FFC033]" onClick={() => handleDeleteInput(questionIndex)}></i>
+                                        <i className="bi bi-trash text-[#FFC033]" onClick={() => handleDeleteInput(questionIndex)}></i>
                                     </div>
                                 )
                             }
-                          
+
                             <input
                                 type="text"
                                 required

@@ -17,7 +17,7 @@ const RecruiterNavItems = [
     },
 
     {
-        "item": "Admin Dashboard",
+        "item": "Dashboard",
         "link": "/recruiter"
     },
 

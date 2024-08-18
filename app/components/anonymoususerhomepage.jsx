@@ -212,7 +212,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
             <Image src={airAsia} alt="air asia" />
             <Image src={demir} alt="air asia" />
             <Image src={dhl} alt="air asia" />
-            <Image src={suzuki} alt="air asia" />
+            <Image src={suzuki} alt="excel soft" width={238} height={64}/>
             <Image src={navi} alt="air asia" />
 
           </div>

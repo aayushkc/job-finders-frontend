@@ -49,6 +49,8 @@ console.log(applicant);
         <button className="py-2 px-4 text-sm bg-gurkha-yellow text-white rounded-xl  mt-6" onClick={() => navigate.back() }> <i className="mr-1 bi bi-arrow-left"></i> Go back</button>
             {
                 applicant.map(data => {
+                    const timeToComplete = data.quiz_completion_time?.split(':').map(data => parseInt(data))
+                   
                     return (
                         
                         <div className="bg-white px-4 sm:px-8 py-4 rounded-xl border-[1px] border-[#D9D9D9] mt-4 flex flex-col gap-4 sm:flex-row sm:gap-10 items-center" key={data.id}>
@@ -88,7 +90,14 @@ console.log(applicant);
                                     <p className="text-[#4F5052] text-sm">Quiz Score:</p>
                                     {data.quiz_score === 0 ? <p className="text-[#FFB636]">None</p> : <p className="text-[#FFB636]">{data.quiz_score}/{data.quiz_question}</p>}
                                 </div>
-                                
+                                <div className="text-[#4F5052] text-sm mt-1">
+                                    {
+                                       data.quiz_completion_time && (timeToComplete[1] === 0 && timeToComplete[2] === 0 ? <p>User could not complete quiz on time</p>: 
+                                       <em>User took {timeToComplete[1] > 0 && `${timeToComplete[1]} minutes and`}  {`${timeToComplete[2]} seconds`} to complete the quiz.</em>)
+                                    }
+                                    
+                                   
+                                </div>
                                 <div>
                                 <button className="bg-gurkha-yellow py-2 px-3 text-sm rounded-xl mt-4 text-white" onClick={() =>handleOpenStatusModal(data.id,data.job_seeker.id)}>Change Status</button>
                                 </div>

@@ -21,6 +21,7 @@ export default function EditQuestionSetDetail() {
     const accessToken = Cookies.get('accessToken')
     const [formField, setFormField] = useState([{ question: "", answers: [{ option: "", is_correct: false,}, { option: "", is_correct: false }, { option: "", is_correct: false }, { option: "", is_correct: false }] }]);
     const [quizname, setQuizName] = useState('');
+    const [quizDuration, setQuizDuration] = useState(1)
     const [questoinUploadSuccess, setQuestionUploadSuccess] = useState(false)
     const [questoinUploadError, setQuestionUploadError] = useState(false)
     const [areYouSure, setAreYouSure] = useState(false)
@@ -121,6 +122,7 @@ export default function EditQuestionSetDetail() {
         setQuestionUploadError(false)
         const formData = {
             quiz_name: quizname,
+            total_quiz_time:`00:${quizDuration}:00`,
             questions: formField.map(({ question, answers, id }) => ({
                 question,
                 id: id,
@@ -145,8 +147,10 @@ export default function EditQuestionSetDetail() {
     const getQuestionSet = async () => {
         try {
             const data = await getRequestWithToken(`/quiz/get-quiz/${id}`, accessToken)
-            console.log(data);
             setQuizName(data.quiz_name)
+            const serverTime = data.total_quiz_time.split(":").map(data => parseInt(data))
+            const totalTime = serverTime[0] * 60 + serverTime[1]
+            setQuizDuration(totalTime)
             setFormField(data.questions)
         }
         catch (errors) {
@@ -193,10 +197,30 @@ export default function EditQuestionSetDetail() {
                             className="w-1/2 rounded-lg py-1 px-3 border-2 text-[#79767C] border-[#23232180]"
                         />
                     </div>
+
+                    <div className="flex flex-col gap-2 text-lg mt-8">
+                        <label className="font-semibold">Quiz Duration</label>
+                        <em className="text-sm">Enter time in minutes. The maximum time allowed is 45 minutes.</em>
+                        <div className="flex gap-2 items-center">
+                            <input
+                                type="number"
+                                min={1}
+                                max={45}
+                                placeholder="Enter time in minutes"
+                                required
+                                name="total_quiz_time"
+                                value={quizDuration}
+                                onChange={(e) => setQuizDuration(e.target.value)}
+                                className="w-[200px] rounded-lg py-1 px-3 border-2 text-sm text-[#79767C] border-[#23232180]"
+                            />
+                            <p className="text-sm">minutes</p>
+                        </div>
+
+                    </div>
+
                     {formField?.map((data, questionIndex) => (
 
                         <div key={questionIndex} className="border w-1/2 text-[#79767C] border-[#23232180] mt-10 rounded p-3 flex flex-col">
-                            {console.log("QUestionsssss Dataaaa", data.question)}
                             {
                                 formField.length > 1 && (
                                     <div className="flex justify-end">

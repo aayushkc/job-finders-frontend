@@ -9,13 +9,17 @@ import Cookies from "js-cookie";
 
 
 export default function UserHomePage() {
+
+    const router = useRouter()
+
     const accessToken = Cookies.get('accessToken')
     const isSeeker = Cookies.get('isSeeker')
+
     const [recommendedJobs, setRecommendedJobs] = useState([])
     const [pageNum, setPageNum] = useState(1)
     const [totalPage, setTotalPage] = useState(1)
-    const [topTwo, setTopTwo] = useState([])
-    const router = useRouter()
+   
+
     const getRecommendedJobs = async () => {
         try {
             const data = await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}`, accessToken)
@@ -33,19 +37,7 @@ export default function UserHomePage() {
         }
     }
 
-    const getTopTwoRecommendedJobs = async () => {
-        try {
-            const data = await getRequestWithToken(`/job-seeker/recommended-jobs/?page=1`, accessToken)
-            if (data.detail) {
-                throw new Error("Cannot Fetch")
-            }
-
-            setTopTwo(data.results)
-        }
-        catch (errors) {
-            setTopTwo([])
-        }
-    }
+   
     // Gets all the profileDetail of the request user
     const checkSeekerDetails = async () => {
         const requestOptions = {
@@ -64,7 +56,7 @@ export default function UserHomePage() {
 
             }
             getRecommendedJobs()
-            getTopTwoRecommendedJobs()
+           
         } catch (error) {
             console.error('There was a problem with the fetch request:', error);
             // Handle error
@@ -105,7 +97,7 @@ export default function UserHomePage() {
 
                         <div className="mt-4 grid sm:grid-cols-2 gap-6">
                             {
-                                topTwo?.map((data, index) => {
+                                recommendedJobs?.map((data, index) => {
 
                                     return (
                                         index < 2 &&
@@ -142,7 +134,7 @@ export default function UserHomePage() {
                                             <div className="flex flex-col sm:flex-row justify-between sm:items-center mt-3 pr-4">
                                                 <p className="text-[#01B46A]">Location Type: <span>{data.work_location_type}</span></p>
                                                 <Link href={`/jobs?id=${data.id}&pageNum=1`}>
-                                                    <button className="text-[#0B69FF] mt-3 sm:mt-0">View Details <i className="bi bi-arrow-up-right"></i></button>
+                                                    <button className="text-gurkha-yellow mt-3 sm:mt-0">View Details <i className="bi bi-arrow-up-right"></i></button>
                                                 </Link>
 
                                             </div>

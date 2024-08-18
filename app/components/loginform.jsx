@@ -50,9 +50,9 @@ export default function LoginForm(){
           const isSeeker = decodedToken.isSeeker; 
           const isSuperAdmin = decodedToken.isSuperAdmin
           Cookies.set('accessToken', data.access, { expires: 1});
-          Cookies.set('userId', userId); 
-          Cookies.set('isSeeker', isSeeker)
-          Cookies.set("isLoggedIn", true)
+          Cookies.set('userId', userId,{ expires: 1}); 
+          Cookies.set('isSeeker', isSeeker,{ expires: 1})
+          Cookies.set("isLoggedIn", true,{ expires: 1})
           if(isRecruiter){
             router.push('/recruiter');
           }

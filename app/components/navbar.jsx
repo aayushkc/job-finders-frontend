@@ -100,7 +100,7 @@ export default function NavBar() {
     },[])
     return (
         <>
-          <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
+          <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[888]">
             <div>
 
             </div>
@@ -129,12 +129,12 @@ export default function NavBar() {
                                 </Link>
                             })
                     }
-                    {isClient && accessToken && !isSeeker && <Link href={'/recruiter'} onClick={handleClick}><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link>}
-                    {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" prefetch={false} className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
+                    {}
+                    {isLoggedIn ? isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link> :<button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" prefetch={false} className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
                 </ul>
 
 
-                {isLoggedIn ? <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block" onClick={handleLogOut}>Log Out</button> : <Link href="/signin" prefetch={false} className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
+                {isLoggedIn ?isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block"><li className={`mb-4 sm:mb-0 list-none`}>Admin Dashboard</li> </Link>: <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block" onClick={handleLogOut}>Log Out</button> : <Link href="/signin" prefetch={false} className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
 
             </nav>
         </header>

@@ -1,23 +1,17 @@
 "use client"
-import * as React from 'react';
 import getRequestWithToken from "@/app/api/getRequestWithToken";
 import PostFormWithToken from "@/app/api/postFormWithToken";
-import DialogBox from "@/app/components/sucessbox";
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import Cookies from "js-cookie";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+
+import CountDown from '@/app/components/countDown';
+import QuizCompletionBox from "./_quizCompletionBox";
 
 export default function QuestionSet() {
+
     const router = useRouter()
     const { id } = useParams()
     const serachParam = useSearchParams()
@@ -29,38 +23,15 @@ export default function QuestionSet() {
     const [score, setScore] = useState(0);
     const [numberOfQuestion, setNumberOfQuestion] = useState(1)
     const [selectedAnswers, setSelectedAnswers] = useState({});
-    const [isSubmitted, setIsSubmitted] = useState(false)
-    const [success, setSuccess] = useState(false)
-    const [falliure, setFaliure] = useState(false)
-
-    const [value, setValue] = useState(null);
-
-    const handleChange = (event) => {
-        setValue(event.target.value);
+    const [submissionStatus, setSubmissionStatus] = useState({ status: 'idle', message: '' });
+    const [radioOptionValue, setRadioOptionValue] = useState(null);
+    const [quizTime, setQuizTime] = useState(null)
+    const [stopTimer, setStopTimer] = useState(false)
+    const [timeTaken, setTimeTaken] = useState('00:00:00')
+    const [scoreUpdating, setScoreUpdating] = useState(false)
+    const handleRadioValueChange = (event) => {
+        setRadioOptionValue(event.target.value);
     };
-
-    const getQuizSet = async () => {
-        try {
-            const res = await getRequestWithToken(`/quiz/get-quiz-seeker/${id}`, accessToken)
-            console.log(res);
-            setNumberOfQuestion(res.no_of_question)
-            setQuizData(res)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getQuizSet()
-    }, [])
-
-    useEffect(() => {
-        if (!isLoggedIn) router.push("/signin")
-    }, [isLoggedIn])
-
-    if (!quizData) {
-        return <div>Error loading quiz data.</div>;
-    }
 
     const handleAnswerClick = (questionId, answerId, isCorrect) => {
         setSelectedAnswers({
@@ -69,174 +40,182 @@ export default function QuestionSet() {
         });
     };
 
-    const handleNextClick = () => {
-
-        if (selectedAnswers[quizData.questions[currentQuestionIndex].id]?.isCorrect) {
-            setScore(score + 1);
-        }
+    const handleNextClick = () => {  
+        setRadioOptionValue(null)
+        // if (selectedAnswers[quizData.questions[currentQuestionIndex].id]?.isCorrect) {
+        //     console.log("ENtered correct answer");
+        //     const newScore = score + 1
+        //     setScore(newScore);
+        // }
         if (currentQuestionIndex < quizData.questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
     };
 
-    const handleSubmit = async () => {
-        console.log(selectedAnswers[quizData.questions[currentQuestionIndex].id]);
-        let finalScore = score
-        if (selectedAnswers[quizData.questions[currentQuestionIndex].id].isCorrect) {
-            finalScore += 1
-        }
-        setScore(finalScore)
-        setIsSubmitted(true);
-        const formData = new FormData()
 
-        formData.append("job", serachParam.get('jobId'))
-        formData.append("quiz_score", finalScore)
-        try {
-            const data = await PostFormWithToken(`/job-seeker/create-job-request/`, formData)
-            if (data.detail) {
-                console.log(data);
-                throw new Error("Cannot Fetch")
+    
+
+    //Function called when time's up
+    //Handles automatic form submission
+    const handleTimeFinshed = () => {
+        // Update the score based on the selected answers
+        setSelectedAnswers((prevState) => {
+            let totalScore = 0;
+            console.log("Previoud selected state",prevState);
+            
+            for (let key in prevState) {
+                if (prevState[key].isCorrect) {
+                    totalScore += 1;
+                }
             }
-
-
-            setSuccess(true)
-
-
+    
+            setScore(totalScore);
+            setScoreUpdating(true)
+            return prevState; // Return the same state since we're not changing it here
+        });
+      
+    };
+    useEffect(() =>{
+        if(scoreUpdating){
+            submitQuiz(score)
         }
-        catch (errors) {
-
-            setFaliure(true)
+    },[scoreUpdating])
+    const submitQuiz = async (totalScore) => {
+        const formData = new FormData();
+        formData.append("job", serachParam.get('jobId'));
+        formData.append("quiz_score", totalScore);
+        console.log(timeTaken);
+        
+        formData.append('quiz_completion_time', timeTaken);
+    
+        try {
+            const data = await PostFormWithToken(`/job-seeker/create-job-request/`, formData);
+            if (data.detail) {
+                throw new Error("Cannot Fetch");
+            }
+            setSubmissionStatus({ status: 'success', message: 'Your application has been sent successfully' });
+        } catch (errors) {
+            setSubmissionStatus({ status: 'faliure', message: 'An error occurred during the submission.' });
+        } finally {
+            setStopTimer(true); // Stop the timer after submission
         }
     };
 
-    const currentQuestion = quizData.questions[currentQuestionIndex];
+    const setTimeTakenToComplete = (timeString) =>{
+        setTimeTaken(timeString)
+    }
+
+    const handleSubmit = () => {
+
+        let totalScore = 0;
+        for (let key in selectedAnswers) {
+            if (selectedAnswers[key].isCorrect) {
+                totalScore += 1;
+            }
+        }
+        setScore(totalScore);
+        submitQuiz(totalScore)
+    };
+
+    const getQuizSet = async () => {
+        try {
+            const res = await getRequestWithToken(`/quiz/get-quiz-seeker/${id}`, accessToken)
+            setNumberOfQuestion(res.no_of_question);
+            setQuizTime(res.total_quiz_time)
+            setQuizData(res)
+        } catch (error) {
+            setSubmissionStatus({status:'quiz_faliure', message: "Failed to load quiz"})
+        }
+    }
+
+    useEffect(() => {
+        if (!isLoggedIn) router.push("/signin")
+    }, [isLoggedIn, router])
+
+    useEffect(() => {
+        getQuizSet()
+    }, [id, accessToken])
+
+    const currentQuestion = quizData?.questions[currentQuestionIndex];
+
+    if(!quizData && submissionStatus.status === 'quiz_faliure'){
+        return <div>{submissionStatus.message}</div>
+    }
 
     return (
-
-        <section className="flex px-4 sm:justify-center bg-white pt-[8%]">
-            {
-                success && <QuizCompletionBox
-                    dialogHeading={"Success"}
-                    dialogText={"Your application has been sent successfully"}
-                    success={true}
-                    score = {score}
-                    numberOfQuestion={numberOfQuestion}
-                    goToPageName={" to Job Status"}
-                    url={"/job-status"}
-                />
-            }
-
-            {
-                falliure && <QuizCompletionBox
-                    dialogHeading={"An Error occured during Submission"}
-                    dialogText={"Please try again"}
-                    error={true}
-                />
-            }
-            <div className="bg-white py-6 px-6 sm:px-10 sm:w-1/2  border border-[#23232180]">
-
-                <h2 className="font-bold sm:text-lg">{currentQuestion.question}</h2>
-                <ul className="mt-3">
-                    <RadioGroup
-                        aria-labelledby="demo-controlled-radio-buttons-group"
-                        name="controlled-radio-buttons-group"
-                        value={value}
-                        onChange={handleChange}
-
-                    >
-
-
-                        {currentQuestion.answers.map(answer => (
-                            <li key={answer.id}>
-
-                                <button
-                                    onClick={() => handleAnswerClick(currentQuestion.id, answer.id, answer.is_correct)}
-                                    className="flex items-center gap-4 mt-2"
-                                >
-                                    {/* <input type="radio" name="option" id={answer.option} className="accent-gurkha-yellow p-2"/> */}
-                                    <FormControlLabel
-                                        value={answer.option}
-                                        control={
-                                            <Radio sx={{
-                                                '&.Mui-checked': {
-                                                    color: '#FFB000',
-                                                }
-                                            }}
-                                            />
-                                        }
-                                        label={answer.option}
-                                    />
-                                </button>
-                            </li>
-                        ))}
-                    </RadioGroup>
-                </ul>
-
-                {currentQuestionIndex < quizData.no_of_question - 1 ? (
-                    <button onClick={handleNextClick}  disabled={!selectedAnswers[currentQuestion.id]} className="bg-gurkha-yellow w-full py-2 text-white text-center rounded-xl mt-4"> Next</button>
-                ) :
-                    (
-                        <button onClick={handleSubmit}  disabled={!selectedAnswers[currentQuestion.id]} className="bg-gurkha-yellow w-full py-2 text-white text-center rounded-xl mt-4"> Submit</button>
-                    )
+        <section className='bg-[#F3F4F8] h-screen'>
+            <section className="flex px-4 sm:justify-center  pt-[8%]">
+                {
+                    submissionStatus.status === 'success' && <QuizCompletionBox
+                        dialogHeading={"Success"}
+                        dialogText={submissionStatus.message}
+                        success={true}
+                        score={score}
+                        numberOfQuestion={numberOfQuestion}
+                        goToPageName={" to Job Status"}
+                        url={"/job-status"}
+                    />
                 }
 
+                {
+                    submissionStatus.status === 'faliure' && <QuizCompletionBox
+                        dialogHeading={"An Error occured during Submission"}
+                        dialogText={submissionStatus.message}
+                        error={true}
+                    />
+                }
+                <div className="bg-white py-6 px-6 sm:px-10 sm:w-1/2 rounded">
+                    {quizTime && <CountDown setTimeTakenToComplete={setTimeTakenToComplete} time={quizTime} stopTimer={stopTimer} handleTimeFinshed={handleTimeFinshed} />}
+                    <div className='p-4 sm:px-6 border border-[#DADCE0] rounded mt-4'>
+                        <h2 className="font-bold sm:text-lg">{currentQuestion?.question}</h2>
+                        <ul className="mt-3">
+                            <RadioGroup
+                                aria-labelledby="demo-controlled-radio-buttons-group"
+                                name="controlled-radio-buttons-group"
+                                value={radioOptionValue}
+                                onChange={handleRadioValueChange}
 
-            </div>
+                            >
+                                {currentQuestion?.answers.map(answer => (
+                                    <li key={answer.id}>
 
+                                        <button
+                                            onClick={() => handleAnswerClick(currentQuestion.id, answer.id, answer.is_correct)}
+                                            className="flex items-center gap-4 mt-2"
+                                        >
+                            
+                                            <FormControlLabel
+                                                value={answer.option}
+                                                control={
+                                                    <Radio sx={{
+                                                        '&.Mui-checked': {
+                                                            color: '#FFB000',
+                                                        }
+                                                    }}
+                                                    />
+                                                }
+                                                label={answer.option}
+                                            />
+                                        </button>
+                                    </li>
+                                ))}
+                            </RadioGroup>
+                        </ul>
+                    </div>
+
+
+                    <button
+                        onClick={currentQuestionIndex < quizData?.no_of_question - 1 ? handleNextClick : handleSubmit}
+                        disabled={!selectedAnswers[currentQuestion?.id]}
+                        className="bg-gurkha-yellow w-full py-2 text-white text-center rounded-xl mt-4">
+                        {currentQuestionIndex < quizData?.no_of_question - 1 ? "Next" : "Submit"}
+                    </button>
+
+                </div>
+
+            </section>
         </section>
+
     );
 
-}
-
-
-
-
-export function QuizCompletionBox({ url, dialogHeading, dialogText, goToPageName, success, error, deleteBox,score,numberOfQuestion }) {
-  const [open, setOpen] = React.useState(true);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const router = useRouter();
-  const handleRoute = () => {
-    router.push(url)
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <React.Fragment>
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title" sx={{textAlign:"center", fontWeight:"bold", fontSize:"24px"}}>
-          {dialogHeading}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {success &&
-              <div className='rounded-full flex justify-center '>
-                <i className="bi bi-check-circle-fill text-4xl mb-3 text-[#23A26D]"></i>
-              </div>
-            }
-            <p className='text-center font-semibold mb-2'>Quiz Score: {score} out of {numberOfQuestion}</p>
-            <p className='font-bold mt-3 text-lg'>{dialogText}</p>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          {
-            success ? <Button autoFocus onClick={handleRoute}>
-              Go {goToPageName}
-            </Button> : <Button onClick={() => {handleClose(); router.push('/jobs')}} autoFocus>
-              Ok
-            </Button>
-          }
-
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
-  );
 }

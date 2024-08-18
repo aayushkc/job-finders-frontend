@@ -58,14 +58,14 @@ export default function JobStatus() {
                                     <p className=""> Salary/Month</p>
                                     <p className="sm:text-lg">
                                         {
-                                            data.salary && <p>{data.salary}$ <span className="text-[#828282]">/month</span></p>
+                                            data.salary && <span>{data.salary}$ <span className="text-[#828282]">/month</span></span>
                                         }
                                         {
-                                            data.min_salary && <p>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282]">/month</span> </p>
+                                            data.min_salary && <span>{data.min_salary} - {data.max_salary}$ <span className="text-[#828282]">/month</span> </span>
                                         }
 
                                         {
-                                            !data.min_salary && !data.salary && <p>Undisclosed </p>
+                                            !data.min_salary && !data.salary && <span>Undisclosed </span>
                                         }
                                     </p>
                                 </div>
@@ -86,8 +86,8 @@ export default function JobStatus() {
                     })
                     :
 
-                    <div className="font-bold text-5xl flex items-center justify-center h-[400px] bg-white">
-                        You have Applied to any Jobs
+                    <div className="font-bold text-4xl flex items-center justify-center h-[400px] bg-white">
+                        You have not Applied to any Jobs
                     </div>
             }
 

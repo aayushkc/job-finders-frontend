@@ -299,6 +299,34 @@ export default function HireCandidates() {
               (
                 <section className="flex justify-center mb-6">
                   <form onSubmit={handleSubmit(onSubmit)} className="mt-6 bg-[#F3F4F8] p-6 rounded-xl max-w-[800px]">
+                    
+                     {/* Choose Quiz Set */}
+                     <div className="my-4">
+                      <Controller
+                        control={control}
+                        name="quiz"
+                        // rules={{ required: "Quiz  is Required" }}
+                        render={({ field: { onChange } }) => (
+                          <Autocomplete
+                            defaultValue={null}
+                            options={quizSet}
+                            getOptionLabel={(option) => option.quiz_name}
+                            onChange={(event, values) => {
+                              onChange(values?.id)
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Choose One Quiz Set"
+                                placeholder="Choose One Quiz Set"
+                                helperText={errors.quiz?.message}
+                                error={!!errors.quiz}
+                              />
+                            )}
+                          />)}
+                      />
+
+                    </div>
 
                     {/* Job Title */}
                     <div className="my-4">
@@ -463,35 +491,6 @@ export default function HireCandidates() {
                                 placeholder="Choose One Domain"
                                 helperText={errors.industry?.message}
                                 error={!!errors.industry}
-                              />
-                            )}
-                          />)}
-                      />
-
-                    </div>
-                    
-
-                     {/* Choose Quiz Set */}
-                     <div className="my-4">
-                      <Controller
-                        control={control}
-                        name="quiz"
-                        // rules={{ required: "Quiz  is Required" }}
-                        render={({ field: { onChange } }) => (
-                          <Autocomplete
-                            defaultValue={null}
-                            options={quizSet}
-                            getOptionLabel={(option) => option.quiz_name}
-                            onChange={(event, values) => {
-                              onChange(values?.id)
-                            }}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                label="Choose One Quiz Set"
-                                placeholder="Choose One Quiz Set"
-                                helperText={errors.quiz?.message}
-                                error={!!errors.quiz}
                               />
                             )}
                           />)}

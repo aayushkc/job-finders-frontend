@@ -1,16 +1,14 @@
 "use client"
 
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, styled, Autocomplete, TextField } from "@mui/material"
-import { useRouter, useSearchParams } from "next/navigation";
+import { Button, styled, Autocomplete, TextField } from "@mui/material"
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
-import defaultProfile from "../../../public/images/defaultProfile.png"
 import Image from "next/image";
 import GetRequestNoToken from "@/app/api/getRequestNoToken";
 import PostFormWithToken from "@/app/api/postFormWithToken";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
 import { addYears } from "date-fns";
 import { ClipLoader } from "react-spinners";
@@ -20,7 +18,6 @@ export default function CreateProfile() {
     const { isLoggedIn } = useAuth();
     const [industries, setIndustries] = useState([]);
     const [selectedFile, setSelectedFile] = useState()
-    const [preview, setPreview] = useState()
     const [selecteProfilePhoto, setSelectedProfilePhoto] = useState()
     const [previewProfilePic, setPreviewProfilePic] = useState()
     const [skills, setSkills] = useState([])
@@ -32,7 +29,7 @@ export default function CreateProfile() {
         control,
         setValue,
         watch,
-        formState: { errors, isSubmitting, isDirty, isValid },
+        formState: { errors, isSubmitting },
     } = useForm()
 
 
@@ -113,19 +110,6 @@ export default function CreateProfile() {
     const handleProfilePicChange = (e) => {
         setSelectedProfilePhoto(e.target.files[0]);
     }
-
-    // useEffect(() => {
-    //     if (!selectedFile) {
-    //         setPreview(undefined)
-    //         return
-    //     }
-
-    //     const objectUrl = URL.createObjectURL(selectedFile)
-    //     setPreview(objectUrl)
-
-    //     // free memory when ever this component is unmounted
-    //     return () => URL.revokeObjectURL(objectUrl)
-    // }, [selectedFile])
 
     useEffect(() => {
         if (!isLoggedIn) router.push("/signin")
