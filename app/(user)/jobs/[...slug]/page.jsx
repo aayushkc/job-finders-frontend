@@ -78,8 +78,8 @@ export default async function JobFromId({ searchParams, params }) {
     return (
         <>
             <section className="pt-10 bg-white">
-            <Link href="/jobs" className="text-sm">
-                <button className='text-white px-5 py-2 bg-gurkha-yellow rounded-xl flex gap-2 items-center ml-4 sm:ml-16'>
+            <Link href="/jobs" className="ml-4 sm:ml-16 text-sm inline-block w-[120px]">
+                <button className='text-white px-5 py-2 bg-gurkha-yellow rounded-xl flex gap-2 items-center'>
                     <i className='bi bi-arrow-left'></i>
                     <p>Go Back</p>
                 </button>

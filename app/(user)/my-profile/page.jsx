@@ -379,7 +379,6 @@ export default function UpdateProfile() {
 
                                         <div className="flex flex-col mt-6">
                                             <label htmlFor="phone" className="text-sm">Phone Number*</label>
-                                            {/* <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" {...register("phone", { required: "First Name is required" })} /> */}
                                              <Controller
                                                 control={control}
                                                 name="phone_number"

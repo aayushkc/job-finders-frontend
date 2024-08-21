@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://hiregurkha.com
+
+# Sitemaps
+Sitemap: https://hiregurkha.com/sitemap.xml
