@@ -12,7 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
 import { addYears } from "date-fns";
 import { ClipLoader } from "react-spinners";
-
+import PhoneInput from "react-phone-number-input"
 export default function CreateProfile() {
     const router = useRouter()
     const { isLoggedIn } = useAuth();
@@ -34,13 +34,13 @@ export default function CreateProfile() {
 
 
     const formIndustryId = watch("industry")
-    
+
     const disableFutureDates = (date) => {
         // Calculate the minimum birthdate allowed (14 years ago)
         const minBirthDate = addYears(new Date(), -14);
         // Disable future dates and dates where the user is less than 14 years old
         return date > new Date() || date > minBirthDate;
-      };
+    };
 
 
     const getSkills = async () => {
@@ -55,7 +55,7 @@ export default function CreateProfile() {
             setSkills([{ "id": "", "title": "" }])
         }
     }
-  
+
     const getIndustries = async () => {
 
         try {
@@ -104,7 +104,7 @@ export default function CreateProfile() {
 
     const handleChange = (e) => {
         setSelectedFile(e.target.files[0]);
-        setValue("resume",e.target.files[0])
+        setValue("resume", e.target.files[0])
     }
 
     const handleProfilePicChange = (e) => {
@@ -122,7 +122,7 @@ export default function CreateProfile() {
         }
 
         const objectUrl = URL.createObjectURL(selecteProfilePhoto)
-        setValue("profilePic",selecteProfilePhoto)
+        setValue("profilePic", selecteProfilePhoto)
         setPreviewProfilePic(objectUrl)
 
         // free memory when ever this component is unmounted
@@ -145,31 +145,31 @@ export default function CreateProfile() {
         });
         try {
             const res = await PostFormWithToken(`/job-seeker/create-details/`, formData)
-           
+
             if (res.detail) {
-                
+
                 throw new Error("Cannot Fetch")
             }
-           
+
             router.push("/")
 
         }
         catch (errors) {
-           
+
             console.log(errors);
         }
     }
 
     useEffect(() => {
-            getIndustries()
-            getJobCategory()
-        
+        getIndustries()
+        getJobCategory()
+
     }, [])
 
     useEffect(() => {
         getSkills()
-    
-      }, [formIndustryId])
+
+    }, [formIndustryId])
 
     return (
         <>
@@ -192,44 +192,46 @@ export default function CreateProfile() {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="mt-8">
 
-                                    {/* Handle the upload changes done in the image field */}
-                                    <Controller
-                                        control={control}
-                                        name="resume"
-                                        rules={{ required: "A CV in either .pdf or .docx format must be uploaded", validate:(file) =>{
-                                            if(file?.size > 500000){
-                                                return "Max Sized Allowed 500kb"
+                            {/* Handle the upload changes done in the image field */}
+                            <Controller
+                                control={control}
+                                name="resume"
+                                rules={{
+                                    required: "A CV in either .pdf or .docx format must be uploaded", validate: (file) => {
+                                        if (file?.size > 500000) {
+                                            return "Max Sized Allowed 500kb"
+                                        }
+                                        return true
+                                    }
+                                }}
+                                render={({ field: { onChange, ref } }) =>
+                                    <Button
+                                        component="label"
+                                        variant="contained"
+                                        sx={
+                                            {
+                                                backgroundColor: '#FAFAFA',
+                                                color: 'black',
+                                                textTransform: "capitalize",
+                                                border: errors.resume ? "1.5px solid red" : "1px solid #CFD1D4",
+                                                width: "max-content",
+                                                maxWidth: "230px",
+                                                padding: "0.8rem 2.4rem",
+                                                fontSize: "18px",
+                                                fontWeight: "700",
+
                                             }
-                                            return true
-                                        } }}
-                                        render={({ field: { onChange,ref } }) =>
-                                            <Button
-                                                component="label"
-                                                variant="contained"
-                                                sx={
-                                                    {
-                                                        backgroundColor: '#FAFAFA',
-                                                        color: 'black',
-                                                        textTransform: "capitalize",
-                                                        border:errors.resume ? "1.5px solid red" : "1px solid #CFD1D4",
-                                                        width: "max-content",
-                                                        maxWidth:"230px",
-                                                        padding: "0.8rem 2.4rem",
-                                                        fontSize: "18px",
-                                                        fontWeight: "700",
-                                                        
-                                                    }
-                                                }
-                                            >
-                                                {
-                                                    //Previews the file name
-                                                    selectedFile ? <p className="text-sm overflow-clip">{selectedFile.name}</p> : "Upload CV"
-                                                }
-                                                <VisuallyHiddenInput ref={ref} type="file" accept=".pdf,.docx" autoFocus={errors.resume} onChange={handleChange} />
-                                            </Button>}
-                                    />
-                                 {errors.resume ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.resume.message}</p> : ""}
-                          
+                                        }
+                                    >
+                                        {
+                                            //Previews the file name
+                                            selectedFile ? <p className="text-sm overflow-clip">{selectedFile.name}</p> : "Upload CV"
+                                        }
+                                        <VisuallyHiddenInput ref={ref} type="file" accept=".pdf,.docx" autoFocus={errors.resume} onChange={handleChange} />
+                                    </Button>}
+                            />
+                            {errors.resume ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.resume.message}</p> : ""}
+
                         </div>
 
                         <div className="mt-6">
@@ -253,13 +255,15 @@ export default function CreateProfile() {
                                             <Controller
                                                 control={control}
                                                 name="profilePic"
-                                                rules={{ required: "Profile Picture is required", validate:(file) =>{
-                                                    if(file.size > 500000){
-                                                        return "Max Size Allowed 500Kb"
+                                                rules={{
+                                                    required: "Profile Picture is required", validate: (file) => {
+                                                        if (file.size > 500000) {
+                                                            return "Max Size Allowed 500Kb"
+                                                        }
+                                                        return true
                                                     }
-                                                    return true
-                                                } }}
-                                                render={({ field: { onChange,ref } }) =>
+                                                }}
+                                                render={({ field: { onChange, ref } }) =>
                                                     <Button component="label" variant="contained" sx={{ backgroundColor: '#FFB000', color: 'white', textTransform: "capitalize", borderRadius: "17px", width: "max-content" }}>
                                                         Upload Profile Picture
                                                         <VisuallyHiddenInput type="file" ref={ref} autoFocus={errors.profilePic} accept=".jpg, .jpeg, .png" onChange={handleProfilePicChange} />
@@ -282,23 +286,38 @@ export default function CreateProfile() {
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="first_name" {...register("first_name", { required: "First Name is required" })} />
                                             {errors.first_name ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.first_name.message}</p> : ""}
                                         </div>
-                                        
+
                                         <div className="flex flex-col mt-6">
                                             <label htmlFor="last_name" className="text-sm">Last Name*</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="last_name" {...register("last_name", { required: "Last Name is required" })} />
                                             {errors.last_name ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.last_name.message}</p> : ""}
                                         </div>
-                                    
+
 
                                         <div className="flex flex-col mt-6">
-                                            <label htmlFor="phone" className="text-sm">Phone Number*</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" min={1} {...register("phone", { required: "Phone is required" })} />
-                                            {errors.phone ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.phone.message}</p> : ""}
+                                            {/* <label htmlFor="phone" className="text-sm">Phone Number*</label>
+                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" min={1} {...register("phone", { required: "Phone is required" })} /> */}
+                                            <Controller
+                                                control={control}
+                                                name="phone_number"
+                                                rules={{ required: "This field is Required" }}
+                                                render={({ field }) => (
+                                                    <PhoneInput
+                                                        {...field}
+                                                        placeholder="Enter phone number"
+                                                        international
+                                                        defaultCountry="NP"
+                                                        countryCallingCodeEditable={false}
+                                                        className={`border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full`}
+                                                    />
+                                                )}
+                                            />
+                                            {errors.phone_number ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.phone_number.message}</p> : ""}
                                         </div>
                                     </div>
 
                                     <div className="mt-6 sm:mt-0 sm:w-[50%]">
-                                
+
                                         <div className="flex flex-col">
                                             <label htmlFor="middle_name" className="text-sm">Middle Name</label>
                                             <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" id="middle_name" {...register("middle_name")} />
@@ -332,7 +351,7 @@ export default function CreateProfile() {
                                         value: true,
                                         message: "Date of Birth is required",
                                     },
-                                    
+
                                 }}
                                 render={({ field: { onChange, value, ref } }) => (
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
@@ -377,7 +396,7 @@ export default function CreateProfile() {
                             <Controller
                                 control={control}
                                 name="industry"
-                                rules={{required:"You must choose one domain"}}
+                                rules={{ required: "You must choose one domain" }}
                                 render={({ field: { onChange } }) => (
                                     <Autocomplete
                                         defaultValue={null}
@@ -385,7 +404,7 @@ export default function CreateProfile() {
                                         getOptionLabel={(option) => option.title_name}
                                         onChange={(event, values) => {
                                             onChange(values?.id)
-                                            setValue("skills",[])
+                                            setValue("skills", [])
                                         }}
                                         renderInput={(params) => (
                                             <TextField
@@ -406,55 +425,55 @@ export default function CreateProfile() {
                         {
                             formIndustryId && (
                                 <div className="mt-10">
-                                <h2 className="text-xl font-semibold">Choose Your Skills</h2>
-                                <p className="text-xs text-[#4F5052] mb-4">(We will use this to recommend you jobs)</p>
-                                <div style={{ marginBottom: 16, marginTop: 6 }}>
-                                    <Controller
-                                        control={control}
-                                        name="skills"
-                                        rules={{required:"You must choose one or more Skills"}}
-                                        render={({ field}) => (
-                                            <Autocomplete
-                                                {...field}
-                                                defaultValue={[]}
-                                                multiple
-                                                disableCloseOnSelect
-                                                options={skills}
-                                                getOptionLabel={(option) =>
-                                                    option ?
-                                                      typeof option === "number" ?
-                                                        (skills.find(skill => skill.id === option) || {}).title || '' :
-                                                        option.title : ""
-                                                  }
-                                                  isOptionEqualToValue={(option, value) => {
-                  
-                                                    return option.id === value
-                                                  }
-                                                  }
-                                                  onChange={(event, values) => {
-                  
-                                                    field.onChange(values.map(val => { return typeof (val) === "number" ? val : val.id }))
-                                                  }}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        {...params}
-                                                        label="Required Skills"
-                                                        placeholder="Required Skills"
-                                                        helperText={errors.skills?.message}
-                                                        error={!!errors.skills}
-                                                    />
-                                                )}
-                                            />
-                                        )}
-                                    />
-    
+                                    <h2 className="text-xl font-semibold">Choose Your Skills</h2>
+                                    <p className="text-xs text-[#4F5052] mb-4">(We will use this to recommend you jobs)</p>
+                                    <div style={{ marginBottom: 16, marginTop: 6 }}>
+                                        <Controller
+                                            control={control}
+                                            name="skills"
+                                            rules={{ required: "You must choose one or more Skills" }}
+                                            render={({ field }) => (
+                                                <Autocomplete
+                                                    {...field}
+                                                    defaultValue={[]}
+                                                    multiple
+                                                    disableCloseOnSelect
+                                                    options={skills}
+                                                    getOptionLabel={(option) =>
+                                                        option ?
+                                                            typeof option === "number" ?
+                                                                (skills.find(skill => skill.id === option) || {}).title || '' :
+                                                                option.title : ""
+                                                    }
+                                                    isOptionEqualToValue={(option, value) => {
+
+                                                        return option.id === value
+                                                    }
+                                                    }
+                                                    onChange={(event, values) => {
+
+                                                        field.onChange(values.map(val => { return typeof (val) === "number" ? val : val.id }))
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Required Skills"
+                                                            placeholder="Required Skills"
+                                                            helperText={errors.skills?.message}
+                                                            error={!!errors.skills}
+                                                        />
+                                                    )}
+                                                />
+                                            )}
+                                        />
+
+                                    </div>
                                 </div>
-                            </div>
-                                
+
                             )
                         }
 
-                       
+
 
                         <div className="mt-10">
                             <h2 className="text-xl font-semibold">Choose Your Preffered Job Fields</h2>
@@ -463,7 +482,7 @@ export default function CreateProfile() {
                                 <Controller
                                     control={control}
                                     name="prefferd_job"
-                                    rules={{required:"You must choose one or more categories"}}
+                                    rules={{ required: "You must choose one or more categories" }}
                                     render={({ field: { onChange } }) => (
                                         <Autocomplete
                                             defaultValue={[]}
@@ -492,15 +511,15 @@ export default function CreateProfile() {
                         <hr className="my-8"></hr>
 
                         <div className="flex w-full justify-end">
-                        <button className={`text-white bg-gurkha-yellow py-2 px-12 rounded-2xl flex items-center gap-4 ${isSubmitting && 'opacity-75'}`} type="submit" disabled={isSubmitting}>
+                            <button className={`text-white bg-gurkha-yellow py-2 px-12 rounded-2xl flex items-center gap-4 ${isSubmitting && 'opacity-75'}`} type="submit" disabled={isSubmitting}>
                                 {
-                                    isSubmitting &&   <ClipLoader
-                                    color={"#FFFFFF"}
-                                    loading={true}
-                                    size={15}
-                                    aria-label="Loading Spinner"
-                                    data-testid="loader"
-                                  />
+                                    isSubmitting && <ClipLoader
+                                        color={"#FFFFFF"}
+                                        loading={true}
+                                        size={15}
+                                        aria-label="Loading Spinner"
+                                        data-testid="loader"
+                                    />
                                 }
                                 Submit
                             </button>

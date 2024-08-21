@@ -1,13 +1,11 @@
 "use client"
 
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, styled, Autocomplete, TextField } from "@mui/material"
+import { Button, styled, Autocomplete, TextField } from "@mui/material"
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
 import defaultProfile from "../../../public/images/defaultProfile.png"
-import Image from "next/image";
 import GetRequestNoToken from "@/app/api/getRequestNoToken";
-import PostFormWithToken from "@/app/api/postFormWithToken";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -17,20 +15,17 @@ import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import { addYears } from 'date-fns';
 import Link from "next/link";
 import { ClipLoader } from "react-spinners";
-
+import PhoneInput from "react-phone-number-input"
 export default function UpdateProfile() {
     const router = useRouter()
     const [profileDetail, setProfileDetails] = useState([])
     const [industries, setIndustries] = useState([]);
     const [selectedFile, setSelectedFile] = useState()
-    const [preview, setPreview] = useState()
     const [selecteProfilePhoto, setSelectedProfilePhoto] = useState()
     const [previewProfilePic, setPreviewProfilePic] = useState()
     const [skills, setSkills] = useState([])
     const [prefferedJobField, setPrefferedJobField] = useState([])
-    const [requiedSkills, setRequiredSkills] = useState([])
-    const [selectedJobCategory, setSelectedJobCategory] = useState()
-    const [selectedIndustry, setSelectedIndustry] = useState(null)
+  
 
     const {
         handleSubmit,
@@ -40,7 +35,7 @@ export default function UpdateProfile() {
         watch,
         setError,
         setFocus,
-        formState: { errors, isSubmitting, isDirty, isValid },
+        formState: { errors, isSubmitting },
     } = useForm({
 
         shouldUnregister: false
@@ -250,7 +245,7 @@ export default function UpdateProfile() {
         setValue("middle_name", profileDetail[0]?.middle_name || "");
         setValue("location", profileDetail[0]?.location || "");
         setValue("last_name", profileDetail[0]?.last_name || "");
-        setValue("phone", profileDetail[0]?.phone || "");
+        setValue("phone_number", profileDetail[0]?.phone_number || "");
         setValue("linkedin_url", profileDetail[0]?.linkedin_url || "");
         setValue("dob", dayjs(profileDetail[0]?.dob) || dayjs().startOf("D"));
         setValue("industry", industries.filter(data => data.id === profileDetail[0]?.industry.id)[0]?.id || "")
@@ -384,7 +379,23 @@ export default function UpdateProfile() {
 
                                         <div className="flex flex-col mt-6">
                                             <label htmlFor="phone" className="text-sm">Phone Number*</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" {...register("phone", { required: "First Name is required" })} />
+                                            {/* <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" {...register("phone", { required: "First Name is required" })} /> */}
+                                             <Controller
+                                                control={control}
+                                                name="phone_number"
+                                                rules={{ required: "This field is Required" }}
+                                                render={({ field }) => (
+                                                    <PhoneInput
+                                                        {...field}
+                                                        placeholder="Enter phone number"
+                                                        international
+                                                        defaultCountry="NP"
+                                                        countryCallingCodeEditable={false}
+                                                        className={`border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full`}
+                                                    />
+                                                )}
+                                            />
+                                            {errors.phone_number ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.phone_number.message}</p> : ""}
                                         </div>
                                     </div>
 

@@ -3,6 +3,8 @@ import { Open_Sans } from "next/font/google";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "../globals.css";
 import AdminNav from "../components/adminnav";
+import 'react-phone-number-input/style.css'
+import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from "../utils/checkIsLoggedIn";
 const sans = Open_Sans({ subsets: ["latin"] });
 

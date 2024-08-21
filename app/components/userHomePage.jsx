@@ -254,7 +254,7 @@ export default function UserHomePage() {
                                                     <p className="text-[#01B46A]">{data.applied} Applied</p>
                                                 </div>
 
-                                                <p className="text-sm mt-4 sm:mt-0">{data.has_expried ? <span className="text-[#B40C01]">Expried</span>: 'Apply Before: ' + data.apply_before}</p>
+                                                <p className="text-sm mt-4 sm:mt-0">{data.has_expried ? <span className="text-[#B40C01]">Expired</span>: 'Apply Before: ' + data.apply_before}</p>
                                             </div>
 
                                         </div>

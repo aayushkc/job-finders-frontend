@@ -9,6 +9,12 @@ import JobPanelData from "@/app/components/JobPanelData"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 
+import ReactDOM from 'react-dom'
+ 
+export function PreloadResources() {
+  ReactDOM.prefetchDNS('https://api.hiregrukha.com')
+}
+
 export default function JobDetail() {
 
     const serachParam = useSearchParams()
@@ -185,7 +191,7 @@ export default function JobDetail() {
                                                         </div>
                                                         <p className="mr-2 text-xs">
                                                             {
-                                                                data.has_expried ? <span className="text-[#B40C01]">Expried</span> : <span className="text-[#3C831B]">Expries in {Difference_In_Days} days</span>
+                                                                data.has_expried ? <span className="text-[#B40C01]">Expired</span> : <span className="text-[#3C831B]">Expires in {Difference_In_Days} days</span>
                                                             }
                                                         </p>
 
@@ -254,8 +260,9 @@ export default function JobDetail() {
 
                                         let Difference_In_Time = dat.getTime() - today.getTime()
                                         let Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+                                        const urlTite= data.title.replaceAll('-','').replaceAll(' ', '-').toLowerCase()
                                         return (
-                                            <Link href={`/jobs/${data.id}?pageNum=${pageNum}`} key={data.id}>
+                                            <Link href={`/jobs/${data.id}/${urlTite}?pageNum=${pageNum}`} key={data.id}>
                                                 <div key={data.id}>
                                                     <div className={`pt-6 cursor-pointer pb-2 pl-4 ${data.id === jobPanelData?.id && 'bg-[#EBF3FA]'}`} key={data.id}>
                                                         <div className="flex items-center gap-6">
@@ -304,7 +311,7 @@ export default function JobDetail() {
                                                         </div>
                                                         <p className="mr-2 text-xs mt-2">
                                                             {
-                                                                data.has_expried ? <span className="text-[#B40C01]">Expried</span> : <span className="text-[#3C831B]">Expries in {Difference_In_Days} days</span>
+                                                                data.has_expried ? <span className="text-[#B40C01]">Expired</span> : <span className="text-[#3C831B]">Expires in {Difference_In_Days} days</span>
                                                             }
                                                         </p>
 

@@ -60,7 +60,7 @@ export default function JobPanelData({ jobPanelData, isUserLoged, accessToken, p
         }
     }
 
-
+    const urlTite= jobPanelData.title.replaceAll('-','').replaceAll(' ', '-').toLowerCase()
     return (
         <>
 
@@ -85,20 +85,15 @@ export default function JobPanelData({ jobPanelData, isUserLoged, accessToken, p
                 isAppliedClicked &&
                 <ApplyJob open={open} quizData={jobPanelData.quiz} jobId={jobPanelData.id} handleClose={handleClose} handledApplied={handledApplied} />
             }
-            <Link href="/jobs" className='sm:hidden'>
-                <div className='p-5 flex gap-4 items-center'>
-                    <i className='bi bi-arrow-left'></i>
-                    <p className='text-[#537FE7] underline'>Go Back</p>
-                </div>
-            </Link>
 
             <div className="sm:h-screen sm:overflow-y-scroll bg-white relative px-4 sm:px-16">
                 <header className="sticky bg-white w-full z-[999] top-[90px] flex flex-col py-4 sm:top-0 sm:min-h-[80px] sm:flex-row sm:justify-between sm:items-center sm:border-b sm:border-b-neutral-500">
                     <div className='flex gap-3 items-center mb-2 sm:mb-0 sm:basis-[60%]'>
-                        <h2 className="font-bold text-xl sm:text-2xl">{jobPanelData.title}</h2>
+                    
+                        <h2 className="font-bold text-xl sm:text-2xl"><Link href={`/jobs/${jobPanelData.id}/${urlTite}?pageNum=${pageNum}`}>{jobPanelData.title}</Link></h2>
                     </div>
 
-                    <div className=''>
+                    <div className='flex items-center gap-3'>
                         {
                             !accessToken ?
                                 <Link href="/signin">
@@ -120,15 +115,9 @@ export default function JobPanelData({ jobPanelData, isUserLoged, accessToken, p
 
 
                         }
-
+                     <ShareButton shareableUrl={`https://hiregurkha.com/jobs?id=${jobPanelData.id}&pageNum=${pageNum}&skills=null&industry=null#${jobPanelData.id}`} className={['']} />
                     </div>
                 </header>
-                
-                <div className='flex gap-3 items-center mt-4'>
-                    <p className='text-sm'>Share Job</p>
-                    <ShareButton shareableUrl={`https://hiregurkha.com/jobs/${jobPanelData.id}`} className={['sm:hidden']} />
-                    <ShareButton shareableUrl={`https://hiregurkha.com/jobs?id=${jobPanelData.id}&pageNum=${pageNum}&skills=null&industry=null#${jobPanelData.id}`} className={['hidden sm:flex']} />
-                </div>
 
                 <div className="mt-8">
                     <h2 className="font-semibold text-xl">Job Type</h2>

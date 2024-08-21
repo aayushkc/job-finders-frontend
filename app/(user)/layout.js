@@ -7,6 +7,7 @@ import { AuthProvider } from "../utils/checkIsLoggedIn";
 import { Suspense } from "react";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import 'react-toastify/ReactToastify.min.css';
+import 'react-phone-number-input/style.css'
 const sans = Open_Sans({ subsets: ["latin"], display:'swap' });
 
 export const metadata = {

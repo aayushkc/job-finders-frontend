@@ -1,19 +1,16 @@
 "use client"
 
-import { Button } from "@mui/material"
+
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import GetRequestNoToken from "@/app/api/getRequestNoToken";
 import Cookies from "js-cookie";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import AdminDashBoardLayout from "@/app/components/DashBoardLayout";
-import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import PatchRequest from "@/app/api/patchRequest";
 import { ClipLoader } from "react-spinners";
-
+import PhoneInput from "react-phone-number-input"
 export default function UpdateProfile() {
     const param = useParams()
     const router = useRouter()
@@ -26,11 +23,7 @@ export default function UpdateProfile() {
     const [industries, setIndustries] = useState([]);
     const [isShortlistSubmitting, setIsShortListSubmitting] = useState(false)
     const [isRejectSubmitting, setIsRejectSubmitting] = useState(false)
-    const {
-        register,
-        handleSubmit,
-        formState:{errors,isSubmitting}
-    } = useForm()
+   
     // Gets all the profileDetail of the request user
     const getProfile = async () => {
         const accessToken = Cookies.get('accessToken');
@@ -204,7 +197,11 @@ export default function UpdateProfile() {
 
                                         <div className="flex flex-col mt-6">
                                             <label htmlFor="phone" className="text-sm">Phone Number</label>
-                                            <input disabled className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" value={profileDetail.phone} />
+                                            <PhoneInput 
+                                                    readOnly 
+                                                    className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" 
+                                                    value={profileDetail.phone_number} 
+                                            />
                                         </div>
                                     </div>
 

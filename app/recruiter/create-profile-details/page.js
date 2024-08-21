@@ -12,7 +12,7 @@ import PostFormWithToken from "@/app/api/postFormWithToken";
 import { useRouter } from "next/navigation";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import { ClipLoader } from "react-spinners";
-
+import PhoneInput from 'react-phone-number-input'
 import 'react-quill/dist/quill.snow.css';
 
 
@@ -117,7 +117,7 @@ export default function CreateProfileDetails() {
         // formData.append("company_min_size", data.company_min_size)
         // formData.append("company_max_size", data.company_max_size)
         formData.append("location", data.location)
-        formData.append("phone", data.phone)
+        formData.append("phone_number", data.phone_number) 
         formData.append("company_email", data.company_email)
         formData.append("industry", data.industry)
         formData.append("description", data.description)
@@ -226,16 +226,32 @@ export default function CreateProfileDetails() {
 
                     {/* Phone Fields */}
 
-                    <label htmlFor="phone" className="text-sm">Phone</label>
+                    {/* <label htmlFor="phone" className="text-sm">Phone</label>
                     <div className="flex gap-4 items-center mt-1">
                         <input min="1" type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Phone number" />
 
+                    </div> */}
+                    <div className="my-4">
+                    <Controller
+                        control={control}
+                        name="phone_number"
+                        rules={{ required: "This field is Required" }}
+                        render={({ field}) => (
+                        <PhoneInput
+                            {...field}
+                            placeholder="Enter phone number"
+                            international
+                            defaultCountry="NP"
+                            countryCallingCodeEditable={false}
+                            className={`w-full rounded-xl bg-white py-4 px-3 text-black`} 
+                            />
+                        )}
+                    />
+                    {errors.phone_number ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.phone_number.message}</p> : ""}
+
                     </div>
-
-
                     {/* COmpany sizze Fields */}
 
-                    {/* <h3 htmlFor="size" className="text-base font-semibold mt-2">Company Size</h3> */}
                     <div className="my-4">
 
                         <Controller
@@ -261,7 +277,6 @@ export default function CreateProfileDetails() {
                                     )}
                                 />)}
                         />
-                        {errors.company_size ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.company_size.message}</p> : ""}
                     </div>
 
 

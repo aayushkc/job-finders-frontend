@@ -14,7 +14,7 @@ import GetRequestNoToken from "../api/getRequestNoToken";
 import { useRouter } from "next/navigation";
 import { APIENDPOINT } from "../api/APIENDPOINT";
 import 'react-quill/dist/quill.snow.css';
-
+import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from "react-phone-number-input"
 
 const ReactQuillEditable = dynamic(
     () => import ('react-quill'),
@@ -134,7 +134,7 @@ export default function Home() {
   // Handle Submission of All Fields Expcept for the logo(image) field
   const onSubmit = async (data) => {
     delete data.logo //Delete the logo from the object before submisssion
-    console.log(data);
+    
     try {
       const res = await PatchRequest(`/recruiter/view-recruiter-details/${profileDetail[0].id}`, data)
     
@@ -199,7 +199,7 @@ export default function Home() {
     setValue("name", profileDetail[0]?.name || "");
     setValue("company_email", profileDetail[0]?.company_email || "");
     setValue("location", profileDetail[0]?.location || "");
-    setValue("phone", profileDetail[0]?.phone || "");
+    setValue("phone_number", profileDetail[0]?.phone_number || "");
     setValue("company_url", profileDetail[0]?.company_url || "");
     setValue("industry", industries.filter(indus => indus.title_name === profileDetail[0]?.industry)[0]?.id || '');
     setValue("description", profileDetail[0]?.description || "");
@@ -275,7 +275,23 @@ export default function Home() {
             <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="phone" className="text-sm">Phone</label>
               <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
-                <input type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editPhone ? false : true} placeholder="Enter Company Phone number" />
+                {/* <input type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editPhone ? false : true} placeholder="Enter Company Phone number" /> */}
+                <Controller
+                        control={control}
+                        name="phone_number"
+                        rules={{ required: "This field is Required" }}
+                        render={({ field}) => (
+                        <PhoneInput
+                            {...field}
+                            placeholder="Enter phone number"
+                            international
+                            defaultCountry="NP"
+                            countryCallingCodeEditable={false}
+                            readOnly={editPhone ? false : true}
+                            className={`w-full rounded-xl bg-white py-4 px-3 text-black`} 
+                            />
+                        )}
+                    />
                 {
                   editPhone ?
                     <div className="flex gap-2 font-bold text-[#414C61]">

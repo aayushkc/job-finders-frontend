@@ -15,6 +15,7 @@ import DialogBox from "@/app/components/sucessbox";
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 import { ClipLoader } from "react-spinners";
+import PhoneInput from 'react-phone-number-input'
 
 export default function SignInUser() {
 
@@ -26,14 +27,16 @@ export default function SignInUser() {
     const [registrationError, setRegistrationError] = useState([])
     const [errorStatus, setErrorStatus] = useState(false)
     const [registrationSuccess, setRegistrationSuccess] = useState(false)
+    const [phone, setPhone] = useState();
     const [emailError, setEmailError] = useState(null)
     const [nameError, setNameError] = useState(null)
-    // const [phoneError, setPhoneError] = useState(null)
+    const [phoneError, setPhoneError] = useState(null)
     const [formError, setFormError] = useState(false)
     const [formData, setFormData] = useState(
         {
             "email": "",
             "name": "",
+            "phone_number":"",
             "meeting_date": "",
             "meeting_time": ""
         }
@@ -50,18 +53,21 @@ export default function SignInUser() {
 
     const handleNextClick = (e) => {
         e.preventDefault();
+        setFormData(prevData => ({...prevData, 'phone_number':phone}))
         setFormError(false)
         setEmailError(null)
         setNameError(null)
-        // setPhoneError(null)
+        setPhoneError(null)
         
-        if(formData.email && formData.name){
+        if(formData.email && formData.name && phone){
             setIsNextClicked(true)
         }else if(!formData.email){
             setEmailError("Invalid Email Address")
         }else if(!formData.name){
             setNameError("Invalid Name")
-        }else if(!formData.email && !formData.name){
+        }else if(!phone){
+            setPhoneError("Invalid Phone Number")
+        }else if(!formData.email && !formData.name && phone){
             setFormError(true)
         }else{
             return;
@@ -74,6 +80,8 @@ export default function SignInUser() {
         setIsButtonDisabled(true)
         setRegistrationSuccess(false)
         setErrorStatus(false)
+        console.log(formData);
+        
         try {
             const response = await fetch(`${APIENDPOINT}/generate-recruiter-lead`, {
                 method: 'POST',
@@ -84,6 +92,7 @@ export default function SignInUser() {
             });
             if (!response.ok) {
                 const error = await response.json()
+                console.log(error);
                 
                 setRegistrationError(error)
               
@@ -215,6 +224,18 @@ export default function SignInUser() {
                                     <input type="text" name="phone" defaultValue={formData.phone} onChange={handleChange} required className={`rounded-xl py-2 px-6 w-full ${phoneError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`}/>
                                     {phoneError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{phoneError}</p> : ""}
                                 </div> */}
+                                <div className="flex flex-col gap-2 items-start">
+                                <label>Phone Number*</label>
+                                 <PhoneInput
+                                        placeholder="Enter phone number"
+                                        international
+                                        value={phone}
+                                        onChange={setPhone}
+                                        defaultCountry="NP"
+                                        countryCallingCodeEditable={false}
+                                        className={`rounded-xl p-2 bg-white w-full ${phoneError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"} ${formError ? "border-2 border-red-600" :"border-2 border-[#E2E8F0]"}`} />
+                                        {phoneError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{phoneError}</p> : ""}
+                                 </div>
                             </>
                     }
 
