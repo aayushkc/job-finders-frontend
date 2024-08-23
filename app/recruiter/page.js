@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image";
 import AdminDashBoardLayout from "../components/DashBoardLayout";
 import ImageSkleton from "../../public/profile.png";
 import Cookies from 'js-cookie';
@@ -14,50 +13,65 @@ import GetRequestNoToken from "../api/getRequestNoToken";
 import { useRouter } from "next/navigation";
 import { APIENDPOINT } from "../api/APIENDPOINT";
 import 'react-quill/dist/quill.snow.css';
-import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from "react-phone-number-input"
+import PhoneInput from "react-phone-number-input"
 
 const ReactQuillEditable = dynamic(
     () => import ('react-quill'),
     { ssr: false }
 );
 
-export default function Home() {
-  //React Quill Modules
-  const modules = {
-    toolbar: false
+ //React Quill Modules
+ const modules = {
+  toolbar: false
 
 }
+ //Imported from MUI fiel upload for the design of upload image field
+ const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+
+export default function Home() {
+ 
   const router = useRouter()
   const {
     handleSubmit,
     register,
     setValue,
+    setError,
     control,
-    formState: { errors, isSubmitting, isDirty, isValid },
+    formState: { errors, isSubmitting },
   } = useForm()
 
-  //Imported from MUI fiel upload for the design of upload image field
-  const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  });
-
-
-  const [profileDetail, setProfileDetails] = useState({})
-  const [editName, setEditName] = useState(false)
-  const [editEmail, setEditEmail] = useState(false)
-  const [editPhone, setEditPhone] = useState(false)
-  const [editLocation, setEditLocation] = useState(false)
-  const [editUrl, setEditUrl] = useState(false)
-  const [editDescription, setEditDescription] = useState(false)
-  const [editIndustry, setEditIndustry] = useState(false)
+  const [profileDetail, setProfileDetails] = useState({
+    "industry": "",
+    "name": "",
+    "logo": "",
+    "location": "",
+    "description": "",
+    "phone": "",
+    "company_size": "",
+    "company_email": "",
+    "company_url": "",
+  })
+  const [editButtonStatus, setEditButtonStatus] = useState(
+                                                            {
+                                                              'editName': false, 
+                                                              'editEmail':false,
+                                                              'editPhone':false, 
+                                                              'editLocation':false, 
+                                                              'editUrl':false,
+                                                              'editDescription':false,
+                                                              'editIndustry':false
+                                                            })
   const [industries, setIndustries] = useState([]);
   const [profilePic, setProfilePic] = useState(false);
   const [selectedFile, setSelectedFile] = useState()
@@ -71,9 +85,6 @@ export default function Home() {
 
   // Gets all the profileDetail of the request user
   const getProfile = async () => {
-    
-
-
     const requestOptions = {
       method: 'GET',
       headers: {
@@ -86,30 +97,14 @@ export default function Home() {
     try {
       const response = await fetch(`${APIENDPOINT}/recruiter/get-recruiter-profile/`, requestOptions);
       if (!response.ok) {
-        const data = await response.json();
-        
-        // Handle non-successful responses
-        setProfileDetails(
-          {
-            "industry": "",
-            "name": "",
-            "logo": "",
-            "location": "",
-            "description": "",
-            "phone": "",
-            "company_size": "",
-            "company_email": "",
-            "company_url": "",
-          }
-        )
         router.push("/recruiter/create-profile-details")
+        return;
 
       }
       const data = await response.json();
       setProfileDetails(data)
     } catch (error) {
       console.error('There was a problem with the fetch request:', error);
-      // Handle error
       return { error: error.message };
     }
   }
@@ -138,18 +133,25 @@ export default function Home() {
     try {
       const res = await PatchRequest(`/recruiter/view-recruiter-details/${profileDetail[0].id}`, data)
     
-      if (res.detail) {
-       
-        throw new Error("Cannot Fetch")
+      if (res.status === 400) {
+        const data = await res.json()
+        for (const error in data){  
+            setError(error, {type:'custom', message:data[error]}, {shouldFocus:true})
+        }
+        return;
       }
   
-      setEditName(false)
-      setEditEmail(false)
-      setEditPhone(false)
-      setEditLocation(false)
-      setEditDescription(false)
-      setEditIndustry(false)
-      setEditUrl(false)
+      setEditButtonStatus(
+        {
+          editName:false,
+          editEmail:false,
+          editIndustry:false,
+          editDescription:false,
+          editLocation:false,
+          editPhone:false,
+          editUrl:false
+        }
+      )
       getProfile()
     }
     catch (errors) {
@@ -209,6 +211,7 @@ export default function Home() {
 
   //Code to preview the selected image file on browser
   useEffect(() => {
+    
     if (!selectedFile) {
       setPreview(undefined)
       return
@@ -220,8 +223,6 @@ export default function Home() {
     // free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile])
-
-
 
 
   return (
@@ -237,15 +238,15 @@ export default function Home() {
             <form className="" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="name" className="text-sm">Company Name</label>
               <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
-                <input type="text" {...register("name", { required: "Name is Required" })} id="name" className={`w-full rounded-xl bg-white py-4 px-3 text-black`} disabled={editName ? false : true} placeholder="Enter Company Name" />
+                <input type="text" {...register("name", { required: "Name is Required" })} id="name" className={`w-full rounded-xl bg-white py-4 px-3 text-black`} readOnly={!editButtonStatus.editName} placeholder="Enter Company Name" />
                 {
-                  editName ?
+                  editButtonStatus.editName ?
                     <div className="flex gap-2 font-bold text-[#414C61]">
                       <button type="submit" disabled={isSubmitting} className="bg-[#99E8A5] py-2 px-6 rounded-2xl">Edit</button>
-                      <button onClick={() => setEditName(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
+                      <button onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editName:false}} )} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                     </div>
                     :
-                    <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditName(true)}></i>
+                    <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editName:true}} )}></i>
                 }
 
               </div>
@@ -256,15 +257,15 @@ export default function Home() {
             <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="email" className="text-sm">Company Email</label>
               <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
-                <input type="email" {...register("company_email", { required: "Email is required" })} id="email" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editEmail ? false : true} placeholder="Enter Company Email" />
+                <input type="email" {...register("company_email", { required: "Email is required" })} id="email" className="w-full rounded-xl bg-white py-4 px-3 text-black" readOnly={!editButtonStatus.editEmail} placeholder="Enter Company Email" />
                 {
-                  editEmail ?
+                  editButtonStatus.editEmail ?
                     <div className="flex gap-2 font-bold text-[#414C61]">
                       <button type="submit" disabled={isSubmitting} className="bg-[#99E8A5] py-2 px-6 rounded-2xl">Edit</button>
-                      <button onClick={() => setEditEmail(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
+                      <button onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editEmail:false}} )} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                     </div>
                     :
-                    <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditEmail(true)}></i>
+                    <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editEmail:true}} )}></i>
                 }
 
               </div>
@@ -275,7 +276,6 @@ export default function Home() {
             <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="phone" className="text-sm">Phone</label>
               <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
-                {/* <input type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editPhone ? false : true} placeholder="Enter Company Phone number" /> */}
                 <Controller
                         control={control}
                         name="phone_number"
@@ -287,21 +287,22 @@ export default function Home() {
                             international
                             defaultCountry="NP"
                             countryCallingCodeEditable={false}
-                            readOnly={editPhone ? false : true}
+                            readOnly={!editButtonStatus.editPhone}
                             className={`w-full rounded-xl bg-white py-4 px-3 text-black`} 
                             />
                         )}
                     />
                 {
-                  editPhone ?
+                  editButtonStatus.editPhone ?
                     <div className="flex gap-2 font-bold text-[#414C61]">
                       <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
-                      <button onClick={() => setEditPhone(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
+                      <button onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editPhone:false}} )} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                     </div>
                     :
-                    <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditPhone(true)}></i>
+                    <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editPhone:true}} )}></i>
                 }
               </div>
+              {errors.phone_number ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.phone_number.message}</p> : ""}
             </form>
 
 
@@ -368,15 +369,15 @@ export default function Home() {
         <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="location" className="text-sm">Location</label>
           <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
-            <input type="text" {...register("location", { required: "Location is required" })} id="location" className="w-full rounded-xl bg-white py-4 px-3 text-black" disabled={editLocation ? false : true} placeholder="Location" />
+            <input type="text" {...register("location", { required: "Location is required" })} id="location" className="w-full rounded-xl bg-white py-4 px-3 text-black" readOnly={!editButtonStatus.editLocation} placeholder="Location" />
             {
-              editLocation ?
+              editButtonStatus.editLocation ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
                   <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
-                  <button onClick={() => setEditLocation(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
+                  <button onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editLocation:false}} )} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :
-                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditLocation(true)}></i>
+                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editLocation:true}} )}></i>
             }
           </div>
         </form>
@@ -396,16 +397,16 @@ export default function Home() {
                             })}
                  id="company_url" 
                  className="w-full rounded-xl bg-white py-4 px-3 text-black" 
-                 disabled={editUrl ? false : true} 
+                 readOnly={!editButtonStatus.editUrl}
                  placeholder="URL" />
             {
-              editUrl ?
+              editButtonStatus.editUrl ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
                   <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
-                  <button onClick={() => setEditUrl(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
+                  <button onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editUrl:false}} )} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :
-                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditUrl(true)}></i>
+                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editUrl:true}} )}></i>
             }
             
           </div>
@@ -420,7 +421,7 @@ export default function Home() {
           <label htmlFor="industry" className="text-sm">Industry</label>
           <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
             {
-              editIndustry ?
+              editButtonStatus.editIndustry ?
                 <ReactHookFormSelect
                   id="idustry-select"
                   name="industry"
@@ -442,13 +443,13 @@ export default function Home() {
             }
 
             {
-              editIndustry ?
+              editButtonStatus.editIndustry ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
                   <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
-                  <button onClick={() => setEditIndustry(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
+                  <button onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editIndustry:false}} )} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :
-                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditIndustry(true)}></i>
+                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editIndustry:true}} )}></i>
             }
           </div>
         </form>
@@ -460,7 +461,7 @@ export default function Home() {
           <div className="flex gap-4 items-start sm:items-center mt-1 flex-col sm:flex-row">
 
             {
-              editDescription ?
+              editButtonStatus.editDescription ?
                 <Controller
                   name="description"
                   control={control}
@@ -490,13 +491,13 @@ export default function Home() {
             }
 
             {
-              editDescription ?
+              editButtonStatus.editDescription ?
                 <div className="flex gap-2 font-bold text-[#414C61]">
                   <button type="submit" className="bg-[#99E8A5] py-2 px-6 rounded-2xl" disabled={isSubmitting}>Edit</button>
-                  <button onClick={() => setEditDescription(false)} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
+                  <button onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editDescription:false}} )} className="bg-red-400 py-2 px-6 rounded-2xl">Cancel</button>
                 </div>
                 :
-                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditDescription(true)}></i>
+                <i className="bi bi-pen-fill text-lg text-[#A0A3BD] cursor-pointer" onClick={() => setEditButtonStatus((prevState) => {return {...prevState, editDescription:true}} )}></i>
             }
 
 

@@ -68,7 +68,8 @@ export default function CreateProfileDetails() {
         register,
         control,
         setValue,
-        formState: { errors, isSubmitting, isDirty, isValid },
+        setError,
+        formState: { errors, isSubmitting },
     } = useForm()
 
     //Imported from MUI fiel upload for the design of upload image field
@@ -110,32 +111,35 @@ export default function CreateProfileDetails() {
 
     const onSubmit = async (data) => {
         const formData = new FormData()
-        
+
         formData.append("name", data.name)
         formData.append("company_url", data.company_url)
         formData.append("company_size", data.company_size)
         // formData.append("company_min_size", data.company_min_size)
         // formData.append("company_max_size", data.company_max_size)
         formData.append("location", data.location)
-        formData.append("phone_number", data.phone_number) 
+        formData.append("phone_number", data.phone_number)
         formData.append("company_email", data.company_email)
         formData.append("industry", data.industry)
         formData.append("description", data.description)
         formData.append("logo", selectedFile)
-        
+
         try {
             const res = await PostFormWithToken(`/recruiter/recruiter-details/`, formData)
-            
-            if (res.detail) {
-                
-                throw new Error("Cannot Fetch")
+
+            if (res.status === 400) {
+                const data = await res.json()
+                for (const error in data){  
+                    setError(error, {type:'custom', message:data[error]}, {shouldFocus:true})
+                }
+                return;
             }
-            
+
             router.push("/recruiter")
 
         }
         catch (errors) {
-            
+
             console.log(errors);
         }
     }
@@ -199,24 +203,53 @@ export default function CreateProfileDetails() {
 
             <div>
                 <h1 className="text-3xl font-semibold">Add Profile Details</h1>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-10">
 
+                    {/* Comapany Logo Fields */}
+                    {errors.logo ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.logo.message}</p> : ""}
+
+                    <div className="w-[155px] h-[155px] mb-12">
+
+                        <div className="flex flex-col gap-2">
+                            <div className={`w-[140px] h-[140px] relative border-2 ${errors.logo ? 'border-red-600' : 'border-[#514646]'}`}>
+                                {
+                                    //Previews the image
+                                    selectedFile ? <img src={preview} className='w-full h-full object-contain' /> : <p className="absolute top-[30%] text-center font-bold text-sm">Upload Company Logo</p>
+                                }
+                            </div>
+
+                            <div>
+
+                                {/* Handle the upload changes done in the image field */}
+                                <Controller
+                                    control={control}
+                                    name="logo"
+                                    rules={{ required: "Company logo is required" }}
+                                    render={({ field: { onChange } }) =>
+                                        <Button component="label" variant="contained" sx={{ backgroundColor: '#49C199', color: 'white', textTransform: "capitalize", border: "1px solid #475569", width: "max-content" }}>
+                                            Choose Company Logo
+                                            <VisuallyHiddenInput type="file" onChange={handleChange} accept=".jpeg,.jpg, .png" />
+                                        </Button>}
+                                ></Controller>
+
+
+                            </div>
+
+                        </div>
+                    </div>
 
 
                     {/* Comapny Name Fields */}
-
-
-                    <label htmlFor="name" className="text-sm">Company Name</label>
-                    <div className="flex gap-4 items-center mt-1">
+                    <div className="flex flex-col gap-2 mt-4">
+                        <label htmlFor="name" className="text-sm">Company Name</label>
                         <input type="text" {...register("name", { required: "Name is Required" })} id="name" className={`w-full rounded-xl bg-white py-4 px-3 text-black`} placeholder="Enter Company Name" />
                     </div>
 
 
 
                     {/* Company Email Fields  */}
-
-                    <label htmlFor="email" className="text-sm">Company Email</label>
-                    <div className="flex gap-4 items-center mt-1">
+                    <div className="flex flex-col gap-2 mt-4">
+                        <label htmlFor="email" className="text-sm">Company Email</label>
                         <input type="email" {...register("company_email", { required: "Email is required" })} id="email" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Email" />
 
 
@@ -226,28 +259,23 @@ export default function CreateProfileDetails() {
 
                     {/* Phone Fields */}
 
-                    {/* <label htmlFor="phone" className="text-sm">Phone</label>
-                    <div className="flex gap-4 items-center mt-1">
-                        <input min="1" type="number" {...register("phone", { required: "Phone is required" })} id="phone" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Enter Company Phone number" />
-
-                    </div> */}
                     <div className="my-4">
-                    <Controller
-                        control={control}
-                        name="phone_number"
-                        rules={{ required: "This field is Required" }}
-                        render={({ field}) => (
-                        <PhoneInput
-                            {...field}
-                            placeholder="Enter phone number"
-                            international
-                            defaultCountry="NP"
-                            countryCallingCodeEditable={false}
-                            className={`w-full rounded-xl bg-white py-4 px-3 text-black`} 
-                            />
-                        )}
-                    />
-                    {errors.phone_number ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.phone_number.message}</p> : ""}
+                        <Controller
+                            control={control}
+                            name="phone_number"
+                            rules={{ required: "This field is Required" }}
+                            render={({ field }) => (
+                                <PhoneInput
+                                    {...field}
+                                    placeholder="Enter phone number"
+                                    international
+                                    defaultCountry="NP"
+                                    countryCallingCodeEditable={false}
+                                    className={`w-full rounded-xl bg-white py-4 px-3 text-black`}
+                                />
+                            )}
+                        />
+                        {errors.phone_number ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.phone_number.message}</p> : ""}
 
                     </div>
                     {/* COmpany sizze Fields */}
@@ -279,65 +307,17 @@ export default function CreateProfileDetails() {
                         />
                     </div>
 
-
-
-
-
-
-
-                    {/* Comapany Logo Fields */}
-                    {errors.logo ? <p className="text-sm text-left mt-2 font-bold text-[#E33629]">{errors.logo.message}</p> : ""}
-
-                    <div className="w-[155px] h-[155px] mb-10">
-
-                        <div className="flex flex-col gap-2">
-                            <div className={`w-[140px] h-[140px] relative border-2 ${errors.logo ? 'border-red-600' : 'border-[#514646]'}`}>
-                                {
-                                    //Previews the image
-                                    selectedFile ? <img src={preview} className='w-full h-full object-contain' /> : <p className="absolute top-[30%] text-center font-bold text-sm">Upload Company Logo</p>
-                                }
-                            </div>
-
-                            <div>
-
-                                {/* Handle the upload changes done in the image field */}
-                                <Controller
-                                    control={control}
-                                    name="logo"
-                                    rules={{ required: "Company logo is required" }}
-                                    render={({ field: { onChange } }) =>
-                                        <Button component="label" variant="contained" sx={{ backgroundColor: '#49C199', color: 'white', textTransform: "capitalize", border: "1px solid #475569", width: "max-content" }}>
-                                            Choose Company Logo
-                                            <VisuallyHiddenInput type="file" onChange={handleChange} accept=".jpeg,.jpg, .png" />
-                                        </Button>}
-                                ></Controller>
-
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-
-
                     {/* Company Location Fields */}
-
-                    <label htmlFor="location" className="text-sm">Location</label>
-                    <div className="flex gap-4 items-center mt-1">
+                    <div className="flex flex-col gap-2 mt-4">
+                        <label htmlFor="location" className="text-sm">Location</label>
                         <input type="text" {...register("location", { required: "Location is required" })} id="location" className="w-full rounded-xl bg-white py-4 px-3 text-black" placeholder="Location" />
 
                     </div>
 
 
                     {/* Comapny Url Fields */}
-
-                    <label htmlFor="company_url" className={`text-sm  ${errors.company_url && 'text-red-600'}`}>Company Website URL</label>
-                    <div className="flex gap-4 items-center mt-1">
+                    <div className="flex flex-col gap-2 mt-4">
+                        <label htmlFor="company_url" className={`text-sm  ${errors.company_url && 'text-red-600'}`}>Company Website URL</label>
                         <input
                             type="text"
                             {...register("company_url",
@@ -394,9 +374,9 @@ export default function CreateProfileDetails() {
                     {/* Description Fields */}
 
 
+                    
+                    <div className="flex flex-col gap-2 mt-4">
                     <label htmlFor="description" className="text-sm">Description</label>
-                    <div className="flex gap-4 items-center mt-1">
-
                         <Controller
                             name="description"
                             control={control}
@@ -406,7 +386,7 @@ export default function CreateProfileDetails() {
                             defaultValue={""}
                             render={({ field: { onChange, value } }) => (
 
-                                <ReactQuillEditable theme="snow" value={value} onChange={onChange} className="w-full bg-white " />
+                                <ReactQuillEditable theme="snow" value={value} onChange={onChange} className="w-full bg-white read-quill write-quill" />
                             )}
                         />
 
@@ -416,7 +396,7 @@ export default function CreateProfileDetails() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="mt-20 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
+                        className="mt-8 block w-full cursor-pointer rounded bg-rose-500 px-4 py-2 text-center font-semibold text-white hover:bg-rose-400 focus:outline-none focus:ring focus:ring-rose-500 focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70"
                     >
                         {isSubmitting ? (
                             <ClipLoader

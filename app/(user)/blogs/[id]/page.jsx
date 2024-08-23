@@ -1,5 +1,4 @@
 import { Lexend_Deca } from "next/font/google";
-import GetRequestNoToken from "@/app/api/getRequestNoToken";
 import ShareButton from "@/app/components/Sharebutton";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
 const lexend = Lexend_Deca({ subsets: ["latin"] });

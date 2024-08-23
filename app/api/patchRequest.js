@@ -23,10 +23,7 @@ export default async function PatchRequest(endpoint, data, isFile){
         const response = await fetch(`${APIENDPOINT}${endpoint}`, requestOptions);
         if (!response.ok) {
           // Handle non-successful responses
-          
-          const err = await response.json()
-          
-          throw new Error('Network response was not ok.');
+          return response
         }
         return await response.json();
       } catch (error) {

@@ -1,6 +1,4 @@
 "use client"
-
-import Link from "next/link";
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";

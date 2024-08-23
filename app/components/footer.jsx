@@ -3,12 +3,12 @@ import Link from "next/link";
 import GetRequestNoToken from "../api/getRequestNoToken";
 
 async function getSkills(){
-  const data = await GetRequestNoToken(`/get-skills/?industry=null`)
+  const data = await GetRequestNoToken(`/all-skills-with-job`)
   return data
 }
 
 async function getJobCategory(){
-  const data =  await GetRequestNoToken('/job-preference/')
+  const data =  await GetRequestNoToken('/all-prefferedjob-with-job')
   return data
 }
 
@@ -74,7 +74,7 @@ export default async function Footer(){
                  {
                     jobCategory?.map(data =>(
                 
-                        <Link href={`/jobs?industry=${data.id}`} key={data.id}>
+                        <Link href={`/jobs?job-category=${data.id}`} key={data.id}>
                             
                         <li className="mt-5 flex gap-3 items-center"> <Image src={data.icon} alt="icon" width={20} height={20}/>  Jobs In {data.title}</li>
                         </Link> 

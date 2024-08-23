@@ -28,6 +28,7 @@ export default function CreateProfile() {
         register,
         control,
         setValue,
+        setError,
         watch,
         formState: { errors, isSubmitting },
     } = useForm()
@@ -145,10 +146,13 @@ export default function CreateProfile() {
         });
         try {
             const res = await PostFormWithToken(`/job-seeker/create-details/`, formData)
-
-            if (res.detail) {
-
-                throw new Error("Cannot Fetch")
+            
+            if (res.status === 400) {
+                const data = await res.json()
+                for (const error in data){  
+                    setError(error, {type:'custom', message:data[error]}, {shouldFocus:true})
+                }
+                return;
             }
 
             router.push("/")
@@ -295,8 +299,9 @@ export default function CreateProfile() {
 
 
                                         <div className="flex flex-col mt-6">
-                                            {/* <label htmlFor="phone" className="text-sm">Phone Number*</label>
-                                            <input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" min={1} {...register("phone", { required: "Phone is required" })} /> */}
+                                        <label htmlFor="phone" className="text-sm">Phone Number*</label>
+                                            
+                                            {/*<input className="border-[1px] border-[#CFD1D4] rounded py-2 px-6 w-full" type="number" id="phone" min={1} {...register("phone", { required: "Phone is required" })} /> */}
                                             <Controller
                                                 control={control}
                                                 name="phone_number"

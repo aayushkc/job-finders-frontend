@@ -16,6 +16,7 @@ import { addYears } from 'date-fns';
 import Link from "next/link";
 import { ClipLoader } from "react-spinners";
 import PhoneInput from "react-phone-number-input"
+
 export default function UpdateProfile() {
     const router = useRouter()
     const [profileDetail, setProfileDetails] = useState([])
@@ -225,10 +226,13 @@ export default function UpdateProfile() {
         try {
             const res = await PatchRequest(`/job-seeker/get-update-details/${profileDetail[0].id}`, formData, true)
             
-            if (res.detail) {
-               
-                throw new Error("Cannot Fetch")
-            }
+            if (res.status === 400) {
+                const data = await res.json()
+                for (const error in data){  
+                    setError(error, {type:'custom', message:data[error]}, {shouldFocus:true})
+                }
+                return;
+              }
           
             router.push("/")
 
@@ -303,7 +307,7 @@ export default function UpdateProfile() {
 
                                 <div>
 
-                                    {/* Handle the upload changes done in the image field */}
+                                    {/* Handle the upload changes done in the resume field */}
                                     <Controller
                                         control={control}
                                         name="resume"

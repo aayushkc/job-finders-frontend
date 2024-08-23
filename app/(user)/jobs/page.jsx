@@ -24,6 +24,7 @@ export default function JobDetail() {
     const today = new Date()
     let indsutryParam = serachParam.get("industry") || null
     let skillsParam = serachParam.get("skills") || null
+    let prefferedjobParam = serachParam.get("job-category") || null
     const accessToken = Cookies.get('accessToken')
     const isSeeker = Cookies.get('isSeeker') === 'true'
 
@@ -40,7 +41,7 @@ export default function JobDetail() {
 
         try {
 
-            const data = accessToken && isSeeker ? await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}`, accessToken) : await GetRequestNoToken(`/job-seeker/get-all-job/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}`)
+            const data = accessToken && isSeeker ? await getRequestWithToken(`/job-seeker/recommended-jobs/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}&job-category=${prefferedjobParam}`, accessToken) : await GetRequestNoToken(`/job-seeker/get-all-job/?page=${pageNum}&industry=${indsutryParam}&skills=${skillsParam}&job-category=${prefferedjobParam}`)
             if (data.detail) {
                 throw new Error("Cannot Fetch")
             }
@@ -100,7 +101,7 @@ export default function JobDetail() {
         nextSearchParams.delete('pageNum')
         nextSearchParams.delete('skills')
         nextSearchParams.delete('industry')
-
+        nextSearchParams.delete('job-category')
         router.replace(`${pathname}?${nextSearchParams}`)
         if (!serachParam.get("id")) {
             getRecommendedJobs(true)
