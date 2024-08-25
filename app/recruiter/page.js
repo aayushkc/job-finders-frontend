@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { APIENDPOINT } from "../api/APIENDPOINT";
 import 'react-quill/dist/quill.snow.css';
 import PhoneInput from "react-phone-number-input"
+import { useAuth } from "../utils/checkIsLoggedIn";
 
 const ReactQuillEditable = dynamic(
     () => import ('react-quill'),
@@ -50,6 +51,8 @@ export default function Home() {
     control,
     formState: { errors, isSubmitting },
   } = useForm()
+
+  const {setIsLoggedIn} = useAuth()
 
   const [profileDetail, setProfileDetails] = useState({
     "industry": "",
@@ -102,6 +105,7 @@ export default function Home() {
 
       }
       const data = await response.json();
+      setIsLoggedIn((prevState) => {return {...prevState, 'username':`${data[0].name}`}})
       setProfileDetails(data)
     } catch (error) {
       console.error('There was a problem with the fetch request:', error);

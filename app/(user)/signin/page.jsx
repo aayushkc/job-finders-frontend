@@ -13,8 +13,8 @@ export default function SignIn() {
   const router = useRouter()
 
   useEffect(() =>{
-    if(isLoggedIn) router.back()
-  },[isLoggedIn])
+    if(isLoggedIn.logInStatus) router.back()
+  },[isLoggedIn.logInStatus])
 
   return (
     <main className="signin grid">

@@ -6,12 +6,13 @@ import Link from "next/link";
 import PaginationComponent from "../components/paginationcomponent";
 import { APIENDPOINT } from "../api/APIENDPOINT";
 import Cookies from "js-cookie";
+import { useAuth } from "../utils/checkIsLoggedIn";
 
 
 export default function UserHomePage() {
 
     const router = useRouter()
-
+    const {setIsLoggedIn} =useAuth()
     const accessToken = Cookies.get('accessToken')
     const isSeeker = Cookies.get('isSeeker')
 
@@ -52,9 +53,14 @@ export default function UserHomePage() {
         try {
             const response = await fetch(`${APIENDPOINT}/job-seeker/check-seeker-details/`, requestOptions);
             if (!response.ok) {
+                setIsLoggedIn((prevState) => {return {...prevState,'logInStatus':true, 'username':''}})
                 router.push("/create-profile")
-
+                return;
             }
+            const data = await response.json()
+            console.log(data);
+            
+            setIsLoggedIn((prevState) => {return {...prevState,'logInStatus':true, 'username':`${data[0].first_name} ${data[0].last_name}`}})
             getRecommendedJobs()
            
         } catch (error) {

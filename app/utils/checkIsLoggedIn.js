@@ -5,23 +5,23 @@ import Cookies from 'js-cookie';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState({'logInStatus':false, 'username':''});
 
   // Check cookie on mount
   useEffect(() => {
     const loggedInCookie = Cookies.get('accessToken');
     
     if (loggedInCookie) {
-      setIsLoggedIn(true);
+      setIsLoggedIn((prevState) => {return {...prevState, 'logInStatus':true}});
     }else{
-      setIsLoggedIn(false)
+      setIsLoggedIn((prevState) => {return {...prevState, 'logInStatus':false}})
     }
   }, []);
 
   // Update cookie when isLoggedIn changes
   useEffect(() => {
-    Cookies.set('isLoggedIn', isLoggedIn); // Expires in 7 days
-  }, [isLoggedIn]);
+    Cookies.set('isLoggedIn', isLoggedIn.logInStatus); // Expires in 7 days
+  }, [isLoggedIn.logInStatus]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>

@@ -129,8 +129,8 @@ export default function QuestionSet() {
     }
 
     useEffect(() => {
-        if (!isLoggedIn) router.push("/signin")
-    }, [isLoggedIn, router])
+        if (!isLoggedIn.logInStatus) router.push("/signin")
+    }, [isLoggedIn.logInStatus, router])
 
     useEffect(() => {
         getQuizSet()

@@ -113,8 +113,8 @@ export default function CreateProfile() {
     }
 
     useEffect(() => {
-        if (!isLoggedIn) router.push("/signin")
-    }, [isLoggedIn])
+        if (!isLoggedIn.logInStatus) router.push("/signin")
+    }, [isLoggedIn.logInStatus])
 
     useEffect(() => {
         if (!selecteProfilePhoto) {

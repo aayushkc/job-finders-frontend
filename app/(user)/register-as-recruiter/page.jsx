@@ -133,8 +133,8 @@ export default function SignInUser() {
     }
 
     useEffect(() =>{
-        if(isLoggedIn) router.back()
-      },[isLoggedIn])
+        if(isLoggedIn.logInStatus) router.back()
+      },[isLoggedIn.logInStatus])
     
     useEffect(()=>{
         setRegistrationSuccess(false)

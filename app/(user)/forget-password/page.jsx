@@ -68,8 +68,8 @@ export default function SignIn() {
     }
 
     useEffect(() => {
-        if (isLoggedIn) router.back()
-    }, [isLoggedIn])
+        if (isLoggedIn.logInStatus) router.back()
+    }, [isLoggedIn.logInStatus])
 
     useEffect(() => {
         setIsMailSent(false)

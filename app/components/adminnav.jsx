@@ -7,8 +7,9 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../utils/checkIsLoggedIn";
+import NavProfleTab from "./navProfileTab";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"], display:'swap' });
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"], display: 'swap' });
 
 const RecruiterNavItems = [
     {
@@ -37,13 +38,18 @@ const SuperAdminNavItems = [
 export default function AdminNav({ isSuperAdmin, isRecruiter }) {
     const router = useRouter();
     const currentRoute = usePathname();
-    
-    const { setIsLoggedIn } = useAuth()
-    const [hamburg, setHamBurg] = useState(false)
 
+    const { isLoggedIn, setIsLoggedIn } = useAuth()
+    const [hamburg, setHamBurg] = useState(false)
+    const [isTabClicked, setIsTabClicked] = useState(false)
+
+
+    const handleTabClicked = () => {
+        setIsTabClicked(!isTabClicked)
+    }
 
     const handleClick = () => {
-        
+
         setHamBurg(!hamburg)
     }
 
@@ -51,48 +57,53 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
         Cookies.remove('accessToken')
         Cookies.remove('userId')
         Cookies.remove('isSeeker')
-        setIsLoggedIn(false)
+        setIsLoggedIn({ logInStatus: false, username: '' })
         router.push('/signin')
     }
     return (
+        <>
+            <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
+                <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
+                    <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
+                        <Link href="/">
+                            <Image src="/images/logo.png" alt="logo" priority={true} className="max-w-full max-h-full" width="175" height="95" />
+                        </Link>
+                    </div>
+                    <button className="pr-4 sm:hidden" onClick={handleClick}>
+                        {hamburg ? <i className="bi bi-x font-bold text-2xl"></i> : <i className="bi bi-list font-bold text-2xl"></i>}
+                    </button>
 
-        <header className="px-4 sm:px-40 sm:py-8 border-[1px] border-b-[#CFD1D4] flex flex-col justify-center h-[90px]  fixed top-0 left-0 bg-white w-full z-[999]">
-            <nav className={`flex gap-10 items-center justify-between font-bold relative ${roboto.className}`}>
-                <div className="max-w-[100px]  sm:max-w-[175px] sm:max-h-[95px]">
-                    <Link href="/">
-                        <Image src="/images/logo.png" alt="logo" priority={true} className="max-w-full max-h-full" width="175" height="95" />
-                    </Link>
-                </div>
-                <button className="pr-4 sm:hidden" onClick={handleClick}>
-                    {hamburg ? <i className="bi bi-x font-bold text-2xl"></i> : <i className="bi bi-list font-bold text-2xl"></i>}
-                </button>
+                    <ul className={`bottom-0 z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4 sm:p-0 ${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" : "hidden"}`}>
 
-                <ul className={`bottom-0 z-99 bg-white absolute sm:flex sm:static sm:top-0 sm:gap-4 sm:p-0 ${hamburg ? "block top-16 right-0 text-left py-4 text-base pl-3 pr-10 bg-white w-fit h-fit" : "hidden"}`}>
-
-                    {/* Navitems for Recruiter Page */}
-                    {
-                        isRecruiter && RecruiterNavItems.map((data, index) => {
-                            return <Link href={data.link} onClick={handleClick} key={index}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
-                                } mb-4 sm:mb-0`}>{data.item}</li></Link>
-                        })
-                    }
-
-
-                    {/* Navitems for Recruiter SuperAdmin */}
-                    {
-                        isSuperAdmin && SuperAdminNavItems.map((data, index) => {
-                            return <Link href={data.link} onClick={handleClick} key={index}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
-                                } mb-4 sm:mb-0`}>{data.item}</li></Link>
-                        })
-                    }
-
-                    <button className="sm:hidden bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>
-                </ul>
+                        {/* Navitems for Recruiter Page */}
+                        {
+                            isRecruiter && RecruiterNavItems.map((data, index) => {
+                                return <Link href={data.link} onClick={handleClick} key={index}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
+                                    } mb-4 sm:mb-0`}>{data.item}</li></Link>
+                            })
+                        }
 
 
-                <button className="hidden sm:block bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>
+                        {/* Navitems for Recruiter SuperAdmin */}
+                        {
+                            isSuperAdmin && SuperAdminNavItems.map((data, index) => {
+                                return <Link href={data.link} onClick={handleClick} key={index}><li className={` ${currentRoute === `${data.link}` && "text-gurkha-yellow"
+                                    } mb-4 sm:mb-0`}>{data.item}</li></Link>
+                            })
+                        }
 
-            </nav>
-        </header>
+                        <button className="sm:hidden bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button>
+                    </ul>
+
+
+                    {/* <button className="hidden sm:block bg-gurkha-yellow text-white py-2 px-6 rounded-3xl" onClick={handleLogOut}>Log Out</button> */}
+                    <NavProfleTab handleLogOut={handleLogOut} handleTabClick={handleTabClicked} isTabClicked={isTabClicked} user_type={'Recruiter'} username={isLoggedIn.username} isRecruiter={true} />
+
+                </nav>
+            </header>
+            {
+                isTabClicked && <div className="absolute w-full h-full z-[88]" onClick={handleTabClicked}></div>
+            }
+        </>
     )
 }

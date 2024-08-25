@@ -10,8 +10,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { APIENDPOINT } from "../api/APIENDPOINT";
 import { useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
-
+import {useAuth} from '../utils/checkIsLoggedIn'
 export default function LoginForm(){
+    const { setIsLoggedIn } = useAuth()
     const [logInErr, setLogInErr] = useState(false)
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false)

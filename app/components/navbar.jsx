@@ -2,11 +2,11 @@
 import Image from "next/image"
 import { Roboto } from "next/font/google";
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../utils/checkIsLoggedIn";
-import { revalidatePath } from "next/cache";
+import NavProfleTab from "./navProfileTab";
 
 
 
@@ -71,29 +71,34 @@ export default function NavBar() {
     const currentRoute = usePathname();
     const accessToken = Cookies.get('accessToken')
     const [isClient, setIsClient] = useState(false)
-    
+    const [isTabClicked, setIsTabClicked] = useState(false)
     const handleClick = () => {
 
         setHamBurg(!hamburg)
     }
 
+    const handleTabClicked = () =>{
+        setIsTabClicked(!isTabClicked)
+    }
+
+    
     const handleLogOut = () => {
         Cookies.remove('accessToken')
         Cookies.remove('isSeeker')
         Cookies.remove('userId')
-        setIsLoggedIn(false)
+        setIsLoggedIn((prevState) =>{return {...prevState,logInStatus:false, username:''}})
         router.push('/signin')
         router.refresh()
     }
 
-    useEffect(() => {
-        if (accessToken) {
-            setIsLoggedIn(true)
-        } else {
-            setIsLoggedIn(false)
-        }
+    // useEffect(() => {
+    //     if (accessToken) {
+    //         setIsLoggedIn((prevState) => {return {...prevState, logInStatus:true}})
+    //     } else {
+    //         setIsLoggedIn((prevState) => {return {...prevState, logInStatus:false}})
+    //     }
 
-    }, [handleLogOut])
+    // }, [handleLogOut])
 
     useEffect(() =>{
         setIsClient(true)
@@ -116,7 +121,7 @@ export default function NavBar() {
 
                 <ul className={`${hamburg ? "flex flex-col  items-center gap-4 top-16 slide-in pt-14 -mx-4 text-center bg-white w-[110%] h-[100vh] border-2 " : "hidden "} text-xl sm:text-base sm:p-0 bottom-0 border-[#D8D9DC] sm:flex sm:border-none  z-99 bg-white absolute sm:flex-row sm:static sm:w-fit sm:h-fit sm:top-0 sm:gap-12`}>
                     {
-                        isLoggedIn && isSeeker ? NavItems.map((data, index) => {
+                        isLoggedIn.logInStatus && isSeeker ? NavItems.map((data, index) => {
                             return <Link href={data.link} onClick={handleClick} key={index} prefetch={false}>
                                 <li className={` ${currentRoute.split('/')[1] === data.link.slice(1) && "text-gurkha-yellow"} mb-4 sm:mb-0`}>{data.item}</li>
                             </Link>
@@ -130,14 +135,17 @@ export default function NavBar() {
                             })
                     }
                     {}
-                    {isLoggedIn ? isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link> :<button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" prefetch={false} className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
+                    {isLoggedIn.logInStatus ? isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link> :<button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" prefetch={false} className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
                 </ul>
 
 
-                {isLoggedIn ?isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block"><li className={`mb-4 sm:mb-0 list-none`}>Admin Dashboard</li> </Link>: <button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block" onClick={handleLogOut}>Log Out</button> : <Link href="/signin" prefetch={false} className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
+                {isLoggedIn.logInStatus ?isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block"><li className={`mb-4 sm:mb-0 list-none`}>Admin Dashboard</li> </Link>: <NavProfleTab handleLogOut={handleLogOut} handleTabClick={handleTabClicked} isTabClicked={isTabClicked} user_type={'Job Seeker'} username={isLoggedIn.username}/> : <Link href="/signin" prefetch={false} className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
 
             </nav>
         </header>
+        {
+                isTabClicked && <div className="absolute w-full h-full z-[88]" onClick={handleTabClicked}></div>
+        }
         </>
 
       

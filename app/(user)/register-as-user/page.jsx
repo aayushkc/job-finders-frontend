@@ -80,8 +80,8 @@ export default function SignInUser() {
       });
 
     useEffect(() =>{
-        if(isLoggedIn) router.back()
-      },[isLoggedIn])
+        if(isLoggedIn.logInStatus) router.back()
+      },[isLoggedIn.logInStatus])
    
     return (
         <main className="signin sm:px-4 grid">
