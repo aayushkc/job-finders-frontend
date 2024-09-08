@@ -1,20 +1,8 @@
-"use client"
-import LoginForm from "../../components/loginform";
-import google from "../../../public/images/google.png";
-import Image from "next/image";
-import Link from "next/link";
-import { useAuth } from "@/app/utils/checkIsLoggedIn";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
+import LoginForm from "../../components/loginform";
+import Link from "next/link";
 
 export default function SignIn() {
-  const { isLoggedIn } = useAuth();
-  const router = useRouter()
-
-  useEffect(() =>{
-    if(isLoggedIn.logInStatus) router.back()
-  },[isLoggedIn.logInStatus])
 
   return (
     <main className="signin grid">

@@ -6,8 +6,8 @@ import mobileHero from "../../public/images/mobileHero.png"
 import Bolb from "../../public/images/blob.png"
 import Cube from "../../public/images/cube.png"
 import airAsia from "../../public/images/airAsia.png"
-import demir from "../../public/images/demir.png"
-import dhl from "../../public/images/dhlpng.png"
+import demir from "../../public/images/IT-Maximize-New-Logo.svg"
+import dhl from "../../public/images/sisterNursing.jpeg"
 import suzuki from "../../public/images/Suzuki.png"
 import navi from "../../public/images/Navistar.png"
 import arrow from "../../public/images/arrow.png"
@@ -24,7 +24,7 @@ import chooseUs1 from "../../public/images/chooseUs1.png"
 import chooseUs2 from "../../public/images/chooseUs2.png"
 import chooseUs3 from "../../public/images/chooseUs3.png"
 import chooseUs4 from "../../public/images/chooseUs4.png"
-import chooseUs5 from "../../public/images/chooseUs5.png"
+import chooseUs5 from "../../public/images/social-network-connection-avatar-icon-vector.jpg"
 import EmblaCarousel from "./emblacarousel";
 import FAQCard from "./faq";
 import HomePageJobDisplayComponent from "./homePageJobDisplayComponent";
@@ -41,21 +41,21 @@ export const CLIENT_SLIDES = [
     'name': "Prashant Pradhan",
     'profilePic': "/images/prashant.webp",
     'company': "NexSewa",
-    'review': "Hiregurkha played a pivotal role in helping me secure my role at NexSewa.",
+    'review': "Hire Gurkha was instrumental in landing my job at NexSewa. The platform connected me with top opportunities, making the job search seamless and successful. Highly recommend for anyone seeking a career boost.",
     'proficient': "Graphic Designer"
   },
   {
     'name': "Ayush Duyadi",
     'company': "AirAsia",
     'profilePic': "/images/ayush.webp",
-    'review': "My journey to AirAsia was made possible by Hiregurkha.",
+    'review': "Hire Gurkha was crucial in helping me secure my role as Project Manager at AirAsia. The platform provided excellent opportunities and guidance, making my job search smooth and successful. Highly recommended!",
     'proficient': "Project Manager"
   },
    {
     'name': "Amir Kanal",
     'company': "Mahindra Mahindra",
     'profilePic': "/images/amirKhanal.webp",
-    'review': "Hiregurkha helped me find to secure my job at Mahindra Mahindra.",
+    'review': "Hire Gurkha played a vital role in helping me secure a designer position at Mahindra & Mahindra. The platform’s resources and support made my job search efficient and successful. Highly recommended!",
     'proficient': "Project Lead"
   }
 ]
@@ -82,7 +82,7 @@ export  const BUSINESS_SLIDES = [
     'company': "KEN PO KAI Australia",
     'position': "CEO",
     'profilePic': "/images/sumanSubedi.webp",
-    'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
+    'review': "I highly recommend Hire Gurkha for finding top talent in Nepal. They helped me secure the best candidates quickly and efficiently, streamlining the hiring process. Exceptional service and results!",
     'proficient': null
   },
   {
@@ -90,7 +90,7 @@ export  const BUSINESS_SLIDES = [
     'company': "Kangaroo Group",
     'position': "MD",
     'profilePic': "/images/sarojThapa.webp",
-    'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
+    'review': "Hire Gurkha is an excellent platform for sourcing top talent from Nepal. They helped me find the perfect candidates quickly and efficiently, making the hiring process smooth and successful.",
     'proficient': null
   },
   {
@@ -98,7 +98,7 @@ export  const BUSINESS_SLIDES = [
     'company': "Senept",
     'position': "COO",
     'profilePic': "/images/bijayThapa.webp",
-    'review': "Hiregurkha has truly exceeded our expectations in talent acquisition. Their dedication to finding the right fit for our company culture and  goals has been invaluable",
+    'review': "Hire Gurkha is outstanding for sourcing top Nepali talent for our company. They helped us find the perfect candidates quickly and efficiently, making the hiring process seamless.",
     'proficient': null
   },
   {
@@ -207,11 +207,11 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <div className="px-4 sm:p-10">
           <h2 className="text-3xl font-bold text-center sm:leading-[48px]">Over <span className="text-[#FE810F]">100 NRN</span> businesses using our platform to hire <span className="text-[#FE810F]">from Nepal</span></h2>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-14 mt-12">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-14 mt-12 grayscale">
 
             <Image src={airAsia} alt="air asia" />
-            <Image src={demir} alt="air asia" />
-            <Image src={dhl} alt="air asia" />
+            <Image src={demir} alt="air asia" width={128} height={48}/>
+            <Image src={dhl} alt="air asia" width={238} height={64}/>
             <Image src={suzuki} alt="excel soft" width={238} height={64}/>
             <Image src={navi} alt="air asia" />
 
@@ -442,7 +442,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row justify-center items-center mt-2 gap-4 px-6 sm:gap-0 sm:px-0">
+        <div className="flex flex-col sm:flex-row justify-center items-center mt-2 gap-4 px-6 sm:gap-2 sm:px-0">
           <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs4} alt="choose" className="w-full h-full"/>
              <div className="chooseUsDivText">
@@ -453,7 +453,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
           <div className="w-[290px] h-[240px] sm:w-[396px] sm:h-[357px] chooseUsDiv">
             <Image src={chooseUs5} alt="choose" className="w-full h-full"/>
              <div className="chooseUsDivText">
-                <p>AI Driven Platform</p>
+                <p>HR Services</p>
             </div>
           </div>
         </div>

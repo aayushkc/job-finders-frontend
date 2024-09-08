@@ -16,6 +16,8 @@ import { addYears } from 'date-fns';
 import Link from "next/link";
 import { ClipLoader } from "react-spinners";
 import PhoneInput from "react-phone-number-input"
+import { MAX_FILE_SIZE_IN_MB } from "@/app/utils/constants";
+import { getFileSize } from "@/app/utils/getFIleSize";
 
 export default function UpdateProfile() {
     const router = useRouter()
@@ -178,10 +180,11 @@ export default function UpdateProfile() {
         let da = { ...data, "dob": data.dob.format("YYYY-MM-DD") }
 
         if (selectedFile) {
-            if(selectedFile.size > 500000){
+            const getFileSizeInMb = getFileSize(selectedFile.size)
+            if(getFileSizeInMb > MAX_FILE_SIZE_IN_MB){
                 setError("resume", {
                     type:"manual",
-                    message:"Must be less than 500 KB"
+                    message:"File size must be less than 2 MB"
                 },{
                     shouldFocus:true
                 })
@@ -191,10 +194,11 @@ export default function UpdateProfile() {
         }
 
         if (selecteProfilePhoto) {
-            if(selecteProfilePhoto.size > 500000){
+            const getFileSizeInMb = getFileSize(selecteProfilePhoto.size)
+            if(getFileSizeInMb > MAX_FILE_SIZE_IN_MB){
                 setError("profilePic", {
                     type:"manual",
-                    message:"Must be less than 500 KB"
+                    message:"File size must be less than 2 MB"
                 },{
                     shouldFocus:true
                 })
@@ -349,8 +353,9 @@ export default function UpdateProfile() {
                                                 control={control}
                                                 name="profilePic"
                                                 rules={{required:"Profile Picture is Required", validate:(file) =>{
-                                                    if(file?.size > 500000){
-                                                        return "Max Size Allowed 500kb";
+                                                    const getFileSizeInMb = getFileSize(file?.size)
+                                                    if(getFileSizeInMb > MAX_FILE_SIZE_IN_MB){
+                                                        return "Max Size Allowed 2Mb";
                                                     }
                                                     return true;
                                                 }}}

@@ -15,7 +15,7 @@ import Link from "next/link"
 import { CLIENT_SLIDES } from "@/app/components/anonymoususerhomepage"
 
 
-const OPTIONS = { align: 'start', dragFree: true, loop: true }
+const OPTIONS = { align: 'center', dragFree: true, loop: true }
 
 export default function AboutUs() {
     return (

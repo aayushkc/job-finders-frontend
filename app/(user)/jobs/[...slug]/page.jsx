@@ -23,16 +23,20 @@ export async function generateMetadata({ params }) {
         return {
             title: 'Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha',
             description: 'Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha',
-            keywords: []
+            keywords: [],
+            openGraph:{
+                title: 'Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha',
+                description: 'Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha'
+            }
         }
     }
 
     return {
         title: `${job.title} | Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha`,
         description: `${job.company} is hiring for the role ${job.title} and the required skillset are ${job?.required_skills.map(data => `${data.title}`)}. Apply to thiS job though remote job platform HireGurkha.com. (Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha)`,
-        keywords: [`Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha`, [`Remote Job Nepal`], [`Remote Jobs`], [job?.required_skills.map(data => `${data.title}`)], [job?.job_category.map(data => data.title)]],
+        keywords: [job.title,`${job.company} job in Nepal` ,`Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha`, [`Remote Job Nepal`], [`Remote Jobs`], [job?.required_skills.map(data => `${data.title}`)], [job?.job_category.map(data => data.title)]],
         robots: {
-            index: false,
+            index: true,
             follow: true,
             nocache: true,
             googleBot: {
@@ -42,8 +46,12 @@ export async function generateMetadata({ params }) {
             }
         },
         alternates: {
-            canonical: 'https://hiregurkha.com/jobs/',
+            canonical: `https://hiregurkha.com/jobs/${job.id}/${job.title.replaceAll('-','').replaceAll(' ', '-').toLowerCase()}`,
 
+        },
+        openGraph:{
+            title: `${job.title} | Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha`,
+            description: `${job.company} is hiring for the role ${job.title} and the required skillset are ${job?.required_skills.map(data => `${data.title}`)}. Apply to thiS job though remote job platform HireGurkha.com. (Remote jobs in Nepal(Hire or Get Hired)-Hire Gurkha)`,
         }
     }
 }

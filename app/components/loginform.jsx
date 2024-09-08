@@ -50,10 +50,18 @@ export default function LoginForm(){
           const isRecruiter = decodedToken.isRecruiter; 
           const isSeeker = decodedToken.isSeeker; 
           const isSuperAdmin = decodedToken.isSuperAdmin
+          const isVerified = decodedToken.hasUserBeenActivated
+          setIsLoggedIn({'logInStatus':true, 'username':''})
+          
           Cookies.set('accessToken', data.access, { expires: 1});
           Cookies.set('userId', userId,{ expires: 1}); 
           Cookies.set('isSeeker', isSeeker,{ expires: 1})
           Cookies.set("isLoggedIn", true,{ expires: 1})
+          Cookies.set("hasUserBeenActivated", isVerified)
+          // if(!isVerified){
+          //   router.push('/account-activation')
+          // }
+
           if(isRecruiter){
             router.push('/recruiter');
           }
@@ -96,7 +104,8 @@ export default function LoginForm(){
                 <label>Password</label>
                 <input 
                   type={showPassword ? "text" : 'password'}
-                  required 
+                  required
+                  autoComplete="off" 
                   {...register("password")} 
                   className="rounded-xl border-2 border-[#E2E8F0] py-2 px-6 w-full"/>
             </div>
@@ -109,7 +118,7 @@ export default function LoginForm(){
                 }
               </button>
                
-                <Link href="/forget-password">Forget Password?</Link>
+                <Link href="/forget-password">Forgot Password?</Link>
             </div>
 
             <button className={`flex gap-4 items-center justify-center uppercase rounded-xl py-3 px-6 w-full mt-6 ${isSubmitting ?'bg-[#FCE4B0] text-[#475569] font-semibold' :'bg-gurkha-yellow text-white font-bold'}`} disabled={isSubmitting}>

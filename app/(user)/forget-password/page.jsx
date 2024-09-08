@@ -1,5 +1,5 @@
 "use client"
-import { useAuth } from "@/app/utils/checkIsLoggedIn";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -10,7 +10,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignIn() {
-    const { isLoggedIn } = useAuth();
     const {
         handleSubmit,
         register,
@@ -67,17 +66,14 @@ export default function SignIn() {
         }
     }
 
-    useEffect(() => {
-        if (isLoggedIn.logInStatus) router.back()
-    }, [isLoggedIn.logInStatus])
-
+  
     useEffect(() => {
         setIsMailSent(false)
         setMailError(false)
     }, [])
 
     return (
-        <main className="signin grid h-[90vh]">
+        <section className="signin grid h-[90vh]">
             {
                 isMailSent && <DialogBox
                     dialogHeading={"Email Sent SuccessFully"}
@@ -126,6 +122,6 @@ export default function SignIn() {
 
             </section>
             <ToastContainer />
-        </main>
+        </section>
     );
 }

@@ -57,6 +57,7 @@ export default function AdminNav({ isSuperAdmin, isRecruiter }) {
         Cookies.remove('accessToken')
         Cookies.remove('userId')
         Cookies.remove('isSeeker')
+        Cookies.remove('hasUserBeenActivated')
         setIsLoggedIn({ logInStatus: false, username: '' })
         router.push('/signin')
     }

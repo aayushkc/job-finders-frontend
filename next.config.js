@@ -18,6 +18,9 @@ const nextConfig = {
           }
           ],
         },
+        env:{
+          'APIENDPOINT':'127.0.0.1:8000'
+        }
       
 };
 

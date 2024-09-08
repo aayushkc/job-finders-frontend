@@ -1,19 +1,26 @@
 "use client"
 
-import logo from "../../../public/images/footerLogo.png"
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
-import { useAuth } from "@/app/utils/checkIsLoggedIn";
+
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { APIENDPOINT } from "@/app/api/APIENDPOINT";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
+import PhoneInput from "react-phone-number-input"
+import Cookies from "js-cookie";
+import jwt from "jsonwebtoken"
+import { useAuth } from "@/app/utils/checkIsLoggedIn";
+
 export default function SignInUser() {
+
     const router = useRouter()
-    const { isLoggedIn } = useAuth();
+    const {setIsLoggedIn} = useAuth()
+
     const [emailExists, setEmailExists] = useState(false)
     
     const handleFormSubmit = async (data) => {
@@ -45,8 +52,20 @@ export default function SignInUser() {
             }
 
             const res = await response.json();
+            if (res.userToken) {
+                const decodedToken = jwt.decode(res.userToken.access); // Decode the access token
+
+                const userId = decodedToken.user_id;
+                setIsLoggedIn({ 'logInStatus': true, 'username': '' })
+
+                Cookies.set('accessToken', res.userToken.access, { expires: 1 });
+                Cookies.set('userId', userId, { expires: 1 });
+                Cookies.set('isSeeker', true, { expires: 1 })
+                Cookies.set("isLoggedIn", true, { expires: 1 })
+                Cookies.set("hasUserBeenActivated", false)
+                router.push('/');
+            }
             
-            router.push('/signin')
         } catch (error) {
             console.error('Error registering user:', error);
         }
@@ -65,23 +84,22 @@ export default function SignInUser() {
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
             "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
           ),
-          confirm_password: Yup.string()
+        confirm_password: Yup.string()
           .required("Confirm Password is required")
-          .oneOf([Yup.ref("password")], "Passwords do not match")
+          .oneOf([Yup.ref("password")], "Passwords do not match"),
+        phone_number: Yup.string().required("Phone number is required")
       });
     
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors, isSubmitting, isValid },
       } = useForm({
         
         resolver: yupResolver(formSchema)
       });
 
-    useEffect(() =>{
-        if(isLoggedIn.logInStatus) router.back()
-      },[isLoggedIn.logInStatus])
    
     return (
         <main className="signin sm:px-4 grid">
@@ -144,6 +162,27 @@ export default function SignInUser() {
                         {errors.confirm_password ? <p className="text-sm text-[#E33629]">{errors.confirm_password.message}</p> :""}
                     </div>
 
+                    
+                    <div className="flex flex-col gap-2 items-start">
+                                    <label>Phone Number*</label>
+                                    <Controller
+                                        control={control}
+                                        name="phone_number"
+                                        rules={{ required: "This field is Required" }}
+                                        render={({ field }) => (
+                                            <PhoneInput
+                                                {...field}
+                                                placeholder="Enter phone number"
+                                                international
+                                                defaultCountry="NP"
+                                                countryCallingCodeEditable={false}
+                                                className={`rounded-xl p-2 bg-white w-full ${errors.phone_number ? "border-2 border-red-600" : "border-2 border-[#E2E8F0]"}`}
+                                            />
+                                        )}
+                                    />
+                                    {errors.phone_number ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{errors.phone_number.message}</p> : ""}
+                                    {/* {phoneError ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{phoneError}</p> : ""} */}
+                                </div>
                
                     <button className="uppercase bg-gurkha-yellow font-bold text-white rounded-xl py-3 px-6 w-full mt-6">
                         {isSubmitting ? 

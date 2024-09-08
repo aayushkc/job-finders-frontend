@@ -168,7 +168,6 @@ export default function Home() {
   // Handles the submission of the logo only
   const onFileSubmit = async (data) => {
     const formData = new FormData()
-    console.log(data);
     formData.append("logo", selectedFile)
     try {
       const res = await PatchRequest(`/recruiter/view-recruiter-details/${profileDetail[0].id}`, formData, true) //True need to be sent to indicate that the recieved data is a file

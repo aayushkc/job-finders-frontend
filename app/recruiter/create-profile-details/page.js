@@ -115,8 +115,6 @@ export default function CreateProfileDetails() {
         formData.append("name", data.name)
         formData.append("company_url", data.company_url)
         formData.append("company_size", data.company_size)
-        // formData.append("company_min_size", data.company_min_size)
-        // formData.append("company_max_size", data.company_max_size)
         formData.append("location", data.location)
         formData.append("phone_number", data.phone_number)
         formData.append("company_email", data.company_email)

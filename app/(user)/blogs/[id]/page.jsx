@@ -28,6 +28,10 @@ export async function generateMetadata({ params }) {
             alt: `Preview image for ${product.title}`,
         }],
       },
+      alternates: {
+        canonical: `https://hiregurkha.com/blogs/${params.id}`,
+
+    },
     }
   }
 
@@ -61,7 +65,7 @@ export default async function BlogPage({params}) {
                     <div className="mt-5 sm:mx-16 blogs-content">
                         {
                             data?.body.length > 0 && data.body?.map((data,index) =>(
-                                <div key={index}>
+                                <div key={index} className="mt-4">
                                { data.type === 'paragraph' && <div  className="text-lg text-[#213343] font-light my-4 sm:leading-[32px]" dangerouslySetInnerHTML={{ __html: data.value }}></div>}
                                { data.type === 'heading' && <h2  className="text-2xl text-[#213343] my-4" dangerouslySetInnerHTML={{ __html: data.value }}></h2>}
                                { data.type === 'image' && <img src={`${data.value.large.src}`} alt={data.value.title} className="object-cover my-8"/>}

@@ -73,7 +73,8 @@ export default async function Blogs() {
                     <section className="grid sm:grid-cols-3 mt-12 gap-10 px-6 sm:px-0">
                         {
                             otherBlogs && otherBlogs.map(data => (
-                                <Card sx={{ maxWidth: 375 }} key={data.id}>
+                                <Link href={`/blogs/${data.id}`} key={data.id}>
+                                <Card sx={{ maxWidth: 375 }}>
                                     <CardActionArea>
                                         <CardMedia
                                             component="img"
@@ -92,15 +93,16 @@ export default async function Blogs() {
                                         </CardContent>
                                     </CardActionArea>
                                     <CardActions>
-                                        <Link href={`/blogs/${data.id}`}>
+                                       
                                             <Button size="small" color="primary" className="flex gap-3 font-lightbold">
                                                 <p>Continue </p>
                                                 <i className="bi bi-arrow-right"></i>
                                             </Button>
-                                        </Link>
+                            
 
                                     </CardActions>
                                 </Card>
+                                </Link>
                             ))
 
                         }

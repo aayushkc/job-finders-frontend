@@ -86,6 +86,7 @@ export default function NavBar() {
         Cookies.remove('accessToken')
         Cookies.remove('isSeeker')
         Cookies.remove('userId')
+        Cookies.remove('hasUserBeenActivated')
         setIsLoggedIn((prevState) =>{return {...prevState,logInStatus:false, username:''}})
         router.push('/signin')
         router.refresh()
@@ -134,12 +135,12 @@ export default function NavBar() {
                                 </Link>
                             })
                     }
-                    {}
-                    {isLoggedIn.logInStatus ? isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link> :<button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" prefetch={false} className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
+                   
+                    {isLoggedIn.logInStatus ? isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} prefetch={false} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"><li className={`mb-4 sm:mb-0`}>Admin Dashboard</li> </Link> :<button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden" onClick={() =>{handleLogOut(); handleClick()}}>Log Out</button> : <Link href="/signin" prefetch={false} className="sm:hidden"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl sm:hidden"  onClick={handleClick}>Login</button></Link>}
                 </ul>
 
 
-                {isLoggedIn.logInStatus ?isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block"><li className={`mb-4 sm:mb-0 list-none`}>Admin Dashboard</li> </Link>: <NavProfleTab handleLogOut={handleLogOut} handleTabClick={handleTabClicked} isTabClicked={isTabClicked} user_type={'Job Seeker'} username={isLoggedIn.username}/> : <Link href="/signin" prefetch={false} className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
+                {isLoggedIn.logInStatus ?isClient && accessToken && !isSeeker ? <Link href={'/recruiter'} prefetch={false} onClick={handleClick} className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl hidden sm:block"><li className={`mb-4 sm:mb-0 list-none`}>Admin Dashboard</li> </Link>: <NavProfleTab handleLogOut={handleLogOut} handleTabClick={handleTabClicked} isTabClicked={isTabClicked} user_type={'Job Seeker'} username={isLoggedIn.username}/> : <Link href="/signin" prefetch={false} className="hidden sm:block"><button className="bg-gurkha-yellow text-white py-2 px-6 rounded-3xl"  onClick={handleClick}>Login</button></Link>}
 
             </nav>
         </header>

@@ -1,10 +1,9 @@
 "use client"
 import getRequestWithToken from "@/app/api/getRequestWithToken";
 import PostFormWithToken from "@/app/api/postFormWithToken";
-import { useAuth } from "@/app/utils/checkIsLoggedIn";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import Cookies from "js-cookie";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import CountDown from '@/app/components/countDown';
@@ -12,11 +11,11 @@ import QuizCompletionBox from "./_quizCompletionBox";
 
 export default function QuestionSet() {
 
-    const router = useRouter()
+ 
     const { id } = useParams()
     const serachParam = useSearchParams()
     const accessToken = Cookies.get("accessToken")
-    const { isLoggedIn } = useAuth();
+   
 
     const [quizData, setQuizData] = useState(null)
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -128,9 +127,6 @@ export default function QuestionSet() {
         }
     }
 
-    useEffect(() => {
-        if (!isLoggedIn.logInStatus) router.push("/signin")
-    }, [isLoggedIn.logInStatus, router])
 
     useEffect(() => {
         getQuizSet()
@@ -181,7 +177,7 @@ export default function QuestionSet() {
 
                                         <button
                                             onClick={() => handleAnswerClick(currentQuestion.id, answer.id, answer.is_correct)}
-                                            className="flex items-center gap-4 mt-2"
+                                            className="flex items-center text-left gap-4 mt-2"
                                         >
                             
                                             <FormControlLabel

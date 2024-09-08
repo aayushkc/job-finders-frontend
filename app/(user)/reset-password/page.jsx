@@ -1,7 +1,6 @@
 "use client"
 
-import Link from "next/link";
-import { useAuth } from "@/app/utils/checkIsLoggedIn";
+
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -13,7 +12,7 @@ import * as Yup from "yup"
 import { toast } from "react-toastify";
 
 export default function SignIn() {
-    const { isLoggedIn } = useAuth();
+
     const searchParam = useSearchParams()
     const [token, setToken] = useState()
     const [showPassword, setShowPassword] = useState(false)
@@ -82,9 +81,6 @@ export default function SignIn() {
         }
     }
 
-    useEffect(() => {
-        if (isLoggedIn.logInStatus) router.back()
-    }, [isLoggedIn.logInStatus])
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword)
