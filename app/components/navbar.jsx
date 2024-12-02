@@ -47,18 +47,18 @@ const NavAnonItems = [
         "link": "/jobs"
     },
 
-    {
-        "item": "Blogs",
-        "link": "/blogs"
-    },
-    {
-        "item": "About Us",
-        "link": "/about-us"
-    },
-    {
-        "item": "Events",
-        "link": "/events"
-    },
+    // {
+    //     "item": "Blogs",
+    //     "link": "/blogs"
+    // },
+    // {
+    //     "item": "About Us",
+    //     "link": "/about-us"
+    // },
+    // {
+    //     "item": "Events",
+    //     "link": "/events"
+    // },
 
 
 ]

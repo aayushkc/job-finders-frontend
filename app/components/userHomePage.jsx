@@ -92,7 +92,7 @@ export default function UserHomePage() {
     return (
         <>
             <section className="text-center bg-white pt-8">
-                <h1 className="text-[#193855] font-bold text-3xl sm:text-5xl sm:leading-[78.4px]">Welcome to Hire Gurkha</h1>
+                <h1 className="text-[#193855] font-bold text-3xl sm:text-5xl sm:leading-[78.4px]">Welcome to Job Finders</h1>
                 <p className="font-semibold text-2xl sm:text-3xl text-[#6A6666] mt-4">Ready to Apply for <span className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text">Jobs?</span></p>
 
                 <div className="flex justify-center px-4">

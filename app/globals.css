@@ -14,13 +14,14 @@ body{
   overflow-x: hidden;
 }
 .signin {
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  /* background-repeat: no-repeat;
+  background-size: 100% 100%; */
+  background-color: #103555;
 }
 
-.signin {
+/* .signin {
   background-image: url("../public/images/singinbg.png");
-}
+} */
 
 main {
   background-color: #F3F4F8;

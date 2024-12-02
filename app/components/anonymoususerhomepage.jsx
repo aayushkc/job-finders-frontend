@@ -203,7 +203,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
       </section>
 
-      <section className=" sm:px-32 mt-12">
+      {/* <section className=" sm:px-32 mt-12">
         <div className="px-4 sm:p-10">
           <h2 className="text-3xl font-bold text-center sm:leading-[48px]">Over <span className="text-[#FE810F]">100 NRN</span> businesses using our platform to hire <span className="text-[#FE810F]">from Nepal</span></h2>
 
@@ -218,11 +218,11 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
           </div>
         </div>
 
-      </section>
+      </section> */}
 
 
       {/* Job Seeker Testimonial Carousel */}
-      <section className="mt-12">
+      {/* <section className="mt-12">
         <h2 className="text-2xl text-center font-bold px-4">We help <span className="text-[#FD810E]"> talents</span> find their perfect spots</h2>
         <div className="mt-10 flex justify-center">
 
@@ -236,10 +236,10 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <div className="bg-gradient-to-r from-[#FD810E] to-[#DA4C98] w-[345px] h-[8px] rounded-2xl">
 
         </div>
-      </div>
+      </div> */}
 
       {/* Recruiter Testimonial Carousel */}
-      <section className="mt-12">
+      {/* <section className="mt-12">
         <h2 className="text-2xl text-center font-bold px-4">We accelerate <span className="text-[#FD810E]"> businesses</span> towards their goals</h2>
         <div className="mt-10 flex justify-center">
 
@@ -247,7 +247,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         </div>
 
 
-      </section>
+      </section> */}
 
 
       {/* Grid Section */}
@@ -300,7 +300,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
       </section>
 
       {/* Timeline of Steps */}
-      <section className="mt-12">
+      {/* <section className="mt-12">
         <h2 className="text-3xl text-center font-bold">Innovating Recruitment: <span className="text-[#FD810E]">{`HireGurkha’s`} AI-Driven</span> Hiring Process</h2>
         <p className="text-[#84888E] text-center mt-4">We will ensure that you hire software developers who are the best fit for your company</p>
 
@@ -352,7 +352,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
 
         </div>
 
-      </section>
+      </section> */}
 
       <section className="pt-12 bg-[#FCFCFC]">
         <h2 className="text-4xl text-center font-bold">Our <span className="text-[#FD810E]"> Hiring Strategies</span></h2>
@@ -379,7 +379,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
             <div className="flex flex-col items-center">
               <i className="bi bi-speedometer2 text-gurkha-yellow text-6xl"></i>
               <h2 className="text-lg font-bold mt-2">Speed</h2>
-              <p className="mt-2">With <span className="text-gurkha-yellow"> HireGurkha, </span>the search for exceptional talent is swift. We provide the top 3% of matching profiles within 24-48 hours, streamlining the hiring process like never before.</p>
+              <p className="mt-2">With <span className="text-gurkha-yellow"> JobFinders, </span>the search for exceptional talent is swift. We provide the top 3% of matching profiles within 24-48 hours, streamlining the hiring process like never before.</p>
               
             </div>
 
@@ -416,7 +416,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
       </section>
 
       {/* Why chose us */}
-      <section className="mt-12">
+      {/* <section className="mt-12">
         <h2 className="text-4xl text-center font-bold">Why Choose <span className="text-[#FD810E]">HireGurkha </span></h2>
         <p className="text-[#84888E] text-center mt-4">In the realm of Remote Work Opportunities in Nepal, HireGurkha stands out as a paragon of excellence.<br></br> Our platform is not just a conduit for job matching; it’s a comprehensive ecosystem designed to elevate the remote hiring <br></br>experience for both talents and employers.</p>
 
@@ -457,10 +457,10 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
-
-      <section className="mt-16 px-6 sm:px-40 py-20 bg-[#F7F9FC] relative">
+      {/* FAQs */}
+      {/* <section className="mt-16 px-6 sm:px-40 py-20 bg-[#F7F9FC] relative">
         <div className="absolute left-[12%] top-[25%] hidden sm:block">
           <Image src={arrow} alt="cube" />
         </div>
@@ -531,7 +531,7 @@ export default function AnonUserHomePage({ pageNum, totalPage }) {
         <div className="absolute left-32 top-[70%] hidden sm:block">
           <Image src={Cube} alt="cube" />
         </div>
-      </section>
+      </section> */}
 
 
 

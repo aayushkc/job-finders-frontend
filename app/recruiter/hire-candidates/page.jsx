@@ -279,7 +279,7 @@ export default function HireCandidates() {
       }
       <section className="flex">
         <div className="bg-white  sm:mt-6 sm:ml-12 sm:w-[95%] rounded-2xl mb-8">
-          <h1 className="text-5xl text-[#193855] font-bold text-center pt-10 sm:text-3xl">Welcome to Hire Gurkha</h1>
+          <h1 className="text-5xl text-[#193855] font-bold text-center pt-10 sm:text-3xl">Welcome to Job Finders</h1>
           <div className="flex justify-center ">
             <div className="border-[1px] w-[144px] border-gurkha-yellow my-8"></div>
           </div>
@@ -293,7 +293,7 @@ export default function HireCandidates() {
 
           {
             showCalendly ? <div className="">
-              <InlineWidget url="https://calendly.com/hiregurkhaofficial/30min" />
+              <InlineWidget url="https://calendly.com/aayush-nexsewa/job-request" />
             </div>
               :
               (
