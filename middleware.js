@@ -15,12 +15,12 @@ const logedUserNoViewPaths = [
 ]
 
 export async function middleware(request) {
-
     const accessToken = request.cookies.get('accessToken')?.value
     const isVerified = request.cookies.get('hasUserBeenActivated')?.value
     const isSeeker = request.cookies.get('isSeeker')?.value
 
     if(isSeeker === 'true' && request.nextUrl.pathname === '/' && isVerified === 'false') {
+       
         return NextResponse.redirect(new URL('/account-activation', request.url))
     } 
 
@@ -35,9 +35,9 @@ export async function middleware(request) {
     if (request.nextUrl.pathname.startsWith(userProtectedPaths[0]) || request.nextUrl.pathname.startsWith(userProtectedPaths[1]) || request.nextUrl.pathname.startsWith(userProtectedPaths[2])) {
         
         //Redirect to signin page if user is not authenticated
-        if (!accessToken) {
-            return NextResponse.redirect(new URL('/signin', request.url))
-        }
+        // if (!accessToken) {
+        //     return NextResponse.redirect(new URL('/signin', request.url))
+        // }
         if(isVerified === 'false'){
             return NextResponse.redirect(new URL('/account-activation', request.url))
         }

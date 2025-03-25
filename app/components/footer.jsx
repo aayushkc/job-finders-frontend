@@ -23,14 +23,14 @@ export default async function Footer(){
             <div className="flex flex-col sm:flex-row">
                 <div className="basis-3/5">
                     <Image src="/images/Footerlogo.png" alt="logo" className="max-w-full max-h-full" width="102" height="42"/>
-                    <p className="text-sm font-light mt-8">© {thisYear} Nexsewa Pvt. Ltd. All Rights Reserved.</p>
+                    <p className="text-sm font-light mt-8">© {thisYear} Job Finders Pvt. Ltd. All Rights Reserved.</p>
 
                     <div className="my-8 flex gap-8 items-center text-3xl sm:text-4xl">
-                       <Link target="_blank" href={'https://www.facebook.com/hiregurkha?mibextid=ZbWKwL'}><i className="bi bi-facebook"></i></Link> 
-                       <Link target="_blank" href={'https://www.instagram.com/hiregurkha?igsh=MTY4a20wMzZrM3F1dA=='}><i className="bi bi-instagram"></i></Link> 
+                       <Link target="_blank" href={'#'}><i className="bi bi-facebook"></i></Link> 
+                       <Link target="_blank" href={'#'}><i className="bi bi-instagram"></i></Link> 
                         {/* <i className="bi bi-youtube"></i> */}
                         
-                        <Link target="_blank" href={"https://www.linkedin.com/company/hire-gurkha/"}><i className="bi bi-linkedin"></i></Link>
+                        <Link target="_blank" href={"#"}><i className="bi bi-linkedin"></i></Link>
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@ export default async function Footer(){
                     <div>
                     <h3 className="font-bold">More About Us</h3>
                     <ul>
-                        <li className="mt-6"><Link href={"/about-us"}>About Us</Link></li>
+                        {/* <li className="mt-6"><Link href={"/about-us"}>About Us</Link></li> */}
                         <li className="mt-6">Contact Us</li>
                         <li className="mt-6"><Link href={"/blogs"}>Blogs</Link></li>
                         {/* <li className="mt-6">Career</li> */}

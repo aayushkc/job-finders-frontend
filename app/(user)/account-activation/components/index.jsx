@@ -17,7 +17,7 @@ export default function CheckEmailPage({ userDetails, accessToken, userId }) {
             const isSeeker = Cookies.get('isSeeker')
            
             if(isSeeker === 'false'){
-               window.location.replace("https://hiregurkha.com/recruiter")
+               window.location.replace("https://localhost:3000/recruiter")
             }else{
                 router.push("/")
             }

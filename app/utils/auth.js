@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
-import jwt from 'jsonwebtoken';
+
 
 export default function ProtectedAdminPage({children}) {
     const router = useRouter();

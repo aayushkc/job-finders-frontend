@@ -3,19 +3,17 @@
 import Link from "next/link"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import jwt from 'jsonwebtoken';
 import * as Yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup";
-import { APIENDPOINT } from "../api/APIENDPOINT";
 import { useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
-import {useAuth} from '../utils/checkIsLoggedIn'
+import Login from "../utils/logIn";
+
 export default function LoginForm(){
-    const { setIsLoggedIn } = useAuth()
-    const [logInErr, setLogInErr] = useState(false)
-    const router = useRouter();
+    
+    const [logInErr, setLogInErr] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const router = useRouter()
     const formSchema = Yup.object().shape({
       email: Yup.string()
         .email()
@@ -32,56 +30,26 @@ export default function LoginForm(){
     })
   
     const handleLogin = async (data) => {
-      setLogInErr(false)
-      try {
-        const response = await fetch(`${APIENDPOINT}/login/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-  
-        if (response.ok) {
-          const data = await response.json();
-          const decodedToken = jwt.decode(data.access); // Decode the access token
-          
-          const userId = decodedToken.userId; 
-          const isRecruiter = decodedToken.isRecruiter; 
-          const isSeeker = decodedToken.isSeeker; 
-          const isSuperAdmin = decodedToken.isSuperAdmin
-          const isVerified = decodedToken.hasUserBeenActivated
-          setIsLoggedIn({'logInStatus':true, 'username':''})
-          
-          Cookies.set('accessToken', data.access, { expires: 1});
-          Cookies.set('userId', userId,{ expires: 1}); 
-          Cookies.set('isSeeker', isSeeker,{ expires: 1})
-          Cookies.set("isLoggedIn", true,{ expires: 1})
-          Cookies.set("hasUserBeenActivated", isVerified)
-          // if(!isVerified){
-          //   router.push('/account-activation')
-          // }
+      setLogInErr('')
+      const loginRes = await Login(data)
 
-          if(isRecruiter){
-            router.push('/recruiter');
-          }
-          if(isSeeker){
-            router.push('/');
-            router.refresh();
-          }
-          if(isSuperAdmin){
-            router.push('/view-all-pending-jobs')
-          }
-         
-        } else {
-          // Handle error response
-          const data = await response.json()
-          setLogInErr(true)
-          
-        }
-      } catch (error) {
-        console.error('Error during login:', error);
+      //For successfull login
+      if(loginRes.status === 200){
+        if(loginRes.userType === 'recruiter'){
+          router.push('/recruiter')
+          return;
+        } 
+
+        router.push("/")
+        return;
       }
+
+      //Handle login error and display message
+      if(loginRes.status === 400 || loginRes.status === 500){
+        setLogInErr(loginRes.error)
+        return;
+      }
+
     };
 
     const handleShowPassword = () =>{
@@ -90,7 +58,7 @@ export default function LoginForm(){
   
     return(
         <form className="px-6 sm:px-14 mt-6" onSubmit={handleSubmit(handleLogin)}>
-          {logInErr ? <p className="text-sm text-left mb-2 font-bold text-[#E33629]">Could not Log In. Check your Email and Password</p> :""}
+          {logInErr.length > 1 &&  <p className="text-sm text-left mb-2 font-bold text-[#E33629]">{logInErr}</p>}
             <div className="flex flex-col gap-2 items-start">
                 <label>Email</label>
                 <input 

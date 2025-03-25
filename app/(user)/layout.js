@@ -5,7 +5,7 @@ import "../globals.css";
 import Navbar from "../components/navbar"
 import { AuthProvider } from "../utils/checkIsLoggedIn";
 import { Suspense } from "react";
-import { GoogleAnalytics } from '@next/third-parties/google'
+// import { GoogleAnalytics } from '@next/third-parties/google'
 import 'react-toastify/ReactToastify.min.css';
 import 'react-phone-number-input/style.css'
 const sans = Open_Sans({ subsets: ["latin"], display:'swap' });
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
         </AuthProvider>
 
       </body>
-      <GoogleAnalytics gaId="G-9JG53MHYCP" />
+      {/* <GoogleAnalytics gaId="G-9JG53MHYCP" /> */}
     </html>
   );
 }

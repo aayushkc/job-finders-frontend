@@ -177,7 +177,7 @@ export default function CreateProfile() {
     return (
         <>
             <section className="text-center bg-white py-8">
-                <h1 className="text-[#193855] font-bold text-3xl sm:text-5xl sm:leading-[78.4px]">Welcome to Hire Gurkha</h1>
+                <h1 className="text-[#193855] font-bold text-3xl sm:text-5xl sm:leading-[78.4px]">Welcome to Job Finders</h1>
                 <p className="font-semibold text-xl sm:text-3xl bg-gradient-to-r from-[#FD810E] to-[#DA4C98] inline-block text-transparent bg-clip-text mt-4"> Create Your Profile</p>
                 <div className="flex justify-center">
                     <div className="bg-[#F3F4F8] mt-8 p-4 w-[80%]">

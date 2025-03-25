@@ -15,12 +15,11 @@ import PhoneInput from "react-phone-number-input"
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken"
 import { useAuth } from "@/app/utils/checkIsLoggedIn";
+import Login from "@/app/utils/logIn";
 
 export default function SignInUser() {
 
     const router = useRouter()
-    const {setIsLoggedIn} = useAuth()
-
     const [emailExists, setEmailExists] = useState(false)
     
     const handleFormSubmit = async (data) => {
@@ -50,22 +49,12 @@ export default function SignInUser() {
                
                 throw new Error('Failed to register');
             }
-
-            const res = await response.json();
-            if (res.userToken) {
-                const decodedToken = jwt.decode(res.userToken.access); // Decode the access token
-
-                const userId = decodedToken.user_id;
-                setIsLoggedIn({ 'logInStatus': true, 'username': '' })
-
-                Cookies.set('accessToken', res.userToken.access, { expires: 1 });
-                Cookies.set('userId', userId, { expires: 1 });
-                Cookies.set('isSeeker', true, { expires: 1 })
-                Cookies.set("isLoggedIn", true, { expires: 1 })
-                Cookies.set("hasUserBeenActivated", false)
-                router.push('/');
-            }
             
+            const logInUser = await Login(data)
+            if(logInUser.status === 200 && logInUser.userType === 'seeker'){
+                router.push("/")
+                return;
+              }
         } catch (error) {
             console.error('Error registering user:', error);
         }
